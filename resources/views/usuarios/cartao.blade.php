@@ -60,7 +60,7 @@
             <b class="mr-3">{{ $cartao['dados']->fun }}</b> <b>{{ $cartao['dados']->pioneiro }}</b>
           </div>
           <div class="col-md-12">
-              <table class="table table-bordered">
+              <table class="table table-bordered table-hover">
                 <thead>
                   <tr>
                     <th class="text-center">
@@ -118,8 +118,8 @@
               </table>
           </div>
     </div>
-    <div class="col-12 mt-4 d-print-none">
-      <a href=" {{route('usuarios.index')}} " title="Voltar" class="btn btn-secondary">
+    <div class="col-12 mt-4 d-print-none div-salvar">
+      <a href=" {{route('usuarios.index')}} " title="Voltar" class="btn btn-secondary btn-voltar">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-short" viewBox="0 0 16 16">
           <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z"/>
           </svg>
@@ -137,9 +137,16 @@
   @stop
 
   @section('css')
-      <link rel="stylesheet" href="/css/admin_custom.css">
+      <link rel="stylesheet" href=" {{url('/')}} /css/lib.css">
   @stop
 
   @section('js')
-      <script> console.log('Hi!'); </script>
+  <script src=" {{url('/')}}/js/lib.js"></script>
+  <script>
+      $(function(){
+          $('.btn-voltar').on('click',function(e){
+              openPageLink(e,$(this).attr('href'),$('[name="ano"]').val());
+          });
+      });
+  </script>
   @stop

@@ -322,20 +322,20 @@ return [
     'menu' => [
         'PUBLICADORES',
         [
-            'text' => 'Todos publicadores',
-            'url'  => 'usuarios',
-            'icon' => 'fas fa-fw fa-users',
-        ],
-        [
             'text' => 'Adicionar publicador',
             'url'  => 'usuarios/create',
             'icon' => 'fas fa-fw fa-plus',
         ],
         [
-            'text'   => 'Show my website',
-            'url'    => '/',
-            'target' => '_blank',
-        ],
+            'text' => 'Todos publicadores',
+            'url'  => 'usuarios',
+            'icon' => 'fas fa-fw fa-users',
+        ]/*,
+        [
+            'text'   => 'Todos Cartões',
+            'url'    => 'usuarios/cards',
+            'icon' => 'fas fa-fw fa-file-pdf',
+        ]*/,
         'GRUPOS',
         [
             'text' => 'Todos grupos',
@@ -346,11 +346,6 @@ return [
             'text' => 'Adicionar grupo',
             'url'  => 'grupos/create',
             'icon' => 'fas fa-fw fa-plus',
-        ],
-        [
-            'text'   => 'Show my website',
-            'url'    => '/',
-            'target' => '_blank',
         ],
         [
             'header' => 'ACCOUNT SETTINGS',
@@ -364,7 +359,12 @@ return [
             'text'  => 'Change Password',
             'route' => 'admin.password',
             'icon'  => 'fas fa-fw fa-lock',
-        ],
+        ],[
+            'text'   => 'Site',
+            'url'    => '/',
+            'icon'  => 'fas fa-fw fa-globe',
+            //'target' => '_blank',
+        ]
     ],
     /*
     |--------------------------------------------------------------------------
