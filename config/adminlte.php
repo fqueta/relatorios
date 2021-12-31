@@ -341,7 +341,7 @@ return [
             'text' => 'Todos grupos',
             'url'  => 'grupos',
             'icon' => 'fas fa-fw fa-users',
-        ],
+        ]/*,
         [
             'text' => 'Adicionar grupo',
             'url'  => 'grupos/create',
@@ -364,7 +364,7 @@ return [
             'url'    => '/',
             'icon'  => 'fas fa-fw fa-globe',
             //'target' => '_blank',
-        ]
+        ]*/
     ],
     /*
     |--------------------------------------------------------------------------

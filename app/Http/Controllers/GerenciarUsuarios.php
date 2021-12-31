@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\usuario;
+use App\Models\Relatorios;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
@@ -235,6 +236,29 @@ class GerenciarUsuarios extends Controller
       $title = '';
       $titulo = '';
       $cartao = $this->cartData($id);
+      //$parent = usuario::where('parent','=',$id);
+      $parent = DB::select("SELECT * FROM usuarios WHERE parent ='".$id."'");
+      if($parent){
+        $l = 0;
+        foreach ($parent as $key => $value) {
+          if($l==1){
+            $l = 0;
+          }else{
+            $l++;
+          }
+          if($l==0){
+            $mb = 'mb-20';
+          }elseif($l==1){
+            $mb = 'mb-200';
+          }else{
+            $mb = '';
+          }
+          $cartao['parent'][$key] = $this->cartData($value->id);
+          $cartao['parent'][$key]['page']['lin'] = $l;
+          $cartao['parent'][$key]['page']['mb'] = $mb;
+        }
+      }
+      //dd($cartao);
       return view('usuarios.cartao',['cartao'=>$cartao,'titulo'=>$title,'title'=>$titulo]);
     }
     public function cards(){
