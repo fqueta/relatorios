@@ -7,11 +7,13 @@
 @stop
 
 @section('content')
-  <p>The .table-bordered class adds borders on all sides of the table and the cells:</p>
   <div class="row">
-    <div class="col-md-12 text-right mb-3">
-      <a href="{{ route('usuarios-create') }}" class="btn btn-success"> Novo usuario </a>
+    <div class="col-md-8 mb-3">
+      <p>Todos os publicadores ativos da congregação</p>
     </div>
+      <div class="col-md-4 text-right mb-3">
+        <a href="{{ route('usuarios-create') }}" class="btn btn-success"> Novo usuario </a>
+      </div>
     <div class="col-md-12">
 
       <table class="table table-bordered dataTable dtr-inline">

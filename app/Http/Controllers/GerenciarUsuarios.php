@@ -224,8 +224,8 @@ class GerenciarUsuarios extends Controller
         $cartao['medias']['publicacao'] = round($mediasPublicacao) ;
         $cartao['medias']['videos'] = round($mediasvideos) ;
         $cartao['medias']['horas'] = round($mediasHoras) ;
-        $cartao['medias']['estudos'] = round($mediasEstudos) ;
         $cartao['medias']['revisitas'] = round($mediasRevisitas) ;
+        $cartao['medias']['estudos'] = round($mediasEstudos) ;
         $url = url()->current();
         $cartao['url'] = $url;
         //dd($cartao);
