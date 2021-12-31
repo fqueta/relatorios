@@ -137,7 +137,7 @@
   @stop
 
   @section('css')
-      <link rel="stylesheet" href=" {{url('/')}} /css/lib.css">
+      <link rel="stylesheet" href=" {{url('/')}}/css/lib.css">
   @stop
 
   @section('js')
