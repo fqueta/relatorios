@@ -170,7 +170,7 @@ function submitRelatorio(id,ac){
        if(ac=='cad'){
          var type = "POST";
        }else{
-         var type = "PUT";
+         var type = "POST";
        }
        var ajaxurl = $('[name="routAjax_'+ac+'"]').val();
        $.ajax({
