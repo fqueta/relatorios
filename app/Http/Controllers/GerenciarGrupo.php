@@ -27,13 +27,13 @@ class GerenciarGrupo extends Controller
     }
     public function store(Request $request)
     {
-        Grupo::create($request->all());
+        grupo::create($request->all());
         return redirect()->route('grupos-index');
 
     }
     public function edit($id)
     {
-        $grupos = Grupo::where('id',$id)->first();
+        $grupos = grupo::where('id',$id)->first();
         if(!empty($grupos)){
           $title = 'Editar um grupo';
           $titulo = $title;
@@ -48,12 +48,12 @@ class GerenciarGrupo extends Controller
            'obs'=>$request->obs,
            'ativo'=>$request->ativo
         ];
-        Grupo::where('id',$id)->update($data);
+        grupo::where('id',$id)->update($data);
         return redirect()->route('grupos-index');
     }
     public function destroy($id)
     {
-        Grupo::where('id',$id)->delete();
+        grupo::where('id',$id)->delete();
         return redirect()->route('grupos-index');
     }
 }
