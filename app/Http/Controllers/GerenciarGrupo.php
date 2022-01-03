@@ -14,7 +14,7 @@ class GerenciarGrupo extends Controller
 
     public function index()
     {
-        $grupos = Grupo::all();
+        $grupos = grupo::all();
         $title = 'Todos os grupos';
         $titulo = $title;
         return view('grupos.index',['grupos'=>$grupos,'title'=>$title,'titulo'=>$titulo]);

@@ -33,7 +33,7 @@ class GerenciarRelatorios extends Controller
         //return redirect()->route('relatorios-index');
         $dados = $request->all();
         //$dados['enviado_por'] = '{"user_id":"4","nome":"Waldir Bertges","ip":"177.104.65.201"}';
-        $salvarRelatorios = Relatorio::create($dados);
+        $salvarRelatorios = relatorio::create($dados);
         /*if(isset($dados['var_cartao']) && !empty($dados['var_cartao'])){
             $json_cartao = base64_decode($dados['var_cartao']);
             $arr_cartao = json_decode($json_cartao,true);
@@ -59,7 +59,7 @@ class GerenciarRelatorios extends Controller
     }
     public function edit($id)
     {
-        $relatorios = Grupo::where('id',$id)->first();
+        $relatorios = grupo::where('id',$id)->first();
         if(!empty($relatorios)){
           $title = 'Editar um grupo';
           $titulo = $title;
@@ -78,7 +78,7 @@ class GerenciarRelatorios extends Controller
       }
       $salvarRelatorios=false;
       if(!empty($data)){
-        $salvarRelatorios=Relatorio::where('id',$data['id'])->update($data);
+        $salvarRelatorios=relatorio::where('id',$data['id'])->update($data);
       }
       //dd($salvarRelatorios);
       if($salvarRelatorios){
