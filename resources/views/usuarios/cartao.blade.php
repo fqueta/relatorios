@@ -28,7 +28,8 @@
   <div class="row">
     <div class="col-md-12 text-right mb-3 d-print-none">
       <div class="col-md-4">
-
+        <input type="hidden" name="routAjax_cad" value="{{route('relatorios.store')}}">
+        <input type="hidden" name="routAjax_alt" value="{{route('relatorios.update')}}">
         <form method="GET" id="ano-form" action="{{ $cartao['url'] }}">
           <div class="input-group">
             <input type="number" onchange="document.querySelector('#ano-form').submit()" class="form-control" maxlength="4" name="ano" value="{{ $cartao['ano_servico'] }}" placeholder="Ano de serviço">
@@ -67,7 +68,7 @@
             <b class="mr-3">{{ $cartao['dados']->fun }}</b> <b>{{ $cartao['dados']->pioneiro }}</b>
           </div>
           <div class="col-md-12">
-              <table class="table table-bordered table-hover">
+              <table class="table table-bordered table-hover" id="pub-{{$cartao['dados']->id}}">
                 <thead>
                   <tr>
                     <th class="text-center">
@@ -95,8 +96,17 @@
                 </thead>
                 <tbody>
                   @foreach($cartao['atividade'] As $key=>$relatorio)
-                  <tr>
-                    <td class="text-left">{{ $cartao['Schema'][$key]['mes'] }}</td>
+                  <tr id="{{$cartao['dados']->id.'_'.$relatorio->mes}}" title="De dois cliques par editar" ondblclick="gerenteAtividade($(this),'{{$relatorio->ac}}')" style="cursor:pointer">
+                    <td class="text-left">
+                      <input type="hidden" name="var_cartao" value="{{base64_encode(json_encode($cartao))}}">
+                      <input type="hidden" name="ano" value="{{ $cartao['Schema'][$key]['ano_servico'] }}">
+                      <input type="hidden" name="mes" value="{{ $key }}">
+                      <input type="hidden" name="id_publicador" value="{{ $cartao['dados']->id }}">
+                      <input type="hidden" name="id_grupo" value="{{ $cartao['dados']->id_grupo }}">
+                      <input type="hidden" name="ac" value="{{ $relatorio->ac }}">
+                      <input type="hidden" name="id" value="{{ $relatorio->id }}">
+                      {{ $cartao['Schema'][$key]['mes'] }}
+                    </td>
                     <td class="text-center">{{ $relatorio->publicacao }}</td>
                     <td class="text-center">{{ $relatorio->video }}</td>
                     <td class="text-center">{{ $relatorio->hora }}</td>
@@ -107,14 +117,14 @@
                   @endforeach
                 </tbody>
                 <tfoot>
-                  <tr>
+                  <tr class="tf-1">
                     <th>Total</th>
                     @foreach($cartao['totais'] As $k=>$total)
                       <th class="text-center">{{ $total }}</th>
                     @endforeach
                     <th>&nbsp;</th>
                   </tr>
-                  <tr>
+                  <tr class="tf-2">
                     <th>Média</th>
                     @foreach($cartao['medias'] As $k=>$m)
                       <th class="text-center">{{ $m }}</th>
@@ -126,7 +136,8 @@
           </div>
     </div>
     @if(isset($cartao['parent']))
-      @foreach($cartao['parent'] As $k=>$parent)
+
+      @foreach($cartao['parent'] As $kp=>$parent)
       <div class="row ml-0 mr-0 {{ $parent['page']['mb'] }}">
             <div class="col-md-12">
               <hr>
@@ -153,11 +164,11 @@
               <b class="mr-3">{{ $parent['dados']->fun }}</b> <b>{{ $parent['dados']->pioneiro }}</b>
             </div>
             <div class="col-md-12">
-                <table class="table table-bordered table-hover">
+                <table class="table table-bordered table-hover" id="pub-{{$parent['dados']->id}}">
                   <thead>
                     <tr>
                       <th class="text-center">
-                          Ano de serviço<br>{{ $cartao['ano_servico'] }}
+                          Ano de serviço<br>{{ $parent['ano_servico'] }}
                       </th>
                       <th class="text-center">
                           Publicações
@@ -180,9 +191,18 @@
                     </tr>
                   </thead>
                   <tbody>
-                    @foreach($cartao['atividade'] As $key=>$relatorio)
-                    <tr>
-                      <td class="text-left">{{ $cartao['Schema'][$key]['mes'] }}</td>
+                    @foreach($parent['atividade'] As $key=>$relatorio)
+                    <tr id="{{$parent['dados']->id.'_'.$relatorio->mes}}" title="De dois cliques par editar" ondblclick="gerenteAtividade($(this),'{{$relatorio->ac}}')" style="cursor:pointer">
+                      <td class="text-left"><input type="hidden" name="var_cartao" value="{{base64_encode(json_encode($cartao))}}">
+                        <input type="hidden" name="var_cartao" value="{{base64_encode(json_encode($parent))}}">
+                        <input type="hidden" name="ano" value="{{ $parent['Schema'][$key]['ano_servico'] }}">
+                        <input type="hidden" name="mes" value="{{ $key }}">
+                        <input type="hidden" name="id_publicador" value="{{ $parent['dados']->id }}">
+                        <input type="hidden" name="id_grupo" value="{{ $cartao['dados']->id_grupo }}">
+                        <input type="hidden" name="ac" value="{{ $relatorio->ac }}">
+                        <input type="hidden" name="id" value="{{ $relatorio->id }}">
+                        {{ $parent['Schema'][$key]['mes'] }}
+                      </td>
                       <td class="text-center">{{ $relatorio->publicacao }}</td>
                       <td class="text-center">{{ $relatorio->video }}</td>
                       <td class="text-center">{{ $relatorio->hora }}</td>
@@ -193,16 +213,16 @@
                     @endforeach
                   </tbody>
                   <tfoot>
-                    <tr>
+                    <tr class="tf-1">
                       <th>Total</th>
-                      @foreach($cartao['totais'] As $k=>$total)
+                      @foreach($parent['totais'] As $kt=>$total)
                         <th class="text-center">{{ $total }}</th>
                       @endforeach
                       <th>&nbsp;</th>
                     </tr>
-                    <tr>
+                    <tr class="tf-2">
                       <th>Média</th>
-                      @foreach($cartao['medias'] As $k=>$m)
+                      @foreach($parent['medias'] As $km=>$m)
                         <th class="text-center">{{ $m }}</th>
                       @endforeach
                       <th>&nbsp;</th>
@@ -239,8 +259,11 @@
   <script src=" {{url('/')}}/js/lib.js"></script>
   <script>
       $(function(){
+        $('a.nav-link').click();
+        
           $('.btn-voltar').on('click',function(e){
-              openPageLink(e,$(this).attr('href'),$('[name="ano"]').val());
+              window.close();
+              //openPageLink(e,$(this).attr('href'),$('[name="ano"]').val());
           });
       });
   </script>

@@ -93,7 +93,7 @@ class GerenciarUsuarios extends Controller
         //
     }
 
-    public function cartData($id){
+    public function cardData($id){
         //$usuarios = usuario::all();
 
         $ano_servico = date('Y');
@@ -172,9 +172,11 @@ class GerenciarUsuarios extends Controller
         $totalEstudos = NULL;
         //dd($arr_sequecia_meses);
         foreach ($arr_sequecia_meses as $key => $value) {
-              $atividade  = DB::select("select * from relatorios WHERE id_publicador='$id' AND mes='$key' AND ano='".$value['ano_servico']."' ORDER BY id ASC");
+              $sql = "select * from relatorios WHERE id_publicador='$id' AND mes='$key' AND ano='".$value['ano_servico']."' ORDER BY id ASC";
+              $atividade  = DB::select($sql);
               if(!empty($atividade)){
                 $cartao['atividade'][$key]  = $atividade[0];
+                $cartao['atividade'][$key]->ac = 'alt';
                 $totalPublicacao += isset($atividade[0]->publicacao)?$atividade[0]->publicacao : 0;
                 $totalHoras += isset($atividade[0]->hora) ? $atividade[0]->hora : 0;
                 $totalVideos += isset($atividade[0]->video) ? $atividade[0]->video : 0;
@@ -182,6 +184,7 @@ class GerenciarUsuarios extends Controller
                 $totalEstudos += isset($atividade[0]->estudo) ? $atividade[0]->estudo : 0;
                 $meses_relatados++;
               }else{
+                $ativi['id'] = 0;
                 $ativi['publicacao'] = 0;
                 $ativi['video'] = 0;
                 $ativi['hora'] = 0;
@@ -189,6 +192,7 @@ class GerenciarUsuarios extends Controller
                 $ativi['revisita'] = 0;
                 $ativi['obs'] = false;
                 $ativi['mes'] = $key;
+                $ativi['ac'] = 'cad';
                 $atividade[0] = (object)$ativi;
                 $cartao['atividade'][$key]  = $atividade[0];
                 $totalPublicacao += isset($atividade[0]->publicacao)?$atividade[0]->publicacao : 0;
@@ -196,8 +200,9 @@ class GerenciarUsuarios extends Controller
                 $totalVideos += isset($atividade[0]->video) ? $atividade[0]->video : 0;
                 $totalRevisitas += isset($atividade[0]->revisita) ? $atividade[0]->revisita : 0;
                 $totalEstudos += isset($atividade[0]->estudo) ? $atividade[0]->estudo : 0;
-                $meses_relatados++;
+                //$meses_relatados++;
               }
+              $cartao['sql'][$key]['sql'] = $sql;
               //$atividades =
         };
         $cartao['totais']['publicacao'] = $totalPublicacao;
@@ -235,7 +240,7 @@ class GerenciarUsuarios extends Controller
     public function cartao($id){
       $title = '';
       $titulo = '';
-      $cartao = $this->cartData($id);
+      $cartao = $this->cardData($id);
       //$parent = usuario::where('parent','=',$id);
       $parent = DB::select("SELECT * FROM usuarios WHERE parent ='".$id."'");
       if($parent){
@@ -253,7 +258,7 @@ class GerenciarUsuarios extends Controller
           }else{
             $mb = '';
           }
-          $cartao['parent'][$key] = $this->cartData($value->id);
+          $cartao['parent'][$key] = $this->cardData($value->id);
           $cartao['parent'][$key]['page']['lin'] = $l;
           $cartao['parent'][$key]['page']['mb'] = $mb;
         }
@@ -281,7 +286,7 @@ class GerenciarUsuarios extends Controller
             }else{
               $mb = '';
             }
-            $cartao[$key] = $this->cartData($value->id);
+            $cartao[$key] = $this->cardData($value->id);
             $cartao[$key]['page']['lin'] = $l;
             $cartao[$key]['page']['mb'] = $mb;
           }

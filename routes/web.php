@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\GerenciarGrupo;
 use App\Http\Controllers\GerenciarUsuarios;
+use App\Http\Controllers\GerenciarRelatorios;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +35,19 @@ Route::prefix('usuarios')->group(function(){
 
     Route::get('/{id}/cartao',[GerenciarUsuarios::class,'cartao'])->name('usuarios.cartao');
     Route::get('/cards',[GerenciarUsuarios::class,'cards'])->name('usuarios.cards');
+});
+
+Route::prefix('relatorios')->group(function(){
+    //Route::get('/',[GerenciarUsuarios::class,'index'])->name('usuarios.index');
+    Route::get('/create',[GerenciarRelatorios::class,'create'])->name('relatorios.create');
+    Route::post('/',[GerenciarRelatorios::class,'store'])->name('relatorios.store');
+    //Route::get('/{id}/edit',[GerenciarUsuarios::class,'edit'])->where('id', '[0-9]+')->name('usuarios-edit');
+    //Route::put('/{id}',[GerenciarRelatorios::class,'update'])->where('id', '[0-9]+')->name('relatorios.update');
+    Route::put('/update',[GerenciarRelatorios::class,'update'])->name('relatorios.update');
+    //Route::delete('/{id}',[GerenciarUsuarios::class,'destroy'])->where('id', '[0-9]+')->name('usuarios-destroy');
+
+    //Route::get('/{id}/cartao',[GerenciarUsuarios::class,'cartao'])->name('usuarios.cartao');
+    //Route::get('/cards',[GerenciarUsuarios::class,'cards'])->name('usuarios.cards');
 });
 
 Route::prefix('admin')->group(function(){
