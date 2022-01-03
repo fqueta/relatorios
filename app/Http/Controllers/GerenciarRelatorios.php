@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Relatorio;
+use App\Models\relatorio;
 
 
 use Illuminate\Http\Request;
