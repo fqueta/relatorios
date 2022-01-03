@@ -259,8 +259,7 @@
   <script src=" {{url('/')}}/js/lib.js"></script>
   <script>
       $(function(){
-        $('a.nav-link').click();
-        
+          $('a.nav-link').click();
           $('.btn-voltar').on('click',function(e){
               window.close();
               //openPageLink(e,$(this).attr('href'),$('[name="ano"]').val());

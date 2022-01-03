@@ -91,7 +91,7 @@
           </tbody>
         </table>
 
-              <table class="table table-bordered">
+              <table class="table table-bordered table-striped table-hover">
                 <thead>
                   <tr>
                     <th class="text-center">
@@ -175,8 +175,10 @@
       <script type="text/javascript" src=" {{url('/')}}/js/lib.js"></script>
       <script>
         $(function(){
+            $('a.nav-link').click();
             $('#valor-pagina').on('click',function(e){
-               openPageLink(e,$(this).attr('href'),$('[name="ano"]').val());
+              window.close();
+               //openPageLink(e,$(this).attr('href'),$('[name="ano"]').val());
             });
         });
        </script>

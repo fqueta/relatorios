@@ -45,6 +45,7 @@ Route::prefix('relatorios')->group(function(){
     //Route::put('/{id}',[GerenciarRelatorios::class,'update'])->where('id', '[0-9]+')->name('relatorios.update');
     Route::put('/update',[GerenciarRelatorios::class,'update'])->name('relatorios.update');
     //Route::delete('/{id}',[GerenciarUsuarios::class,'destroy'])->where('id', '[0-9]+')->name('usuarios-destroy');
+    Route::delete('/',[GerenciarUsuarios::class,'destroy'])->name('usuarios.destroy');
 
     //Route::get('/{id}/cartao',[GerenciarUsuarios::class,'cartao'])->name('usuarios.cartao');
     //Route::get('/cards',[GerenciarUsuarios::class,'cards'])->name('usuarios.cards');

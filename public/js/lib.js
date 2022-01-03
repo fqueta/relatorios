@@ -67,7 +67,8 @@ function abrirjanelaPadraoConsulta(url){
 function openPageLink(ev,url,ano){
   ev.preventDefault();
   var u = url.trim()+'?ano='+ano;
-  window.location = u;
+	abrirjanelaPadrao(u);
+	//window.location = u;
 }
 function gerenteAtividade(obj,ac){
   var id = obj.attr('id');
@@ -88,8 +89,10 @@ function gerenteAtividade(obj,ac){
        var wid='200';
        var t='text';
        var b='<button type="button" onclick="submitRelatorio(\''+id+'\',\''+ac+'\')" title="Salvar" class="btn btn-primary" name="button"><i class="fa fa-check"></i></button>'+
-       '<button type="button" onclick="cancelEdit(\''+id+'\')" title="Cancelar edição" data-toggle="tooltip"  class="btn btn-secondary" name="button"><i class="fa fa-times"></i></button>'+
-       '<button type="button" onclick="delRegistro(\''+id+'\')" title="Apagar registro" data-toggle="tooltip"  class="btn btn-danger" name="button"><i class="fa fa-trash"></i></button>';
+       '<button type="button" onclick="cancelEdit(\''+id+'\')" title="Cancelar edição" data-toggle="tooltip"  class="btn btn-secondary" name="button"><i class="fa fa-times"></i></button>';
+			 if(ac=='alt'){
+				 b += '<button type="button" onclick="delRegistro(\''+id+'\')" title="Apagar registro" data-toggle="tooltip"  class="btn btn-danger" name="button"><i class="fa fa-trash"></i></button>';
+			 }
        s.addClass('d-flex');
     }else{
       var wid='100';
@@ -140,6 +143,9 @@ function cancelEdit(id){
     td.html(c);
   }
 }
+function delRegistro(id){
+	alert(id);
+}
 function submitRelatorio(id,ac){
   var don = $('#'+id+' input');
   console.log(don);
@@ -158,12 +164,7 @@ function submitRelatorio(id,ac){
                'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
            }
        });
-       //e.preventDefault();
-       /*
-       var formData = {
-           title: jQuery('#title').val(),
-           description: jQuery('#description').val(),
-       };*/
+
        var formData = seriali;
        var state = jQuery('#btn-save').val();
        if(ac=='cad'){

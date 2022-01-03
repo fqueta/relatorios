@@ -55,13 +55,13 @@
       </form>
     </div>
     <div class="col-md-4 text-right mb-3">
-        <a href="#" data-toggle="modal" data-target="#config-imp-cartao" class="btn btn-light"> <i class="fa fa-file-pdf"></i> Todos cartões</a>
+        <a href="{{route('usuarios.cards')}}" id="open-all-cards" data-target="#config-imp-cartao" class="btn btn-light"> <i class="fa fa-file-pdf"></i> Todos cartões</a>
         <a href="{{ route('usuarios-create') }}" class="btn btn-success"><i class="fa fa-plus"></i> Novo publicador </a>
     </div>
 
     <div class="col-md-12">
 
-      <table class="table table-bordered dataTable dtr-inline">
+      <table class="table table-bordered dataTable dtr-inline table-hover">
         <thead>
           <tr>
             <!--<th>#</th>-->
@@ -85,9 +85,9 @@
                     <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
                   </svg>
                 </a>
-                 <button type="button" onclick="abrirjanelaPadrao('{{ route('usuarios.cartao',['id'=>$usuario->id]) }}');" title="Cartão do publicador" class="btn btn-primary mr-2 print-card">
+                 <a href="{{ route('usuarios.cartao',['id'=>$usuario->id]) }}" title="Cartão do publicador" class="btn btn-primary mr-2 print-card">
                    <i class="fa fa-file-pdf"></i>
-                </button>
+                </a>
                 <form action="{{ route('usuarios-destroy',['id'=>$usuario->id]) }}" method="POST">
                   @csrf
                   @method('DELETE')
@@ -117,7 +117,10 @@
           $(function(){
               $('.dataTable').DataTable({ "paging":   false,});
               $('.print-card').on('click',function(e){
-                  openPageLink(e,'{{ route('usuarios.cartao',['id'=>$usuario->id]) }}',$('#painel-ano').val());
+                  openPageLink(e,$(this).attr('href'),$('#painel-ano').val());
+              });
+              $('#open-all-cards').on('click',function(e){
+                  openPageLink(e,$(this).attr('href'),$('#painel-ano').val());
               });
           });
       </script>
