@@ -1,4 +1,16 @@
-
+function lib_urlAtual(){
+  return window.location.href;
+}
+function __translate(val,val2){
+	return val;
+}
+function lib_formatMensagem(locaExive,mess,style,tempo){
+	var mess = "<div class=\"alert alert-"+style+" alert-dismissable\" role=\"alert\"><button class=\"close\" type=\"button\" data-dismiss=\"alert\" aria-hidden=\"true\">X</button><i class=\"fa fa-exclamation-triangle\"></i>&nbsp;"+mess+"</div>";
+	if(typeof(tempo) == 'undefined')
+		var tempo = 4000;
+	setTimeout(function(){$(".alert").hide('slow')}, tempo);
+	$(locaExive).html(mess);
+}
 function abrirjanela(url, nome, w, h, param){
 	if(param.length > 1)
 		var popname = window.open(url, nome, 'width='+w+', height='+h+', scrollbars=yes, '+param);
@@ -181,7 +193,12 @@ function submitRelatorio(id,ac){
            success: function (data) {
              if(data.exec){
                cancelEdit(id);
-             }
+							 if(data.mens){
+								 lib_formatMensagem('.mens',data.mens,'success');
+							 }
+						 }else{
+							 lib_formatMensagem('.mens',data.mens,'danger');
+						 }
              if(data.cartao.totais){
                var array = data.cartao.totais;
                var id_pub = data.cartao.dados.id;

@@ -28,9 +28,10 @@ Route::prefix('grupos')->group(function(){
 
 Route::prefix('usuarios')->group(function(){
     Route::get('/',[GerenciarUsuarios::class,'index'])->name('usuarios.index');
-    Route::get('/create',[GerenciarUsuarios::class,'create'])->name('usuarios-create');
-    Route::get('/{id}/edit',[GerenciarUsuarios::class,'edit'])->where('id', '[0-9]+')->name('usuarios-edit');
-    Route::put('/{id}',[GerenciarUsuarios::class,'update'])->where('id', '[0-9]+')->name('usuarios-update');
+    Route::get('/create',[GerenciarUsuarios::class,'create'])->name('usuarios.create');
+    Route::post('/',[GerenciarUsuarios::class,'store'])->name('usuarios.store');
+    Route::get('/{id}/edit',[GerenciarUsuarios::class,'edit'])->where('id', '[0-9]+')->name('usuarios.edit');
+    Route::put('/{id}',[GerenciarUsuarios::class,'update'])->where('id', '[0-9]+')->name('usuarios.update');
     Route::delete('/{id}',[GerenciarUsuarios::class,'destroy'])->where('id', '[0-9]+')->name('usuarios-destroy');
 
     Route::get('/{id}/cartao',[GerenciarUsuarios::class,'cartao'])->name('usuarios.cartao');
@@ -59,7 +60,7 @@ Route::prefix('admin')->group(function(){
 Route::fallback(function () {
     return "Erro!";
 });
-
+Route::get('/teste',[App\Http\Controllers\HomeController::class,'teste'])->name('teste');
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

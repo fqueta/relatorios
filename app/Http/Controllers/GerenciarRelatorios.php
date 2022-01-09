@@ -17,7 +17,7 @@ class GerenciarRelatorios extends Controller
 
     public function index()
     {
-        $relatorios = Grupo::all();
+        $relatorios = grupo::all();
         $title = 'Todos os relatorios';
         $titulo = $title;
         return view('relatorios.index',['relatorios'=>$relatorios,'title'=>$title,'titulo'=>$titulo]);
@@ -98,13 +98,13 @@ class GerenciarRelatorios extends Controller
            'obs'=>$request->obs,
            'ativo'=>$request->ativo
         ];
-        Grupo::where('id',$id)->update($data);
+        grupo::where('id',$id)->update($data);
         return redirect()->route('relatorios-index');
         */
     }
     public function destroy($id)
     {
-        Grupo::where('id',$id)->delete();
+        grupo::where('id',$id)->delete();
         return redirect()->route('relatorios-index');
     }
 }

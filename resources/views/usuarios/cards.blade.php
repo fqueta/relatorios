@@ -39,13 +39,12 @@
 
           @csrf
         </form>
-        <!--<a href="{{ route('usuarios-create') }}" class="btn btn-success"> Novo usuario </a>-->
       </div>
     </div>
 
     @foreach($cards As $kca=>$cartao)
 
-    <div class="row ml-0 mr-0 {{ $cartao['page']['mb'] }}">
+    <div class="row  table-responsive ml-0 mr-0 {{ $cartao['page']['mb'] }}">
         <table class="" style="width:100%">
           <thead>
             <tr>
@@ -175,7 +174,9 @@
       <script type="text/javascript" src=" {{url('/')}}/js/lib.js"></script>
       <script>
         $(function(){
-            $('a.nav-link').click();
+            if($(window).width()>778)
+              $('a.nav-link').click();
+
             $('#valor-pagina').on('click',function(e){
               window.close();
                //openPageLink(e,$(this).attr('href'),$('[name="ano"]').val());

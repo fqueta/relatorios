@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\grupo;
 use Illuminate\Http\Request;
+use App\Qlib\Qlib;
 
 class GerenciarGrupo extends Controller
 {
@@ -29,7 +30,6 @@ class GerenciarGrupo extends Controller
     {
         grupo::create($request->all());
         return redirect()->route('grupos-index');
-
     }
     public function edit($id)
     {
@@ -43,6 +43,8 @@ class GerenciarGrupo extends Controller
         }
     }
     public function update(Request $request,$id){
+      dd($id);
+
         $data = [
            'grupo'=>$request->grupo,
            'obs'=>$request->obs,

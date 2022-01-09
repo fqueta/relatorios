@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\usuario;
-use App\Models\Relatorio;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
+use App\Models\usuario;
+use App\Models\Relatorio;
+use App\Qlib\Qlib;
+use App\Http\Requests\StorePostRequest;
 class GerenciarUsuarios extends Controller
 {
     /**
@@ -34,7 +36,10 @@ class GerenciarUsuarios extends Controller
      */
     public function create()
     {
-        //
+        $title = 'Cadastrar publicador';
+        $titulo = $title;
+        $arr_user = ['ac'=>'cad'];
+        return view('usuarios.createdit',['usuario'=>$arr_user,'title'=>$title,'titulo'=>$titulo]);
     }
 
     /**
@@ -43,17 +48,18 @@ class GerenciarUsuarios extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StorePostRequest $request)
     {
-        //
+        $validated = $request->validated();
+        $dados = $request->all();
+        $dados['data_nasci'] = Qlib::dtBanco($dados['data_nasci']);
+        $dados['data_batismo'] = Qlib::dtBanco($dados['data_batismo']);
+        //dd($dados);
+        usuario::create($dados);
+        return redirect()->route('usuarios.index');
+
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\usuario  $usuario
-     * @return \Illuminate\Http\Response
-     */
     public function show(usuario $usuario)
     {
         //
@@ -65,9 +71,18 @@ class GerenciarUsuarios extends Controller
      * @param  \App\Models\usuario  $usuario
      * @return \Illuminate\Http\Response
      */
-    public function edit(usuario $usuario)
+    public function edit(usuario $id)
     {
-        //
+      $arr_user = Qlib::lib_json_array($id);
+      //$usuario = usuario::where('id',$id)->first();
+      if(is_array($arr_user)){
+        $title = 'Editar cadastro';
+        $titulo = $title;
+        $arr_user['ac'] = 'alt';
+        return view('usuarios.createdit',['usuario'=>$arr_user,'title'=>$title,'titulo'=>$titulo]);
+      }else{
+        return redirect()->route('usuarios.index');
+      }
     }
 
     /**
@@ -77,9 +92,39 @@ class GerenciarUsuarios extends Controller
      * @param  \App\Models\usuario  $usuario
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, usuario $usuario)
+    public function update(Request $request, usuario $id)
     {
-        //
+      $data = [];
+      foreach ($request->all() as $key => $value) {
+        if($key!='_method'&&$key!='_token'&&$key!='ac'){
+          if($key=='data_batismo'){
+              if($value!='0000-00-00'){
+                $data[$key] = $value;
+              }else{
+                $data[$key] = Qlib::dtBanco($data[$key]);
+              }
+          }else{
+            $data[$key] = $value;
+          }
+        }
+      }
+      $salvarUsuario=false;
+      if(!empty($data)){
+        if(Qlib::isJson($id)){
+            $arr = Qlib::lib_json_array($id);
+            if(isset($arr['id'])){
+               $id = $arr['id'];
+            }
+        }
+        $salvarRelatorios=usuario::where('id',$id)->update($data);
+        if($salvarRelatorios){
+          return redirect()->route('usuarios.index');
+        }else{
+          return redirect()->route('usuarios.edit',['id'=>$id,'mens'=>'Erro ao salvar']);
+        }
+      }else{
+        return redirect()->route('usuarios.edit',['id'=>$id,'mens'=>'Erro ao receber dados']);
+      }
     }
 
     /**
@@ -131,6 +176,9 @@ class GerenciarUsuarios extends Controller
         $cartao['ano_servico'] = $ano_servico;
         if(!empty($dados)){
           $cartao['dados'] = $dados[0];
+          $cartao['dados']->data_batismo = Qlib::dataExibe($cartao['dados']->data_batismo);
+          $cartao['dados']->data_nasci = Qlib::dataExibe($cartao['dados']->data_nasci);
+
           if(isset($dados[0]->genero) && $dados[0]->genero =='m'){
             $cartao['dados']->sexo = 'Masculino';
           }elseif ($dados[0]->genero =='f') {

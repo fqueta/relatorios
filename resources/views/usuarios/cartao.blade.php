@@ -25,8 +25,10 @@
     page-break-before: always;
   }
 </style>
-  <div class="row">
+  <div class="row table-responsive">
     <div class="col-md-12 text-right mb-3 d-print-none">
+      <div class="mens">
+      </div>
       <div class="col-md-4">
         <input type="hidden" name="routAjax_cad" value="{{route('relatorios.store')}}">
         <input type="hidden" name="routAjax_alt" value="{{route('relatorios.update')}}">
@@ -40,7 +42,6 @@
 
           @csrf
         </form>
-        <!--<a href="{{ route('usuarios-create') }}" class="btn btn-success"> Novo usuario </a>-->
       </div>
     </div>
 
@@ -67,7 +68,7 @@
           <div class="col-12 text-right">
             <b class="mr-3">{{ $cartao['dados']->fun }}</b> <b>{{ $cartao['dados']->pioneiro }}</b>
           </div>
-          <div class="col-md-12">
+          <div class="col-md-12 table-responsive">
               <table class="table table-bordered table-hover" id="pub-{{$cartao['dados']->id}}">
                 <thead>
                   <tr>
@@ -163,7 +164,7 @@
             <div class="col-12 text-right">
               <b class="mr-3">{{ $parent['dados']->fun }}</b> <b>{{ $parent['dados']->pioneiro }}</b>
             </div>
-            <div class="col-md-12">
+            <div class="col-md-12 table-responsive">
                 <table class="table table-bordered table-hover" id="pub-{{$parent['dados']->id}}">
                   <thead>
                     <tr>
@@ -259,7 +260,8 @@
   <script src=" {{url('/')}}/js/lib.js"></script>
   <script>
       $(function(){
-          $('a.nav-link').click();
+          if($(window).width()>778)
+            $('a.nav-link').click();
           $('.btn-voltar').on('click',function(e){
               window.close();
               //openPageLink(e,$(this).attr('href'),$('[name="ano"]').val());
