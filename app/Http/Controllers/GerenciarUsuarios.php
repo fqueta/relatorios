@@ -104,7 +104,9 @@ class GerenciarUsuarios extends Controller
           if($key=='data_batismo' || $key=='data_nasci'){
               if($value!='00/00/0000'){
                 $data[$key] = Qlib::dtBanco($value);
-              }
+              }//else{
+                //$data[$key] = '?';
+              //}
           }else{
             $data[$key] = $value;
           }

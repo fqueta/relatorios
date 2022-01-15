@@ -26,7 +26,7 @@ class Qlib
 			}
 			return $rs;
 	}
-  function dataExibe($data) {
+  public function dataExibe($data) {
 			$val = trim(strlen($data));
 			$data = trim($data);$rs = false;
 			if($val == 10){
@@ -43,7 +43,7 @@ class Qlib
 
 			return $rs;
 	}
-  function lib_json_array($json=''){
+  public function lib_json_array($json=''){
 		$ret = false;
 		if(is_array($json)){
 			$ret = $json;
@@ -52,14 +52,14 @@ class Qlib
 		}
 		return $ret;
 	}
-	function lib_array_json($json=''){
+	public function lib_array_json($json=''){
 		$ret = false;
 		if(is_array($json)){
 			$ret = json_encode($json,JSON_UNESCAPED_UNICODE);
 		}
 		return $ret;
 	}
-  function isJson($string) {
+  public function isJson($string) {
 		$ret=false;
 		if (is_object(json_decode($string)) || is_array(json_decode($string)))
 		{

@@ -9,7 +9,7 @@ class QlibServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        $this->app->bind('qlib',function(){
+        $this->app->bind('Qlib',function(){
           return new Qlib;
         });
     }
