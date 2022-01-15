@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Requests;
-
+use App\Rules\FullName;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StorePostRequest extends FormRequest
@@ -13,7 +13,7 @@ class StorePostRequest extends FormRequest
     public function rules()
     {
         return [
-            'nome'=>'required',
+            'nome'=>['required',new FullName],
             'tel'=>'required',
             'data_nasci'=>'required',
             'endereco'=>'required',

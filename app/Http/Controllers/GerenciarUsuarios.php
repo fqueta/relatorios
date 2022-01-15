@@ -75,6 +75,8 @@ class GerenciarUsuarios extends Controller
     {
       $arr_user = Qlib::lib_json_array($id);
       //$usuario = usuario::where('id',$id)->first();
+      $arr_user['data_batismo'] = Qlib::dataExibe($arr_user['data_batismo']);
+      $arr_user['data_nasci'] = Qlib::dataExibe($arr_user['data_nasci']);
       if(is_array($arr_user)){
         $title = 'Editar cadastro';
         $titulo = $title;
@@ -92,16 +94,16 @@ class GerenciarUsuarios extends Controller
      * @param  \App\Models\usuario  $usuario
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, usuario $id)
+    public function update(StorePostRequest $request, usuario $id)
     {
       $data = [];
-      foreach ($request->all() as $key => $value) {
+      $req = $request->all();
+      //dd($req);
+      foreach ($req as $key => $value) {
         if($key!='_method'&&$key!='_token'&&$key!='ac'){
-          if($key=='data_batismo'){
-              if($value!='0000-00-00'){
-                $data[$key] = $value;
-              }else{
-                $data[$key] = Qlib::dtBanco($data[$key]);
+          if($key=='data_batismo' || $key=='data_nasci'){
+              if($value!='00/00/0000'){
+                $data[$key] = Qlib::dtBanco($value);
               }
           }else{
             $data[$key] = $value;
@@ -133,10 +135,11 @@ class GerenciarUsuarios extends Controller
      * @param  \App\Models\usuario  $usuario
      * @return \Illuminate\Http\Response
      */
-    public function destroy(usuario $usuario)
-    {
-        //
-    }
+     public function destroy($id)
+     {
+         usuario::where('id',$id)->delete();
+         return redirect()->route('usuarios.index');
+     }
 
     public function cardData($id){
         //$usuarios = usuario::all();
