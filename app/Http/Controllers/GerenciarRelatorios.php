@@ -110,6 +110,7 @@ class GerenciarRelatorios extends Controller
       }
       $data['privilegio'] = $privilegio;
       if($privilegio!='p'){
+        $data['obs'] = str_replace($arr_obs[$privilegio],'',$data['obs']);
         $data['obs'] = $arr_obs[$privilegio].' '.$data['obs'];
       }
       $salvarRelatorios=false;
@@ -120,7 +121,7 @@ class GerenciarRelatorios extends Controller
       if($salvarRelatorios){
         $GerenciarUsuarios = new GerenciarUsuarios;
         $ret['exec'] = true;
-        $ret['salvarRelatorios'] = $salvarRelatorios;
+        $ret['salvarRelatorios'] = $data;
         $ret['mens'] = 'Registro gravado com sucesso!';
         $ret['cartao']=$GerenciarUsuarios->cardData($data['id_publicador']);
       }else{
