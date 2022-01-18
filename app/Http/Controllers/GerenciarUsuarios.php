@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use App\Models\usuario;
+use App\Models\grupo;
 use App\Models\Relatorio;
 use App\Qlib\Qlib;
 use App\Http\Requests\StorePostRequest;
@@ -23,10 +24,65 @@ class GerenciarUsuarios extends Controller
 
     public function index()
     {
-      $usuarios = usuario::all();
+      /*
+      $_GET['ano'] = isset($_GET['ano'])?$_GET['ano']:date('Y');
+      if(isset($_GET['ano']) && !empty($_GET['ano'])){
+        $compleSql="false";
+      }else{
+        $compleSql=false;
+      }*/
+      if(isset($_GET['fil'])){
+        //Qlib::lib_print($_GET['fil']);
+        $compleSql="WHERE ativo='s'";
+        foreach ($_GET['fil'] as $key => $valor) {
+            if(is_array($valor)){
+                $compleOr = false;
+                $i=0;
+                foreach ($valor as $k => $v) {
+                    if($i==0){
+                      $or = ' AND (';
+                      $and = false;
+                    }else{
+                        $or = false;
+                        $and = 'OR';
+                    }
+                    if($key=='priv'){
+                      $campo_bus = 'pioneiro';
+                    }elseif($key=='func'){
+                      $campo_bus = 'fun';
+                    }
+
+                    if($k==0 && $key=='priv'){
+                      $compleOr .="$or $and $campo_bus=''";
+                      $i++;
+                    }else{
+                      $compleOr .="$or $and $campo_bus='$v'";
+                      $i++;
+                    }
+                }
+                if($compleOr){
+                  $compleOr .= ')';
+                }
+                $compleSql .= $compleOr;
+            }else{
+                if($key=='inativo'&&$valor!='t'){
+                    $compleSql .=" AND inativo='$valor'";
+                }
+                if($key=='id_grupo'&&$valor!=''){
+                    $compleSql .=" AND id_grupo='$valor'";
+                }
+            }
+        }
+
+        $sql = "SELECT * FROM usuarios $compleSql ORDER BY nome ASC";
+        $usuarios = DB::select($sql);
+      }else{
+        $usuarios = usuario::all();
+      }
+      $grupos = grupo::all();
       $title = 'Todos os publicadores';
       $titulo = $title;
-      return view('usuarios.index',['usuarios'=>$usuarios,'title'=>$title,'titulo'=>$titulo]);
+      return view('usuarios.index',['usuarios'=>$usuarios,'grupos'=>$grupos,'title'=>$title,'titulo'=>$titulo]);
     }
 
     /**
@@ -38,8 +94,9 @@ class GerenciarUsuarios extends Controller
     {
         $title = 'Cadastrar publicador';
         $titulo = $title;
+        $grupos = grupo::all();
         $arr_user = ['ac'=>'cad'];
-        return view('usuarios.createdit',['usuario'=>$arr_user,'title'=>$title,'titulo'=>$titulo]);
+        return view('usuarios.createdit',['usuario'=>$arr_user,'grupos'=>$grupos,'title'=>$title,'titulo'=>$titulo]);
     }
 
     /**
@@ -53,7 +110,11 @@ class GerenciarUsuarios extends Controller
         $validated = $request->validated();
         $dados = $request->all();
         $dados['data_nasci'] = Qlib::dtBanco($dados['data_nasci']);
-        $dados['data_batismo'] = Qlib::dtBanco($dados['data_batismo']);
+        if($dados['data_batismo']){
+          $dados['data_batismo'] = Qlib::dtBanco($dados['data_batismo']);
+        }else{
+          unset($dados['data_batismo']);
+        }
         //dd($dados);
         usuario::create($dados);
         return redirect()->route('usuarios.index');
@@ -75,13 +136,14 @@ class GerenciarUsuarios extends Controller
     {
       $arr_user = Qlib::lib_json_array($id);
       //$usuario = usuario::where('id',$id)->first();
-      $arr_user['data_batismo'] = Qlib::dataExibe($arr_user['data_batismo']);
-      $arr_user['data_nasci'] = Qlib::dataExibe($arr_user['data_nasci']);
       if(is_array($arr_user)){
         $title = 'Editar cadastro';
+        $grupos = grupo::all();
         $titulo = $title;
         $arr_user['ac'] = 'alt';
-        return view('usuarios.createdit',['usuario'=>$arr_user,'title'=>$title,'titulo'=>$titulo]);
+        $arr_user['data_batismo'] = Qlib::dataExibe($arr_user['data_batismo']);
+        $arr_user['data_nasci'] = Qlib::dataExibe($arr_user['data_nasci']);
+        return view('usuarios.createdit',['usuario'=>$arr_user,'grupos'=>$grupos,'title'=>$title,'titulo'=>$titulo]);
       }else{
         return redirect()->route('usuarios.index');
       }
@@ -94,19 +156,17 @@ class GerenciarUsuarios extends Controller
      * @param  \App\Models\usuario  $usuario
      * @return \Illuminate\Http\Response
      */
-    public function update(StorePostRequest $request, usuario $id)
+    public function update(Request $request, usuario $id)
     {
       $data = [];
-      $req = $request->all();
-      //dd($req);
-      foreach ($req as $key => $value) {
+      $dados = $request->all();
+      foreach ($dados as $key => $value) {
         if($key!='_method'&&$key!='_token'&&$key!='ac'){
           if($key=='data_batismo' || $key=='data_nasci'){
-              if($value!='00/00/0000'){
+              if($value=='0000-00-00' || $value=='00/00/0000'){
+              }else{
                 $data[$key] = Qlib::dtBanco($value);
-              }//else{
-                //$data[$key] = '?';
-              //}
+              }
           }else{
             $data[$key] = $value;
           }
@@ -138,10 +198,11 @@ class GerenciarUsuarios extends Controller
      * @return \Illuminate\Http\Response
      */
      public function destroy($id)
-     {
-         usuario::where('id',$id)->delete();
-         return redirect()->route('usuarios.index');
-     }
+    {
+          usuario::where('id',$id)->delete();
+          return redirect()->route('usuarios.index');
+    }
+
 
     public function cardData($id){
         //$usuarios = usuario::all();

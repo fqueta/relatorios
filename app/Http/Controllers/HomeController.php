@@ -48,16 +48,20 @@ class HomeController extends Controller
 
         $mes = isset($_GET['mes'])?$_GET['mes']:date('m');
         //$relatorio = relatorio::where('mes','=',$mes)->orWhere('ano','=',$ano)->get();
-        $relatorio = DB::select("SELECT * FROM relatorios WHERE mes='$mes' AND ano='$ano'");
+        $relatorios = DB::select("SELECT DISTINCT mes,ano,id_publicador,obs FROM relatorios WHERE mes='$mes' AND ano='$ano' ");
         //echo '<pre>';
         //print_r($relatorio);
         //echo '</pre>';
+        $publicadores['relatorios'] = $relatorios;
         $totalPubMes = '';
         $totalVid = '';
-        $dPagina = [
-
+        $resumo = [
+            'publicadores'=>$publicadores
         ];
 
-        return view('home');
+        return view('home',['resumo'=>$resumo]);
+    }
+    public function resumo(){
+
     }
 }

@@ -12,7 +12,7 @@ class Qlib
         echo $data;
       }
   }
-  public function dtBanco($data) {
+  static function dtBanco($data) {
 			$data = trim($data);
 			if (strlen($data) != 10)
 			{
@@ -26,7 +26,7 @@ class Qlib
 			}
 			return $rs;
 	}
-  public function dataExibe($data) {
+  static function dataExibe($data) {
 			$val = trim(strlen($data));
 			$data = trim($data);$rs = false;
 			if($val == 10){
@@ -43,7 +43,7 @@ class Qlib
 
 			return $rs;
 	}
-  public function lib_json_array($json=''){
+  static function lib_json_array($json=''){
 		$ret = false;
 		if(is_array($json)){
 			$ret = $json;
@@ -59,7 +59,7 @@ class Qlib
 		}
 		return $ret;
 	}
-  public function isJson($string) {
+  static function isJson($string) {
 		$ret=false;
 		if (is_object(json_decode($string)) || is_array(json_decode($string)))
 		{

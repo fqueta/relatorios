@@ -33,6 +33,25 @@ class GerenciarRelatorios extends Controller
         //return redirect()->route('relatorios-index');
         $dados = $request->all();
         //$dados['enviado_por'] = '{"user_id":"4","nome":"Waldir Bertges","ip":"177.104.65.201"}';
+        $arr_obs = ['p'=>'','pa'=>'Pioneiro Auxiliar','pr'=>'Pioneiro Regular'];
+        if(isset($dados['id_publicador'])){
+          $dadosPub = DB::select("SELECT pioneiro FROM usuarios WHERE id='".$dados['id_publicador']."'");
+          if($dadosPub){
+            if(empty($dadosPub[0]->pioneiro)){
+              $privilegio = 'p';
+            }else{
+              $privilegio = trim($dadosPub[0]->pioneiro);
+            }
+          }else{
+            $privilegio = 'p';
+          }
+        }
+        //dd($dadosPub);
+        $dados['privilegio'] = $privilegio;
+        if($privilegio!='p'){
+          $dados['obs'] = $arr_obs[$privilegio].' '.$dados['obs'];
+        }
+        //dd($dados);
         $salvarRelatorios = relatorio::create($dados);
         /*if(isset($dados['var_cartao']) && !empty($dados['var_cartao'])){
             $json_cartao = base64_decode($dados['var_cartao']);
@@ -75,6 +94,23 @@ class GerenciarRelatorios extends Controller
         if($key!='var_cartao'&&$key!='ac'){
           $data[$key] = $value;
         }
+      }
+      $arr_obs = ['p'=>'','pa'=>'Pioneiro Auxiliar','pr'=>'Pioneiro Regular'];
+      if(isset($data['id_publicador'])){
+        $dadosPub = DB::select("SELECT pioneiro FROM usuarios WHERE id='".$data['id_publicador']."'");
+        if($dadosPub){
+          if(empty($dadosPub[0]->pioneiro)){
+            $privilegio = 'p';
+          }else{
+            $privilegio = trim($dadosPub[0]->pioneiro);
+          }
+        }else{
+          $privilegio = 'p';
+        }
+      }
+      $data['privilegio'] = $privilegio;
+      if($privilegio!='p'){
+        $data['obs'] = $arr_obs[$privilegio].' '.$data['obs'];
       }
       $salvarRelatorios=false;
       if(!empty($data)){
