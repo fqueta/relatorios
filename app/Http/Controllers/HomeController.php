@@ -47,19 +47,72 @@ class HomeController extends Controller
         }
 
         $mes = isset($_GET['mes'])?$_GET['mes']:date('m');
-        //$relatorio = relatorio::where('mes','=',$mes)->orWhere('ano','=',$ano)->get();
-        $relatorios = DB::select("SELECT DISTINCT mes,ano,id_publicador,obs FROM relatorios WHERE mes='$mes' AND ano='$ano' ");
+        if($mes == '01'){
+          $mes = '12';
+          $ano = date('Y') - 1;
+        }
+        $compleSql = " WHERE mes='$mes' AND ano='$ano' ";
+        //$relatorios = relatorio::where('mes','=',$mes)->orWhere('ano','=',$ano)->get();
+        //$complePub = " AND pri";
+        //$relatorios = DB::select("SELECT DISTINCT mes,ano,id_publicador,privilegio,obs FROM relatorios $compleSql");
+        $relatorios = DB::select("SELECT * FROM relatorios $compleSql");
         //echo '<pre>';
         //print_r($relatorio);
         //echo '</pre>';
+        $arr_resumo = [
+          'pr'=>['relatorios'=>0,'publicacao'=>0,'video'=>0,'hora'=>0,'revisita'=>0,'estudo'=>0],
+          'pa'=>['relatorios'=>0,'publicacao'=>0,'video'=>0,'hora'=>0,'revisita'=>0,'estudo'=>0],
+          'p'=>['relatorios'=>0,'publicacao'=>0,'video'=>0,'hora'=>0,'revisita'=>0,'estudo'=>0]
+        ];
+        $config_table = [
+          'tabelas'=>[
+            'pr'=>['label'=>'Prioneiros Relegulares'],
+            'pa'=>['label'=>'Prioneiros Auxiliares'],
+            'p'=>['label'=>'Publicadores'],
+          ],
+          'titulos'=>[
+            'publicacao'=>'Publicação','video'=>'Vídeos mostrados','hora'=>'Horas','revisita'=>'Revisitas','estudo'=>'Estudos bíblicos'
+          ]
+        ];
+        if($relatorios){
+          foreach ($relatorios as $key => $value) {
+            //if(is_array($value)){
+              foreach ($arr_resumo['p'] as $k => $v) {
+                if($value->privilegio=='pa'){
+                    if(isset($value->$k)){
+                        $arr_resumo[$value->privilegio][$k] += $value->$k;
+                    }
+                }elseif($value->privilegio=='pr'){
+                    if(isset($value->$k)){
+                        $arr_resumo[$value->privilegio][$k] += $value->$k;
+                        //$arr_resumo[$value->privilegio]['relatorios'] ++;
+                    }
+                }else{
+                    if(isset($value->$k)){
+                      $arr_resumo['p'][$k] += $value->$k;
+                      //$arr_resumo['p']['relatorios'] ++;
+                    }
+                }
+              }
+              if($value->privilegio=='pr'){
+                  $arr_resumo[$value->privilegio]['relatorios'] ++;
+              }elseif($value->privilegio=='pa'){
+                  $arr_resumo[$value->privilegio]['relatorios'] ++;
+              }else{
+                  $arr_resumo['p']['relatorios'] ++;
+
+              }
+          }
+        }
+        //dd($arr_resumo);
         $publicadores['relatorios'] = $relatorios;
+        $publicadores['total_relatorios']['geral'] = count($relatorios);
+        $publicadores['total_resumo'] = $arr_resumo;
+        $publicadores['config_table'] = $config_table;
         $totalPubMes = '';
         $totalVid = '';
-        $resumo = [
-            'publicadores'=>$publicadores
-        ];
-
-        return view('home',['resumo'=>$resumo]);
+        //$resumo = $publicadores;
+        return view('home',['resumo'=>$publicadores]);
     }
     public function resumo(){
 

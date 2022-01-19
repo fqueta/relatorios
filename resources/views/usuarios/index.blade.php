@@ -119,7 +119,7 @@
       <table class="table dataTable dtr-inline table-hover">
         <thead>
           <tr>
-            <!--<th>#</th>-->
+            <th>#</th>
             <th>Nome</th>
             <th>Ativo</th>
             <th>Obs</th>
@@ -129,7 +129,7 @@
         <tbody>
           @foreach($usuarios as $key => $usuario)
             <tr>
-              <!--<td> {{$usuario->id}} </td>-->
+              <td> {{$usuario->id}} </td>
               <td> {{$usuario->nome}} </td>
               <td> @if($usuario->ativo=='s') Sim @elseif($usuario->ativo=='n') Não @endif </td>
               <td> {{$usuario->obs}} </td>
@@ -177,7 +177,10 @@
               //alert('modal agora');
           }
           $(function(){
-              $('.dataTable').DataTable({ "paging":   false,});
+              $('.dataTable').DataTable({
+                "paging":   false,
+                stateSave: true
+              });
               $('.print-card').on('click',function(e){
                   openPageLink(e,$(this).attr('href'),$('#painel-ano').val());
               });

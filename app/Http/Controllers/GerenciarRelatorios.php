@@ -51,7 +51,6 @@ class GerenciarRelatorios extends Controller
         if($privilegio!='p'){
           $dados['obs'] = $arr_obs[$privilegio].' '.$dados['obs'];
         }
-        //dd($dados);
         $salvarRelatorios = relatorio::create($dados);
         /*if(isset($dados['var_cartao']) && !empty($dados['var_cartao'])){
             $json_cartao = base64_decode($dados['var_cartao']);

@@ -20,6 +20,7 @@ class Relatorio extends Model
         'hora',
         'revisita',
         'estudo',
+        'privilegio',
         'obs',
     ];
 }
