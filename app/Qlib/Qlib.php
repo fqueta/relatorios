@@ -78,7 +78,7 @@ class Qlib
   			return $mese;
   		}
 	}
-  public function totalReg($tabela, $condicao = false,$debug=false){
+  static function totalReg($tabela, $condicao = false,$debug=false){
 			//necessario
 			$sql = "SELECT COUNT(*) AS totalreg FROM {$tabela} $condicao";
 			if($debug)
