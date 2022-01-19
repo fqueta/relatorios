@@ -64,6 +64,7 @@ class HomeController extends Controller
           'pa'=>['relatorios'=>0,'publicacao'=>0,'video'=>0,'hora'=>0,'revisita'=>0,'estudo'=>0],
           'p'=>['relatorios'=>0,'publicacao'=>0,'video'=>0,'hora'=>0,'revisita'=>0,'estudo'=>0]
         ];
+        $mesExt = Qlib::Meses();
         $config_table = [
           'tabelas'=>[
             'pr'=>['label'=>'Prioneiros Relegulares'],
@@ -72,6 +73,11 @@ class HomeController extends Controller
           ],
           'titulos'=>[
             'publicacao'=>'Publicação','video'=>'Vídeos mostrados','hora'=>'Horas','revisita'=>'Revisitas','estudo'=>'Estudos bíblicos'
+          ],
+          'data'=>[
+            'titulo'=>'RESUMO DOS RELATORIOS DE '.$mesExt[$mes].' DE '.$ano,
+            'mes'=>$mes,
+            'ano'=>$ano,
           ]
         ];
         if($relatorios){

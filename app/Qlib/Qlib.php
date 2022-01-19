@@ -67,4 +67,12 @@ class Qlib
 		}
 		return $ret;
 	}
+  static function Meses($val=false){
+  		$mese = array('01'=>'JANEIRO','02'=>'FEVEREIRO','03'=>'MARÇO','04'=>'ABRIL','05'=>'MAIO','06'=>'JUNHO','07'=>'JULHO','08'=>'AGOSTO','09'=>'SETEMBRO','10'=>'OUTUBRO','11'=>'NOVEMBRO','12'=>'DEZEMBRO');
+  		if($val){
+  			return $mese[$val];
+  		}else{
+  			return $mese;
+  		}
+	}
 }

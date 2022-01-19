@@ -3,13 +3,15 @@
 @section('title', 'Painel')
 
 @section('content_header')
-    <h1>Painel</h1>
+    <!--<h1>Painel</h1>-->
 @stop
 
 @section('content')
     <!--<p>Welcome to this beautiful admin panel.</p>-->
     <div class="row">
-
+      <div class="col-md-12">
+        <h4>{{$resumo['config_table']['data']['titulo']}}</h5>
+      </div>
     @if(isset($resumo['total_resumo']))
     @foreach($resumo['total_resumo'] As $key=>$value)
 
@@ -17,7 +19,7 @@
       <table class="table table-bordered">
         <thead>
           <tr>
-            <th colspan="2" class="text-center"><h4>{{$resumo['config_table']['tabelas'][$key]['label']}}</h4></th>
+            <th colspan="2" class="text-center"><h5>{{$resumo['config_table']['tabelas'][$key]['label']}}</h5></th>
           </tr>
         </thead>
         <tbody>

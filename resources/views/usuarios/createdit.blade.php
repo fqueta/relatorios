@@ -101,13 +101,13 @@
           </label>
         </div>
       </div>
-      <div class="col-md-12">
+      <div class="col-md-12 mb-5">
         <div class="form-group">
           <label for="obs">Observação</label><br>
           <textarea name="obs" class="form-control" rows="8" cols="80">@if(isset($usuario['obs'])){{$usuario['obs']}}@elseif($usuario['ac']=='cad'){{old('obs')}}@endif</textarea>
         </div>
       </div>
-      <div class="col-md-12">
+      <div class="col-md-12 div-salvar">
         <div class=form-group"">
           <a href=" {{route('usuarios.index')}} " class="btn btn-light"> Voltar</a>
           <button type="submit" class="btn btn-primary">Enviar</button>
