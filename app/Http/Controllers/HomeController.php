@@ -51,7 +51,7 @@ class HomeController extends Controller
           $mes = '12';
           $ano = date('Y') - 1;
         }
-        $compleSql = " WHERE mes='$mes' AND ano='$ano' ";
+        $compleSql = " WHERE mes='$mes' AND ano='$ano' AND hora > '0'"; 
         //$relatorios = relatorio::where('mes','=',$mes)->orWhere('ano','=',$ano)->get();
         //$complePub = " AND pri";
         //$relatorios = DB::select("SELECT DISTINCT mes,ano,id_publicador,privilegio,obs FROM relatorios $compleSql");
@@ -106,7 +106,6 @@ class HomeController extends Controller
                   $arr_resumo[$value->privilegio]['relatorios'] ++;
               }else{
                   $arr_resumo['p']['relatorios'] ++;
-
               }
           }
         }
