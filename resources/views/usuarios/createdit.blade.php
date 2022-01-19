@@ -109,8 +109,11 @@
       </div>
       <div class="col-md-12 div-salvar">
         <div class=form-group"">
-          <a href=" {{route('usuarios.index')}} " class="btn btn-light"> Voltar</a>
-          <button type="submit" class="btn btn-primary">Enviar</button>
+          <a href=" {{route('usuarios.index')}} " class="btn btn-light"><i class="fa fa-chevron-left"></i> Voltar</a>
+          <a href="{{ route('usuarios.cartao',['id'=>$usuario['id']]) }}" title="Cartão do publicador" class="btn btn-light print-card">
+              <i class="fa fa-file-pdf"></i> Cartão
+           </a>
+          <button type="submit" class="btn btn-primary">Salvar <i class="fa fa-chevron-right"></i></button>
         </div>
       </div>
       @csrf
@@ -124,4 +127,11 @@
 
 @section('js')
     <script src=" {{url('/')}}/js/lib.js"></script>
+    <script type="text/javascript">
+          $(function(){
+            $('a.print-card').on('click',function(e){
+                openPageLink(e,$(this).attr('href'),"{{date('Y')}}");
+            });
+          });
+    </script>
 @stop

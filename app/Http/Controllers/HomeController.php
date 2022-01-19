@@ -51,7 +51,7 @@ class HomeController extends Controller
           $mes = '12';
           $ano = date('Y') - 1;
         }
-        $compleSql = " WHERE mes='$mes' AND ano='$ano' AND hora > '0'"; 
+        $compleSql = " WHERE mes='$mes' AND ano='$ano' AND hora > '0'";
         //$relatorios = relatorio::where('mes','=',$mes)->orWhere('ano','=',$ano)->get();
         //$complePub = " AND pri";
         //$relatorios = DB::select("SELECT DISTINCT mes,ano,id_publicador,privilegio,obs FROM relatorios $compleSql");
@@ -62,7 +62,8 @@ class HomeController extends Controller
         $arr_resumo = [
           'pr'=>['relatorios'=>0,'publicacao'=>0,'video'=>0,'hora'=>0,'revisita'=>0,'estudo'=>0],
           'pa'=>['relatorios'=>0,'publicacao'=>0,'video'=>0,'hora'=>0,'revisita'=>0,'estudo'=>0],
-          'p'=>['relatorios'=>0,'publicacao'=>0,'video'=>0,'hora'=>0,'revisita'=>0,'estudo'=>0]
+          'p'=>['relatorios'=>0,'publicacao'=>0,'video'=>0,'hora'=>0,'revisita'=>0,'estudo'=>0],
+          'tg'=>['relatorios'=>0,'publicacao'=>0,'video'=>0,'hora'=>0,'revisita'=>0,'estudo'=>0]
         ];
         $mesExt = Qlib::Meses();
         $config_table = [
@@ -70,6 +71,7 @@ class HomeController extends Controller
             'pr'=>['label'=>'Prioneiros Relegulares'],
             'pa'=>['label'=>'Prioneiros Auxiliares'],
             'p'=>['label'=>'Publicadores'],
+            'tg'=>['label'=>'Totais'],
           ],
           'titulos'=>[
             'publicacao'=>'Publicação','video'=>'Vídeos mostrados','hora'=>'Horas','revisita'=>'Revisitas','estudo'=>'Estudos bíblicos'
@@ -81,24 +83,32 @@ class HomeController extends Controller
           ]
         ];
         if($relatorios){
+          //dd($arr_resumo['tg']);
           foreach ($relatorios as $key => $value) {
             //if(is_array($value)){
               foreach ($arr_resumo['p'] as $k => $v) {
-                if($value->privilegio=='pa'){
-                    if(isset($value->$k)){
-                        $arr_resumo[$value->privilegio][$k] += $value->$k;
-                    }
-                }elseif($value->privilegio=='pr'){
-                    if(isset($value->$k)){
-                        $arr_resumo[$value->privilegio][$k] += $value->$k;
-                        //$arr_resumo[$value->privilegio]['relatorios'] ++;
-                    }
-                }else{
-                    if(isset($value->$k)){
-                      $arr_resumo['p'][$k] += $value->$k;
-                      //$arr_resumo['p']['relatorios'] ++;
-                    }
-                }
+                  if($value->privilegio=='pa'){
+                      if(isset($value->$k)){
+                          $arr_resumo[$value->privilegio][$k] += $value->$k;
+                          if(isset($arr_resumo['tg'][$k])){
+                            $arr_resumo['tg'][$k] += $value->$k;
+                          }
+                      }
+                  }elseif($value->privilegio=='pr'){
+                      if(isset($value->$k)){
+                          $arr_resumo[$value->privilegio][$k] += $value->$k;
+                          if(isset($arr_resumo['tg'][$k])){
+                            $arr_resumo['tg'][$k] += $value->$k;
+                          }
+                      }
+                  }else{
+                      if(isset($value->$k)){
+                        $arr_resumo['p'][$k] += $value->$k;
+                        if(isset($arr_resumo['tg'][$k])){
+                          $arr_resumo['tg'][$k] += $value->$k;
+                        }
+                      }
+                  }
               }
               if($value->privilegio=='pr'){
                   $arr_resumo[$value->privilegio]['relatorios'] ++;
@@ -107,13 +117,22 @@ class HomeController extends Controller
               }else{
                   $arr_resumo['p']['relatorios'] ++;
               }
+              $arr_resumo['tg']['relatorios'] ++;
           }
         }
         //dd($arr_resumo);
+        $publicadores_ativos = Qlib::totalReg('usuarios',"WHERE inativo='n'");
+        $publicadores_inativos = Qlib::totalReg('usuarios',"WHERE inativo='s'");
+        $publicadores_todos = Qlib::totalReg('usuarios',"");
         $publicadores['relatorios'] = $relatorios;
         $publicadores['total_relatorios']['geral'] = count($relatorios);
         $publicadores['total_resumo'] = $arr_resumo;
         $publicadores['config_table'] = $config_table;
+        $publicadores['total_cards'] = [
+            ['valor'=>$publicadores_todos,'url'=>'todos','label'=>'Publicadores','color'=>'light','link'=>''],
+            ['valor'=>$publicadores_ativos,'url'=>'ativos','label'=>'Publicadores Ativos','color'=>'primary','link'=>'?fil[inativo]=n'],
+            ['valor'=>$publicadores_inativos,'url'=>'inativos','label'=>'Publicadores Inativos','color'=>'secondary','link'=>'?fil[inativo]=s'],
+        ];
         $totalPubMes = '';
         $totalVid = '';
         //$resumo = $publicadores;

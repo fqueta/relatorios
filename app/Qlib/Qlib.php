@@ -1,5 +1,8 @@
 <?php
 namespace App\Qlib;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
 
 class Qlib
 {
@@ -74,5 +77,17 @@ class Qlib
   		}else{
   			return $mese;
   		}
+	}
+  public function totalReg($tabela, $condicao = false,$debug=false){
+			//necessario
+			$sql = "SELECT COUNT(*) AS totalreg FROM {$tabela} $condicao";
+			if($debug)
+				 echo $sql.'<br>';
+			//return $sql;
+			$td_registros = DB::select($sql);
+			if(isset($td_registros[0]->totalreg) && $td_registros[0]->totalreg > 0){
+				return $td_registros[0]->totalreg;
+			}else
+				return 0;
 	}
 }
