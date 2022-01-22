@@ -110,9 +110,11 @@
       <div class="col-md-12 div-salvar">
         <div class=form-group"">
           <a href=" {{route('usuarios.index')}} " class="btn btn-light"><i class="fa fa-chevron-left"></i> Voltar</a>
+          @if(isset($usuario['id']))
           <a href="{{ route('usuarios.cartao',['id'=>$usuario['id']]) }}" title="Cartão do publicador" class="btn btn-light print-card">
               <i class="fa fa-file-pdf"></i> Cartão
            </a>
+           @endif
           <button type="submit" class="btn btn-primary">Salvar <i class="fa fa-chevron-right"></i></button>
         </div>
       </div>

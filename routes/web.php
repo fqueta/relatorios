@@ -17,7 +17,7 @@ use App\Http\Controllers\GerenciarRelatorios;
 |
 */
 
-Route::prefix('grupos')->group(function(){
+Route::middleware(['auth'])->prefix('grupos')->group(function(){
     Route::get('/',[GerenciarGrupo::class,'index'])->name('grupos-index');
     Route::get('/create',[GerenciarGrupo::class,'create'])->name('grupos-create');
     Route::post('/',[GerenciarGrupo::class,'store'])->name('grupos-store');
@@ -58,9 +58,13 @@ Route::prefix('admin')->group(function(){
 });
 
 Route::fallback(function () {
-    return "Erro!";
+    return "Página não encontrada!";
 });
 Route::get('/teste',[App\Http\Controllers\HomeController::class,'teste'])->name('teste');
+
 Auth::routes();
 
+Route::get('/',function(){
+  return redirect()->route('login');
+});
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
