@@ -61,57 +61,61 @@
         <a href="{{ route('usuarios.create') }}" class="btn btn-success"><i class="fa fa-plus"></i> Novo publicador </a>
     </div>
     <div class="col-md-12">
-    <form action="{{ route('usuarios.index') }}" method="GET">
-        <div class="form-row">
-          <div class="form-group col-md-2">
-            <label for="inputState">Situação</label>
-            <select id="inputState" title="Ativo ou inativo" name="fil[inativo]" class="form-control">
-              <option value="t" @if(isset($_GET['fil']['inativo'])&&$_GET['fil']['inativo']=='t') selected @endif>Todos</option>
-              <option value="n" @if(isset($_GET['fil']['inativo'])&&$_GET['fil']['inativo']=='n') selected @endif>Ativo</option>
-              <option value="s" @if(isset($_GET['fil']['inativo'])&&$_GET['fil']['inativo']=='s') selected @endif>Inativo</option>
-            </select>
-          </div>
-          @if(isset($grupos))
-          <div class="form-group col-md-3">
-            <label for="inputState">grupo</label>
-            <select id="inputState" name="fil[id_grupo]" class="form-control">
-              <option selected value="">Todos grupos</option>
-              @foreach ($grupos as $k => $grupo)
-              <option @if(isset($_GET['fil']['id_grupo'])&&$_GET['fil']['id_grupo']==$grupo->id) selected @endif value="{{$grupo->id}}">{{$grupo->grupo}}</option>
-              @endforeach
-            </select>
-          </div>
-          @endif
-          <div class="form-group col-md-4">
-            <label for="inputState">Privilegio</label>
-            <div class="btn-group" data-toggle="buttons">
-              <label class="btn btn-secondary active">
-                <input type="checkbox" name="fil[priv][0]" class="d-none" value="p" id="option1" autocomplete="off"  @if(isset($_GET['fil']['priv'][0])&&$_GET['fil']['priv'][0]=='p') checked @endif> Publicador
-              </label>
-              <label class="btn btn-secondary">
-                <input type="checkbox" name="fil[priv][1]" @if(isset($_GET['fil']['priv'][1])&&$_GET['fil']['priv'][1]=='pa') checked @endif class="d-none" value="pa" id="option2" autocomplete="off"> P. Auxiliar
-              </label>
-              <label class="btn btn-secondary">
-                <input type="checkbox" name="fil[priv][2]" @if(isset($_GET['fil']['priv'][2])&&$_GET['fil']['priv'][2]=='pr') checked @endif class="d-none" value="pr" id="option3" autocomplete="off"> P. Regular
-              </label>
-            </div>
-          </div>
-          <div class="form-group col-md-3">
-            <label for="inputState">Desiginação</label>
-            <div class="btn-group" data-toggle="buttons">
-              <label class="btn btn-secondary">
-                <input type="checkbox" @if(isset($_GET['fil']['func'][0])&&$_GET['fil']['func'][0]=='anc') checked @endif name="fil[func][0]" class="d-none" value="anc" id="f-option1" autocomplete="off" > Ancião
-              </label>
-              <label class="btn btn-secondary">
-                <input type="checkbox" @if(isset($_GET['fil']['func'][1])&&$_GET['fil']['func'][1]=='sm') checked @endif name="fil[func][1]" class="d-none" value="sm" id="f-option2" autocomplete="off"> S. ministerial
-              </label>
-            </div>
+      <div class="card">
+        <div class="card-body">
+            <form action="{{ route('usuarios.index') }}" method="GET">
+                <div class="form-row">
+                  <div class="form-group col-md-2">
+                    <label for="inputState">Situação</label>
+                    <select id="inputState" title="Ativo ou inativo" name="fil[inativo]" class="form-control">
+                      <option value="t" @if(isset($_GET['fil']['inativo'])&&$_GET['fil']['inativo']=='t') selected @endif>Todos</option>
+                      <option value="n" @if(isset($_GET['fil']['inativo'])&&$_GET['fil']['inativo']=='n') selected @endif>Ativo</option>
+                      <option value="s" @if(isset($_GET['fil']['inativo'])&&$_GET['fil']['inativo']=='s') selected @endif>Inativo</option>
+                    </select>
+                  </div>
+                  @if(isset($grupos))
+                  <div class="form-group col-md-3">
+                    <label for="inputState">grupo</label>
+                    <select id="inputState" name="fil[id_grupo]" class="form-control">
+                      <option selected value="">Todos grupos</option>
+                      @foreach ($grupos as $k => $grupo)
+                      <option @if(isset($_GET['fil']['id_grupo'])&&$_GET['fil']['id_grupo']==$grupo->id) selected @endif value="{{$grupo->id}}">{{$grupo->grupo}}</option>
+                      @endforeach
+                    </select>
+                  </div>
+                  @endif
+                  <div class="form-group col-md-4">
+                    <label for="inputState">Privilegio</label>
+                    <div class="btn-group" data-toggle="buttons">
+                      <label class="btn btn-secondary active">
+                        <input type="checkbox" name="fil[priv][0]" class="d-none" value="p" id="option1" autocomplete="off"  @if(isset($_GET['fil']['priv'][0])&&$_GET['fil']['priv'][0]=='p') checked @endif> Publicador
+                      </label>
+                      <label class="btn btn-secondary">
+                        <input type="checkbox" name="fil[priv][1]" @if(isset($_GET['fil']['priv'][1])&&$_GET['fil']['priv'][1]=='pa') checked @endif class="d-none" value="pa" id="option2" autocomplete="off"> P. Auxiliar
+                      </label>
+                      <label class="btn btn-secondary">
+                        <input type="checkbox" name="fil[priv][2]" @if(isset($_GET['fil']['priv'][2])&&$_GET['fil']['priv'][2]=='pr') checked @endif class="d-none" value="pr" id="option3" autocomplete="off"> P. Regular
+                      </label>
+                    </div>
+                  </div>
+                  <div class="form-group col-md-3">
+                    <label for="inputState">Desiginação</label>
+                    <div class="btn-group" data-toggle="buttons">
+                      <label class="btn btn-secondary">
+                        <input type="checkbox" @if(isset($_GET['fil']['func'][0])&&$_GET['fil']['func'][0]=='anc') checked @endif name="fil[func][0]" class="d-none" value="anc" id="f-option1" autocomplete="off" > Ancião
+                      </label>
+                      <label class="btn btn-secondary">
+                        <input type="checkbox" @if(isset($_GET['fil']['func'][1])&&$_GET['fil']['func'][1]=='sm') checked @endif name="fil[func][1]" class="d-none" value="sm" id="f-option2" autocomplete="off"> S. ministerial
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Filtrar</button>
+                </div>
+            </form>
           </div>
         </div>
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary">Filtrar</button>
-        </div>
-    </form>
   </div>
 
     <div class="col-md-12 table-responsive">
@@ -122,7 +126,8 @@
               <table class="table dataTable dtr-inline table-hover">
                 <thead>
                   <tr>
-                    <th>#</th>
+                    <th><input type="checkbox" name="check-all" value=""></th>
+                    <th>Id</th>
                     <th>Nome</th>
                     <th>Ativo</th>
                     <th>Obs</th>
@@ -132,9 +137,10 @@
                 <tbody>
                   @foreach($usuarios as $key => $usuario)
                     <tr>
+                      <td> <input type="checkbox" class="checkbox-table" name="check_{{$usuario->id}}" value="s"> </td>
                       <td> {{$usuario->id}} </td>
                       <td> {{$usuario->nome}} </td>
-                      <td> @if($usuario->ativo=='s') Sim @elseif($usuario->ativo=='n') Não @endif </td>
+                      <td> @if($usuario->inativo=='n') Sim @elseif($usuario->inativo=='s') Não @endif </td>
                       <td> {{$usuario->obs}} </td>
                       <td class="d-flex text-right">
                          <a href="{{ route('usuarios.edit',['id'=>$usuario->id]) }}" class="btn btn-light mr-2">

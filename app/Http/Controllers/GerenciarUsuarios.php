@@ -77,7 +77,7 @@ class GerenciarUsuarios extends Controller
         $sql = "SELECT * FROM usuarios $compleSql ORDER BY nome ASC";
         $usuarios = DB::select($sql);
       }else{
-        $usuarios = usuario::all();
+        $usuarios = usuario::OrderBy('nome','asc')->get();
       }
       $grupos = grupo::all();
       $title = 'Todos os publicadores';
