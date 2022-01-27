@@ -17,7 +17,7 @@ use App\Http\Controllers\GerenciarRelatorios;
 |
 */
 
-Route::middleware(['auth'])->prefix('grupos')->group(function(){
+Route::middleware(['permission:admin|dev'])->prefix('grupos')->group(function(){
     Route::get('/',[GerenciarGrupo::class,'index'])->name('grupos-index');
     Route::get('/create',[GerenciarGrupo::class,'create'])->name('grupos-create');
     Route::post('/',[GerenciarGrupo::class,'store'])->name('grupos-store');
@@ -26,7 +26,7 @@ Route::middleware(['auth'])->prefix('grupos')->group(function(){
     Route::delete('/{id}',[GerenciarGrupo::class,'destroy'])->where('id', '[0-9]+')->name('grupos-destroy');
 });
 
-Route::prefix('usuarios')->group(function(){
+Route::middleware(['permission:admin|dev'])->prefix('publicadores')->group(function(){
     Route::get('/',[GerenciarUsuarios::class,'index'])->name('usuarios.index');
     Route::get('/create',[GerenciarUsuarios::class,'create'])->name('usuarios.create');
     Route::post('/',[GerenciarUsuarios::class,'store'])->name('usuarios.store');
@@ -55,6 +55,14 @@ Route::prefix('relatorios')->group(function(){
 Route::prefix('admin')->group(function(){
   Route::get('/profile',[AdminConfigController::class,'index'])->name('admin.profile');
   Route::get('/password',[AdminConfigController::class,'password'])->name('admin.password');
+});
+Route::middleware(['permission:admin|dev'])->prefix('users')->group(function(){
+    Route::get('/',[UserController::class,'index'])->name('users.index');
+    Route::get('/create',[UserController::class,'create'])->name('users.create');
+    Route::post('/',[UserController::class,'store'])->name('users.store');
+    Route::get('/{id}/edit',[UserController::class,'edit'])->where('id', '[0-9]+')->name('users.edit');
+    Route::put('/{id}',[UserController::class,'update'])->where('id', '[0-9]+')->name('users.update');
+    Route::delete('/{id}',[UserController::class,'destroy'])->where('id', '[0-9]+')->name('users.destroy');
 });
 
 Route::fallback(function () {

@@ -8,6 +8,11 @@ use App\Qlib\Qlib;
 
 class GerenciarGrupo extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['permission:admin']);
+    }
+
     public function index()
     {
         $grupos = grupo::all();

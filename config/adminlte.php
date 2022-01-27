@@ -1,6 +1,6 @@
 <?php
 
-return [
+$config = [
 
     /*
     |--------------------------------------------------------------------------
@@ -319,53 +319,7 @@ return [
             'url'        => '#',
         ],
     ],*/
-    'menu' => [
-        'PUBLICADORES',
-        [
-            'text' => 'Adicionar publicador',
-            'url'  => 'usuarios/create',
-            'icon' => 'fas fa-fw fa-plus',
-        ],
-        [
-            'text' => 'Todos publicadores',
-            'url'  => 'usuarios',
-            'icon' => 'fas fa-fw fa-users',
-        ]/*,
-        [
-            'text'   => 'Todos Cartões',
-            'url'    => 'usuarios/cards',
-            'icon' => 'fas fa-fw fa-file-pdf',
-        ]*/,
-        'GRUPOS',
-        [
-            'text' => 'Todos grupos',
-            'url'  => 'grupos',
-            'icon' => 'fas fa-fw fa-users',
-        ]/*,
-        [
-            'text' => 'Adicionar grupo',
-            'url'  => 'grupos/create',
-            'icon' => 'fas fa-fw fa-plus',
-        ],
-        [
-            'header' => 'ACCOUNT SETTINGS',
-        ],
-        [
-            'text'  => 'Profile',
-            'route' => 'admin.profile',
-            'icon'  => 'fas fa-fw fa-user',
-        ],
-        [
-            'text'  => 'Change Password',
-            'route' => 'admin.password',
-            'icon'  => 'fas fa-fw fa-lock',
-        ],[
-            'text'   => 'Site',
-            'url'    => '/',
-            'icon'  => 'fas fa-fw fa-globe',
-            //'target' => '_blank',
-        ]*/
-    ],
+
     /*
     |--------------------------------------------------------------------------
     | Menu Filters
@@ -520,3 +474,34 @@ return [
 
     'livewire' => false,
 ];
+$config['menu'] = [
+      [
+          'text' => 'Painel',
+          'url'  => '/',
+          'icon' => 'fas fa-chart-line',
+      ],
+      'PUBLICADORES',
+      [
+          'text' => 'Adicionar publicador',
+          'url'  => 'publicadores/create',
+          'icon' => 'fas fa-fw fa-plus',
+      ],
+      [
+          'text' => 'Todos publicadores',
+          'url'  => 'publicadores',
+          'icon' => 'fas fa-fw fa-user',
+      ],
+      'GRUPOS',
+      [
+          'text' => 'Todos grupos',
+          'url'  => 'grupos',
+          'icon' => 'fas fa-fw fa-users',
+      ],
+      'CONFIGURAÇÕES',
+      [
+          'text' => 'Usuários',
+          'url'  => 'users/',
+          'icon' => 'fas fa-fw fa-user-friends',
+      ],
+  ];
+return $config;

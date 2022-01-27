@@ -19,7 +19,7 @@ class GerenciarUsuarios extends Controller
      */
      public function __construct()
      {
-         $this->middleware('auth');
+         $this->middleware(['role_or_permission:admin']);
      }
 
     public function index()
