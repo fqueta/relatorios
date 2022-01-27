@@ -57,6 +57,10 @@ class UserController extends Controller
 
     public function store(request $request)
     {
+        $validatedData = $request->validate([
+          'name' => ['required','string'],
+          'email' => ['required', 'string', 'email', 'max:255', 'unique:users']
+        ]);
         $dados = $request->all();
         $dados['password'] = Hash::make($dados['password']);
         //dd($dados);
@@ -86,7 +90,10 @@ class UserController extends Controller
         }
     }
     public function update(Request $request,$id){
-
+        $validatedData = $request->validate([
+          'name' => ['required','string'],
+          'email' => ['required', 'string', 'email', 'max:255', 'unique:users']
+        ]);
         $datas = $request->all();
         $data = [];
         foreach ($datas as $key => $value) {
@@ -103,7 +110,6 @@ class UserController extends Controller
         }
         $ds = $data;
         unset($ds['permissao']);
-        //User::where('id',$id)->update($ds)->givePermissionTo($data['permissao']);
         User::where('id',$id)->update($ds);
         $mudarPermissao = DB::table('model_has_permissions')->where('model_id','=',$id)->update(['permission_id'=>$data['permissao']]);
         return redirect()->route('users.index');
