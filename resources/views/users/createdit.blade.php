@@ -11,16 +11,13 @@
     @method('PUT')
     @endif
     <div class="row">
-      @if(isset($roles) && !empty($roles))
       <div class="form-group col-md-12">
         <label for="role">Tipo de usuário</label>
-        <select class="form-control" name="role">
-          @foreach($roles As $k=>$role)
-          <option @if(isset($users['role_id'])&&$users['role_id']==$role->id) selected @endif value="{{$role->id}}">{{$role->name}}</option>
-          @endforeach
+        <select class="form-control" name="profile">
+          <option @if(isset($users['profile'])&&$users['profile']=='administrator') selected @endif value="administrator">Adminstrador</option>
+          <option @if(isset($users['profile'])&&$users['profile']=='user') selected @endif value="user">Usuário</option>
         </select>
       </div>
-      @endif
       <div class="form-group col-md-12">
           <label for="nome">Nome completo</label>
           <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" aria-describedby="name" placeholder="Nome do usuário" value="@if(isset($users['name'])){{$users['name']}}@elseif($users['ac']=='cad'){{old('name')}}@endif" />
@@ -43,14 +40,22 @@
               <div class="alert alert-danger">{{ $message }}</div>
           @enderror
       </div>
-      <div class="form-group col-md-4">
+      <div class="form-group col-md-6">
           <label for="ativo">Status</label>
-          <select class="form-control" name="ativo">
-            <option value="actived" @if(isset($usuario['status'])&&$usuario['status']=='actived') selected @endif >Ativado</option>
-            <option value="inactived"  @if(isset($usuario['status'])&&$usuario['status']=='inactived') selected @endif >Inativo</option>
-            <option value="pre_registred"  @if(isset($usuario['status'])&&$usuario['status']=='pre_registred') selected @endif >Pré cadastrado</option>
+          <select class="form-control" name="status">
+            <option value="actived" @if(isset($users['status'])&&$users['status']=='actived') selected @endif >Ativado</option>
+            <option value="inactived"  @if(isset($users['status'])&&$users['status']=='inactived') selected @endif >Inativo</option>
+            <option value="pre_registred"  @if(isset($users['status'])&&$users['status']=='pre_registred') selected @endif >Pré cadastrado</option>
           </select>
       </div>
+      <div class="form-group col-md-6">
+          <label for="ativo">Genero</label>
+          <select class="form-control" name="gender">
+            <option value="male" @if(isset($users['gender'])&&$users['gender']=='male') selected @endif >Masculino</option>
+            <option value="female"  @if(isset($users['gender'])&&$users['gender']=='female') selected @endif >Feminino</option>
+          </select>
+      </div>
+
       <div class="col-md-12 div-salvar">
         <div class=form-group"">
           <a href=" {{route('users.index')}} " class="btn btn-light"><i class="fa fa-chevron-left"></i> Voltar</a>

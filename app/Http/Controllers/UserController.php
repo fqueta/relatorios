@@ -136,7 +136,6 @@ class UserController extends Controller
           }
         }
         $ds = $data;
-        unset($ds['role']);
         User::where('id',$id)->update($ds);
         //$mudarPermissao = DB::table('model_has_roles')->where('model_id','=',$id)->update(['role_id'=>$data['role']]);
         return redirect()->route('users.index');
