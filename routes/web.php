@@ -17,7 +17,7 @@ use App\Http\Controllers\GerenciarRelatorios;
 |
 */
 
-Route::middleware(['permission:admin|dev'])->prefix('grupos')->group(function(){
+Route::prefix('grupos')->group(function(){
     Route::get('/',[GerenciarGrupo::class,'index'])->name('grupos-index');
     Route::get('/create',[GerenciarGrupo::class,'create'])->name('grupos-create');
     Route::post('/',[GerenciarGrupo::class,'store'])->name('grupos-store');
@@ -26,7 +26,7 @@ Route::middleware(['permission:admin|dev'])->prefix('grupos')->group(function(){
     Route::delete('/{id}',[GerenciarGrupo::class,'destroy'])->where('id', '[0-9]+')->name('grupos-destroy');
 });
 
-Route::middleware(['permission:admin|dev'])->prefix('publicadores')->group(function(){
+Route::prefix('publicadores')->group(function(){
     Route::get('/',[GerenciarUsuarios::class,'index'])->name('usuarios.index');
     Route::get('/create',[GerenciarUsuarios::class,'create'])->name('usuarios.create');
     Route::post('/',[GerenciarUsuarios::class,'store'])->name('usuarios.store');
@@ -56,10 +56,17 @@ Route::prefix('admin')->group(function(){
   Route::get('/profile',[AdminConfigController::class,'index'])->name('admin.profile');
   Route::get('/password',[AdminConfigController::class,'password'])->name('admin.password');
 });
-Route::middleware(['permission:admin|dev'])->prefix('users')->group(function(){
+Route::prefix('users')->group(function(){
     Route::get('/',[UserController::class,'index'])->name('users.index');
+
+    Route::get('/ajax',[UserController::class,'paginacaoAjax'])->name('users.ajax');
+    Route::get('/lista.ajax',function(){
+        return view('users.index_ajax');
+    });
+
     Route::get('/create',[UserController::class,'create'])->name('users.create');
     Route::post('/',[UserController::class,'store'])->name('users.store');
+    Route::get('/{id}/show',[UserController::class,'show'])->where('id', '[0-9]+')->name('users.show');
     Route::get('/{id}/edit',[UserController::class,'edit'])->where('id', '[0-9]+')->name('users.edit');
     Route::put('/{id}',[UserController::class,'update'])->where('id', '[0-9]+')->name('users.update');
     Route::delete('/{id}',[UserController::class,'destroy'])->where('id', '[0-9]+')->name('users.destroy');
@@ -69,6 +76,7 @@ Route::fallback(function () {
     return "Página não encontrada!";
 });
 Route::get('/teste',[App\Http\Controllers\HomeController::class,'teste'])->name('teste');
+Route::post('/upload',[App\Http\Controllers\UploadFile::class,'upload'])->name('teste.upload');
 
 Auth::routes();
 

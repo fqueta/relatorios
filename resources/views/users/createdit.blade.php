@@ -11,12 +11,12 @@
     @method('PUT')
     @endif
     <div class="row">
-      @if(isset($permissions) && !empty($permissions))
+      @if(isset($roles) && !empty($roles))
       <div class="form-group col-md-12">
-        <label for="permissao">Permissão</label>
-        <select class="form-control" name="permissao">
-          @foreach($permissions As $k=>$permission)
-          <option @if(isset($users['permission_id'])&&$users['permission_id']==$permission->id) selected @endif value="{{$permission->id}}">{{$permission->name}}</option>
+        <label for="role">Tipo de usuário</label>
+        <select class="form-control" name="role">
+          @foreach($roles As $k=>$role)
+          <option @if(isset($users['role_id'])&&$users['role_id']==$role->id) selected @endif value="{{$role->id}}">{{$role->name}}</option>
           @endforeach
         </select>
       </div>
@@ -42,6 +42,14 @@
           @error('password')
               <div class="alert alert-danger">{{ $message }}</div>
           @enderror
+      </div>
+      <div class="form-group col-md-4">
+          <label for="ativo">Status</label>
+          <select class="form-control" name="ativo">
+            <option value="actived" @if(isset($usuario['status'])&&$usuario['status']=='actived') selected @endif >Ativado</option>
+            <option value="inactived"  @if(isset($usuario['status'])&&$usuario['status']=='inactived') selected @endif >Inativo</option>
+            <option value="pre_registred"  @if(isset($usuario['status'])&&$usuario['status']=='pre_registred') selected @endif >Pré cadastrado</option>
+          </select>
       </div>
       <div class="col-md-12 div-salvar">
         <div class=form-group"">

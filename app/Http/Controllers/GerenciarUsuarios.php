@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
+use App\Models\User;
 use App\Models\usuario;
 use App\Models\grupo;
 use App\Models\Relatorio;
@@ -17,13 +18,15 @@ class GerenciarUsuarios extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-     public function __construct()
+     protected $user;
+     public function __construct(User $user)
      {
-         $this->middleware(['role_or_permission:admin']);
+         $this->middleware('auth');
+         $this->user = $user;
      }
-
-    public function index()
+    public function index(User $user)
     {
+      $this->authorize('is_admin', $user);
       /*
       $_GET['ano'] = isset($_GET['ano'])?$_GET['ano']:date('Y');
       if(isset($_GET['ano']) && !empty($_GET['ano'])){
@@ -90,8 +93,9 @@ class GerenciarUsuarios extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(User $user)
     {
+        $this->authorize('is_admin', $user);
         $title = 'Cadastrar publicador';
         $titulo = $title;
         $grupos = grupo::all();

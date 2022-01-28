@@ -477,31 +477,35 @@ $config = [
 $config['menu'] = [
       [
           'text' => 'Painel',
-          'url'  => '/',
+          'url'  => 'home',
           'icon' => 'fas fa-chart-line',
       ],
+      /*
       'PUBLICADORES',
       [
           'text' => 'Adicionar publicador',
           'url'  => 'publicadores/create',
           'icon' => 'fas fa-fw fa-plus',
-      ],
+      ],*/
       [
           'text' => 'Todos publicadores',
           'url'  => 'publicadores',
           'icon' => 'fas fa-fw fa-user',
-      ],
-      'GRUPOS',
+          'can'  => 'is_admin',
+      ],/*
+      'GRUPOS',*/
       [
           'text' => 'Todos grupos',
           'url'  => 'grupos',
           'icon' => 'fas fa-fw fa-users',
-      ],
-      'CONFIGURAÇÕES',
+          'can'  => 'is_admin',
+      ],/*
+      'CONFIGURAÇÕES',*/
       [
           'text' => 'Usuários',
           'url'  => 'users/',
           'icon' => 'fas fa-fw fa-user-friends',
+          'can'  => 'is_admin',
       ],
   ];
 return $config;

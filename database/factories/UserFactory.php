@@ -12,28 +12,51 @@ class UserFactory extends Factory
      *
      * @return array
      */
-    public function definition()
-    {
-        return [
-            'name' => $this->faker->name(),
-            'email' => $this->faker->unique()->safeEmail(),
-            'email_verified_at' => now(),
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-            'remember_token' => Str::random(10),
-        ];
-    }
+     public function definition()
+     {
+         $email = $this->faker->unique()->safeEmail();
+         $gender = $this->getGender();
+         return [
+             'name' => $this->faker->name($gender),
+             'email' => $email,
+             'email_verified_at' => now(),
+             'password' => bcrypt($email), // email
+             'remember_token' => Str::random(10),
+             'status' => $this->getStatus(),
+             'gender' => $gender,
+             'profile' => $this->getProfile(),
+         ];
+     }
 
-    /**
-     * Indicate that the model's email address should be unverified.
-     *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
-     */
-    public function unverified()
-    {
-        return $this->state(function (array $attributes) {
-            return [
-                'email_verified_at' => null,
-            ];
-        });
-    }
+     /**
+      * Indicate that the model's email address should be unverified.
+      *
+      * @return \Illuminate\Database\Eloquent\Factories\Factory
+      */
+     public function unverified()
+     {
+         return $this->state(function (array $attributes) {
+             return [
+                 'email_verified_at' => null,
+             ];
+         });
+     }
+
+     private function getStatus() : string {
+         $statuses = ['actived','inactived','pre_registred'];
+         shuffle($statuses);
+         return $statuses[0];
+     }
+
+     private function getGender() : string {
+         $genders = ['male','female'];
+         shuffle($genders);
+         return $genders[0];
+     }
+
+     private function getProfile() : string {
+         $profiles = ['administrator','user'];
+         shuffle($profiles);
+         return $profiles[0];
+     }
 }

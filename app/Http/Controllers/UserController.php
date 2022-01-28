@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use stdClass;
 use App\Qlib\Qlib;
 use App\Http\Requests\StorePostRequest;
 use Illuminate\Http\Request;
@@ -10,49 +11,54 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-
+use DataTables;
 
 class UserController extends Controller
 {
-    /*
-    protected function validator(array $data)
+    protected $user;
+    public function __construct(User $user)
     {
-        return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
+        $this->middleware('auth');
+        $this->user = $user;
     }
-    */
-    public function index()
+    public function index(User $user)
     {
         //$Users = DB::table('users')->join('model_has_permissions','users.id','=','model_has_permissions.model_id')->get();
-        $Users = User::all();
+        //$Users = User::all();
+        $this->authorize('is_admin', $user);
         $title = 'Todos os Usuários';
         $titulo = $title;
-        return view('users.index',['users'=>$Users,'title'=>$title,'titulo'=>$titulo]);
+        $user_counters = new stdClass;
+        $user_counters->all_users = $this->user->all()->count();
+        $user_counters->actived_users = $this->user->where('status','actived')->count();
+        $user_counters->pre_registred_users = $this->user->where('status','pre_registred')->count();
+        $user_counters->inactived_users = $this->user->where('status','inactived')->count();
+        $user_counters->male_users = $this->user->where('gender','male')->count();
+        $user_counters->female_users = $this->user->where('gender','female')->count();
+        $user_counters->administrator_users = $this->user->where('profile','administrator')->count();
+        $user_counters->user_users = $this->user->where('profile','user')->count();
+
+
+
+        $users = $this->user->paginate(5);
+        return view('users.index',['users'=>$users,
+                            'user_counters'=>$user_counters,'title'=>$title,'titulo'=>$titulo]);
     }
-    public function create()
+    public function paginacaoAjax()
     {
+        $users = user::orderBy('name');
+        return DataTables::of($users)->make(true);
+    }
+    public function create(User $user)
+    {
+        $this->authorize('is_admin', $user);
         $title = 'Cadastrar publicador';
         $titulo = $title;
         //$Users = Users::all();
         $arr_user = ['ac'=>'cad'];
-        return view('users.createdit',['users'=>$arr_user,'title'=>$title,'titulo'=>$titulo]);
-    }
-    /*
-    protected function create(array $data)
-    {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ])->givePermissionTo('user');
-    }
-    */
-    public function __construct()
-    {
-        $this->middleware(['permission:admin']);
+        $roles = DB::select("SELECT * FROM roles ORDER BY id ASC");
+
+        return view('users.createdit',['users'=>$arr_user,'roles'=>$roles,'title'=>$title,'titulo'=>$titulo]);
     }
 
     public function store(request $request)
@@ -65,26 +71,47 @@ class UserController extends Controller
         $dados['password'] = Hash::make($dados['password']);
         //dd($dados);
         $permission = isset($dados['permission'])?$dados['permission']:'user';
-        User::create($dados)->givePermissionTo($permission);
+        User::create($dados);
         return redirect()->route('users.index');
     }
-    public function edit($id)
+    public function show($id)
     {
-        //$Users = User::where('id',$id)->join('model_has_permissions', 'users.id', '=', 'model_has_permissions.model_id')->get();
-        $Us = DB::table('users')->where('id',$id)->join('model_has_permissions', 'users.id', '=', 'model_has_permissions.model_id')->get();
-        //Qlib::lib_print($Us[0]);
+        $Us = DB::table('users')->where('id',$id)->get();
         if(isset($Us[0])){
           $Users = (Array) $Us[0];
         }else{
            $Users = [];
         }
+        $roles = DB::select("SELECT * FROM roles ORDER BY id ASC");
         $permissions = DB::select("SELECT * FROM permissions ORDER BY id ASC");
+
+        if(!empty($Users)){
+          $title = 'Perfil do usuário';
+          $titulo = $title;
+          $Users['ac'] = 'alt';
+          //dd($Users);
+          return view('users.show',['users'=>$Users,'roles'=>$roles,'permissions'=>$permissions,'title'=>$title,'titulo'=>$titulo]);
+        }else{
+          return redirect()->route('users.index');
+        }
+    }
+    public function edit($id)
+    {
+        $Us = DB::table('users')->where('id',$id)->get();
+        if(isset($Us[0])){
+          $Users = (Array) $Us[0];
+        }else{
+           $Users = [];
+        }
+        $roles = DB::select("SELECT * FROM roles ORDER BY id ASC");
+        $permissions = DB::select("SELECT * FROM permissions ORDER BY id ASC");
+
         if(!empty($Users)){
           $title = 'Editar um Usuario';
           $titulo = $title;
           $Users['ac'] = 'alt';
           //dd($Users);
-          return view('users.createdit',['users'=>$Users,'permissions'=>$permissions,'title'=>$title,'titulo'=>$titulo]);
+          return view('users.createdit',['users'=>$Users,'roles'=>$roles,'permissions'=>$permissions,'title'=>$title,'titulo'=>$titulo]);
         }else{
           return redirect()->route('users.index');
         }
@@ -92,7 +119,7 @@ class UserController extends Controller
     public function update(Request $request,$id){
         $validatedData = $request->validate([
           'name' => ['required','string'],
-          'email' => ['required', 'string', 'email', 'max:255', 'unique:users']
+          'email' => ['required']
         ]);
         $datas = $request->all();
         $data = [];
@@ -109,9 +136,9 @@ class UserController extends Controller
           }
         }
         $ds = $data;
-        unset($ds['permissao']);
+        unset($ds['role']);
         User::where('id',$id)->update($ds);
-        $mudarPermissao = DB::table('model_has_permissions')->where('model_id','=',$id)->update(['permission_id'=>$data['permissao']]);
+        //$mudarPermissao = DB::table('model_has_roles')->where('model_id','=',$id)->update(['role_id'=>$data['role']]);
         return redirect()->route('users.index');
     }
     public function destroy($id)

@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\relatorio;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Auth;
 use App\Qlib\Qlib;
-
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 class HomeController extends Controller
 {
     /**
@@ -20,10 +23,15 @@ class HomeController extends Controller
         $this->middleware('auth');
     }
     public function teste(){
-      $teste = [1,2,3,4];
-      Qlib::printV($teste);
-      //return view('teste');
+      //$dados = $request->all();
+      //var_dump($dados);
+      return view('teste');
     }
+    public function upload(Request $request){
+      $dados = $request->all();
+      var_dump($dados);
+    }
+
     /**
      * Show the application dashboard.
      *
