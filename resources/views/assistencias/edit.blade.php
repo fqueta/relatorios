@@ -12,7 +12,7 @@
         <div class="card card-primary card-outline">
           <input type="hidden" name="raiz" value="{{url('/')}}">
             <div class="card-body box-profile">
-              <div class="mens">                
+              <div class="mens">
               </div>
               @if(isset($dados[0]['semanas']))
                     <table class="table table-bordered">

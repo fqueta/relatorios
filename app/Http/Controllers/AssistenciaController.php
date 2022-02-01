@@ -28,6 +28,7 @@ class AssistenciaController extends Controller
           $dados = [];
           $arr = explode('_',$id);
           if(isset($arr[1])){
+              $meses = Qlib::Meses();
               $semanas = [1=>'1.ª Semana',2=>'2.ª Semana',3=>'3.ª Semana',4=>'3.ª Semana',5=>'5.ª Semana',6=>'Total',7=>'Media'];
               $arr_reuniao = [
                 ['label'=>'Reunão do meio da semana','id'=>1],
@@ -37,6 +38,7 @@ class AssistenciaController extends Controller
               foreach ($arr_reuniao as $kr => $reuniao) {
                   $dados[$kr]['label'] = $reuniao;
                   $dados[$kr]['mes'] = $arr[0];
+                  $dados[$kr]['mes_ext'] = $meses[Qlib::zerofill($arr[0],2)];;
                   $dados[$kr]['ano'] = $arr[1];
                   $total = 0;
                   $media = 0;
@@ -166,11 +168,12 @@ class AssistenciaController extends Controller
     public function edit(User $user,$id)
     {
         $this->authorize('is_admin', $user);
-        $title = 'Editar: RELATÓRIO DE ASSISTÊNCIA ÀS REUNIÕES';
-        $titulo = $title;
         $dados = [];
         if(isset($id) && !empty($id)){
             $dados = $this->dadosAssistencia($id);
+            $title = 'Relatório de Assistência de '.$dados[0]['mes_ext'].' de '.$dados[0]['ano'];
+            $titulo = $title;
+
             return view('assistencias.edit',['dados'=>$dados,'titulo'=>$titulo,'title'=>$id,'id'=>$id]);
         }else{
             return redirect()->router('assistencias.index')->with('message', 'Assistência atualizado com sucesso');
