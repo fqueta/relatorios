@@ -11,8 +11,12 @@
         <div class="card card-primary card-outline">
             <div class="card-body box-profile">
                 <div class="text-center">
+                    @if(isset($users['image']) && !empty($users['image']))
+                    <img class="profile-user-img img-fluid img-circle" src="{{ url("storage/{$users['image']}") }}" alt="{{$users['image']}}">
+                    @else
                     <img class="profile-user-img img-fluid img-circle" src="{{ $users['gender'] == 'female' ? 'https://adminlte.io/themes/v3/dist/img/user4-128x128.jpg' : 'https://adminlte.io/themes/v3/dist/img/user2-160x160.jpg' }}"
                         alt="User profile picture">
+                    @endif
                 </div>
                 <h3 class="profile-username text-center">{{$users['name']}}</h3>
                 <p class="text-muted text-center">{{$users['profile']}}</p>

@@ -3,18 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\relatorio;
-
+use App\Models\User;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 class GerenciarRelatorios extends Controller
 {
-    public function __construct()
+    protected $user;
+    public function __construct(User $user)
     {
         $this->middleware('auth');
+        $this->user = $user;
     }
-
     public function index()
     {
         $relatorios = grupo::all();
@@ -86,7 +87,7 @@ class GerenciarRelatorios extends Controller
           return redirect()->route('relatorios-index');
         }
     }
-    public function update(Request $request,$id=false){
+    public function update(Request $request,$id=false,User $user){
       //if($request)
       $data = [];
       foreach ($request->all() as $key => $value) {
@@ -118,7 +119,7 @@ class GerenciarRelatorios extends Controller
       }
       //dd($salvarRelatorios);
       if($salvarRelatorios){
-        $GerenciarUsuarios = new GerenciarUsuarios;
+        $GerenciarUsuarios = new GerenciarUsuarios($user);
         $ret['exec'] = true;
         $ret['salvarRelatorios'] = $data;
         $ret['mens'] = 'Registro gravado com sucesso!';

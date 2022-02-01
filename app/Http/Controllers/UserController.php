@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 use DataTables;
 
 class UserController extends Controller
@@ -40,7 +42,7 @@ class UserController extends Controller
 
 
 
-        $users = $this->user->paginate(5);
+        $users = $this->user->paginate(15);
         return view('users.index',['users'=>$users,
                             'user_counters'=>$user_counters,'title'=>$title,'titulo'=>$titulo]);
     }
@@ -64,15 +66,20 @@ class UserController extends Controller
     public function store(request $request)
     {
         $validatedData = $request->validate([
-          'name' => ['required','string'],
+          'name' => ['required','string','unique:users'],
           'email' => ['required', 'string', 'email', 'max:255', 'unique:users']
         ]);
         $dados = $request->all();
         $dados['password'] = Hash::make($dados['password']);
+        //$permission = isset($dados['permission'])?$dados['permission']:'user';
+        if ($dados['image']->isValid()){
+            $nameFile = Str::of($dados['name'])->slug('-').'.'.$dados['image']->getClientOriginalExtension();
+            $image = $dados['image']->storeAs('users',$nameFile);
+            $dados['image'] = $image;
+        }
         //dd($dados);
-        $permission = isset($dados['permission'])?$dados['permission']:'user';
         User::create($dados);
-        return redirect()->route('users.index');
+        return redirect()->route('users.index')->with('message','Cadastro realizado com sucesso');
     }
     public function show($id)
     {
@@ -121,7 +128,19 @@ class UserController extends Controller
           'name' => ['required','string'],
           'email' => ['required']
         ]);
+
+        if(!$post = User::find($id)){
+          return redirect()->back();
+        }
         $datas = $request->all();
+        if($request->image && $request->image->isValid()){
+            if(Storage::exists($post->image))
+              Storage::delete($post->image);
+              $nameFile = Str::of($request->name)->slug('-') . '.' .$request->image->getClientOriginalExtension();
+
+            $image = $request->image->storeAs('users', $nameFile);
+            $datas['image'] = $image;
+        }
         $data = [];
         foreach ($datas as $key => $value) {
           if($key!='_method'&&$key!='_token'&&$key!='ac'){
@@ -135,13 +154,20 @@ class UserController extends Controller
             }
           }
         }
-        $ds = $data;
-        User::where('id',$id)->update($ds);
+        //dd($data);
+
+        User::where('id',$id)->update($data);
         //$mudarPermissao = DB::table('model_has_roles')->where('model_id','=',$id)->update(['role_id'=>$data['role']]);
         return redirect()->route('users.index');
     }
     public function destroy($id)
     {
+      if (!$post = User::find($id))
+          return redirect()->route('users.index');
+
+      if (Storage::exists($post->image))
+          Storage::delete($post->image);
+
         User::where('id',$id)->delete();
         return redirect()->route('users.index');
     }

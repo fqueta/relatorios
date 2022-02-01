@@ -5,6 +5,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\GerenciarGrupo;
 use App\Http\Controllers\GerenciarUsuarios;
 use App\Http\Controllers\GerenciarRelatorios;
+use App\Http\Controllers\AssistenciaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,11 +52,6 @@ Route::prefix('relatorios')->group(function(){
     //Route::get('/{id}/cartao',[GerenciarUsuarios::class,'cartao'])->name('usuarios.cartao');
     //Route::get('/cards',[GerenciarUsuarios::class,'cards'])->name('usuarios.cards');
 });
-
-Route::prefix('admin')->group(function(){
-  Route::get('/profile',[AdminConfigController::class,'index'])->name('admin.profile');
-  Route::get('/password',[AdminConfigController::class,'password'])->name('admin.password');
-});
 Route::prefix('users')->group(function(){
     Route::get('/',[UserController::class,'index'])->name('users.index');
 
@@ -70,6 +66,22 @@ Route::prefix('users')->group(function(){
     Route::get('/{id}/edit',[UserController::class,'edit'])->where('id', '[0-9]+')->name('users.edit');
     Route::put('/{id}',[UserController::class,'update'])->where('id', '[0-9]+')->name('users.update');
     Route::delete('/{id}',[UserController::class,'destroy'])->where('id', '[0-9]+')->name('users.destroy');
+});
+Route::prefix('assistencias')->group(function(){
+    Route::get('/',[AssistenciaController::class,'index'])->name('assistencias.index');
+
+    Route::get('/ajax',[AssistenciaController::class,'paginacaoAjax'])->name('assistencias.ajax');
+    Route::get('/lista.ajax',function(){
+        return view('users.index_ajax');
+    });
+
+    Route::get('/create',[AssistenciaController::class,'create'])->name('assistencias.create');
+    Route::post('/',[AssistenciaController::class,'store'])->name('assistencias.store');
+    Route::get('/{id}/show',[AssistenciaController::class,'show'])->name('assistencias.show');
+    Route::get('/{id}/edit',[AssistenciaController::class,'edit'])->name('assistencias.edit');
+    Route::put('/{id}',[AssistenciaController::class,'update'])->where('id', '[0-9]+')->name('assistencias.update');
+    Route::post('/{id}',[AssistenciaController::class,'update'])->where('id', '[0-9]+')->name('assistencias.update-ajax');
+    Route::delete('/{id}',[AssistenciaController::class,'destroy'])->where('id', '[0-9]+')->name('assistencias.destroy');
 });
 
 Route::fallback(function () {

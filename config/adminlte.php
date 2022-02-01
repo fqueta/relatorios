@@ -499,6 +499,12 @@ $config['menu'] = [
           'url'  => 'grupos',
           'icon' => 'fas fa-fw fa-users',
           'can'  => 'is_admin',
+      ],
+      [
+          'text' => 'Assistências',
+          'url'  => 'assistencias',
+          'icon' => 'fas fa-fw fa-users',
+          'can'  => 'is_admin',
       ],/*
       'CONFIGURAÇÕES',*/
       [

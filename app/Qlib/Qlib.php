@@ -90,4 +90,25 @@ class Qlib
 			}else
 				return 0;
 	}
+  static function zerofill( $number ,$nroDigo=6, $zeros = null ){
+		$string = sprintf( '%%0%ds' , is_null( $zeros ) ?  $nroDigo : $zeros );
+		return sprintf( $string , $number );
+	}
+  static function encodeArray($arr){
+			$ret = false;
+			if(is_array($arr)){
+				$ret = base64_encode(json_encode($arr));
+			}
+			return $ret;
+	}
+  static function decodeArray($arr){
+			$ret = false;
+			if($arr){
+				//$ret = base64_encode(json_encode($arr));
+				$ret = base64_decode($arr);
+				$ret = json_decode($ret,true);
+
+			}
+			return $ret;
+	}
 }

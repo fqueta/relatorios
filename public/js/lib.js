@@ -324,3 +324,117 @@ function alerta(msg,largura,altura, fecha, time,title,fechar){
 	if(fecha == true)
 	setTimeout(function(){$("."+unico).dialog("close")}, time);
 }
+function editarAssistencia(obj){
+    var sele = obj.attr('sele');
+    var arr = sele.split('_');
+    var ac = arr[0];
+    var id = 0;
+    var s = $('[sele="'+sele+'"] .l1');
+    if(arr[0]=='edit'){
+      id = arr[1];
+      var d = '';
+      var valor = s.find('span').html();
+      valor = valor.trim();
+    }else{
+      var d = s.find('[name="dados"]').val();
+      valor = 0;
+    }
+    var tema = '<form id="frm_'+sele+'">'+
+                    '<div class="input-group">'+
+                      '<input type="number" class="form-control" style="width:56px" name="qtd" value="{value}" placeholder="0">'+
+                      '<input type="hidden" class="form-control" name="ac" value="{ac}">'+
+                      '<input type="hidden" class="form-control" name="id" value="{id}">'+
+                      '<span class="input-group-btn">'+
+                        '<button class="btn btn-primary" onclick="salvarAssitencia(\'frm_'+sele+'\',\''+d+'\');" type="button"><i class="fa fa-check"></i></button>'+
+                        '<button class="btn btn-secondary" onclick="cancelEditAssistencia(\'frm_'+sele+'\',{valor})" type="button"><i class="fa fa-times"></i></button>'+
+                      '</span>'+
+                    '</div>'+
+                  '</form>';
+    var nv = tema.replace('{value}',valor);
+    nv = nv.replace('{ac}',ac);
+    nv = nv.replace('{id}',id);
+    nv = nv.replace('{valor}',valor);
+    s.find('span').html(nv);
+    s.find('[name="qtd"]').select();
+}
+function cancelEditAssistencia(frm,qtd){
+  var sele = frm.replace('frm_','');
+  var s = $('[sele="'+sele+'"] .l1').find('span');
+  var tema = '{qtd}';
+  var nv = tema.replace('{qtd}',qtd);
+  //nv = nv.replace('{ac}',ac);
+  //nv = nv.replace('{id}',id);
+  s.html(nv);
+}
+function salvarAssitencia(frm,dados){
+  //var var_cartao = atob(arr['var_cartao']);
+    $.ajaxSetup({
+           headers: {
+               'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+           }
+       });
+
+       //var state = jQuery('#btn-save').val();
+       var f = $('#'+frm);
+       var ac = f.find('[name="ac"]').val();
+       var RAIZ = $('[name="raiz"]').val();
+       if(ac=='cad'){
+         var type = "POST";
+         var ajaxurl = RAIZ+'/assistencias';
+       }else{
+         var id = f.find('[name="id"]').val();
+         var type = "POST";
+         var ajaxurl = RAIZ+"/assistencias/"+id;
+       }
+       $.ajax({
+           type: type,
+           url: ajaxurl,
+           data: f.serialize()+'&dados='+dados,
+           dataType: 'json',
+           success: function (data) {
+             if(data.exec){
+               cancelEditAssistencia(frm,data.data.qtd);
+							 if(data.mens){
+								 lib_formatMensagem('.mens',data.mens,'success');
+							 }
+						 }else{
+							 lib_formatMensagem('.mens',data.mens,'danger');
+						 }
+             if(data.data.dados[0].semanas[6].qtd){
+               var totalR1 = data.data.dados[0].semanas[6].qtd;
+               $('[sele="total_0_6"] span').html(totalR1);
+             }
+             if(data.data.dados[0].semanas[7].qtd){
+               var mediaR1 = data.data.dados[0].semanas[7].qtd;
+               $('[sele="media_0_7"] span').html(mediaR1);
+             }
+             if(data.data.dados[1].semanas[6].qtd){
+               var totalR1 = data.data.dados[1].semanas[6].qtd;
+               $('[sele="total_1_6"] span').html(totalR1);
+             }
+             if(data.data.dados[1].semanas[7].qtd){
+               var mediaR1 = data.data.dados[1].semanas[7].qtd;
+               $('[sele="media_1_7"] span').html(mediaR1);
+             }
+
+             /*
+             if(data.cartao.medias){
+               var array = data.cartao.medias;
+               var id_pub = data.cartao.dados.id;
+               var eq = 1;
+               $.each(array,function(i,k){
+                  $('#pub-'+id_pub+' .tf-2 th:eq('+(eq)+')').html(k);
+                 eq++;
+               });
+             }
+             if(data.salvarRelatorios.obs && data.salvarRelatorios.mes){
+               var selector = '#'+id_pub+'_'+data.salvarRelatorios.mes+' td';
+               $(selector).last().html(data.salvarRelatorios.obs);
+             }
+              */
+           },
+           error: function (data) {
+               console.log(data);
+           }
+       });
+}
