@@ -3,7 +3,7 @@
 @section('title', 'Dashboard')
 
 @section('content_header')
-    <h1>{{$titulo}}</h1>
+    <!--<h1>{{$titulo}}</h1>-->
 @stop
 @section('content')
 <div class="row">
@@ -11,6 +11,9 @@
 
         <div class="card card-primary card-outline">
           <input type="hidden" name="raiz" value="{{url('/')}}">
+            <div class="card-header">
+              <h4>{{$titulo}}</h4>
+            </div>
             <div class="card-body box-profile">
               <div class="mens">
               </div>
@@ -46,11 +49,11 @@
         </div>
     </div>
 
-    <div class="col-md-12 div-salvar">
+    <div class="col-md-12 div-salvar d-print-none">
       <div class="row">
         <div class="col-6">
           <a href=" {{route('assistencias.index')}} " class="btn btn-light"><i class="fa fa-chevron-left"></i> Voltar</a>
-          <a href=" {{route('assistencias.edit',['id'=>$id])}} " class="btn btn-primary">Editar <i class="fa fa-chevron-right"></i></a>
+          <a href="javascript:window.print()" class="btn btn-primary"> <i class="fa fa-print"></i></a>
           <span style="position: absolute;top: 0px;left: 171px;">
 
           </span>

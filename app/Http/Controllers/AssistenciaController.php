@@ -93,9 +93,12 @@ class AssistenciaController extends Controller
         $this->authorize('is_admin', $user);
         $title = 'Assistência das reuniões';
         $titulo = $title;
+        $m = isset($_GET['m']) ? $_GET['m'] : date('m');
+        $y = isset($_GET['y']) ? $_GET['y'] : date('Y');
         //$assistencias = Assistencia::orderBy('id','desc')->paginate(12);
-        $assistencias = DB::table('assistencias_rel')->orderBy('id','desc')->paginate(12);
-        //$assistencias = Assistencia::distinct('mes','ano')->orderBy('ano','desc')->get();
+        //$assistencias = DB::table('assistencias_rel')->orderBy('id','desc')->paginate(12);
+        //$assistencias = DB::table('assistencias_rel')->distinct()->orderBy('id','desc')->get(['mes','ano']);
+        $assistencias = Assistencia::distinct()->orderBy('ano','desc')->get(['mes','ano']);
         //$assistencias = DB::select("SELECT distinct mes,ano FROM assistencias ORDER BY ANO DESC");
         //$dadasAss = [];
         //$ass = $assistencias->;
@@ -106,7 +109,7 @@ class AssistenciaController extends Controller
               }
           }
         }
-        return view('assistencias.index',['assistencias'=>$assistencias,'titulo'=>$titulo,'title'=>$title]);
+        return view('assistencias.index',['assistencias'=>$assistencias,'meses'=>$meses,'m'=>$m,'y'=>$y,'titulo'=>$titulo,'title'=>$title]);
     }
 
     /**

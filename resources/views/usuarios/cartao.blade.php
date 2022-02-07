@@ -32,6 +32,7 @@
       <div class="col-md-4">
         <input type="hidden" name="routAjax_cad" value="{{route('relatorios.store')}}">
         <input type="hidden" name="routAjax_alt" value="{{route('relatorios.update')}}">
+        <input type="hidden" name="routAjax_del" value="{{route('relatorios.destroy')}}">
         <form method="GET" id="ano-form" action="{{ $cartao['url'] }}">
           <div class="input-group">
             <input type="number" onchange="document.querySelector('#ano-form').submit()" class="form-control" maxlength="4" name="ano" value="{{ $cartao['ano_servico'] }}" placeholder="Ano de serviço">
@@ -96,8 +97,9 @@
                   </tr>
                 </thead>
                 <tbody>
+
                   @foreach($cartao['atividade'] As $key=>$relatorio)
-                  <tr id="{{$cartao['dados']->id.'_'.$relatorio->mes}}" title="De dois cliques par editar" ondblclick="gerenteAtividade($(this),'{{$relatorio->ac}}')" style="cursor:pointer">
+                  <tr id="{{$cartao['dados']->id.'_'.$relatorio->mes}}" class="@if(isset($relatorio->class)){{$relatorio->class}}@endif" title="De dois cliques par editar" ondblclick="gerenteAtividade($(this),'{{$relatorio->ac}}')" style="cursor:pointer">
                     <td class="text-left">
                       <input type="hidden" name="var_cartao" value="{{base64_encode(json_encode($cartao))}}">
                       <input type="hidden" name="ano" value="{{ $cartao['Schema'][$key]['ano_servico'] }}">
@@ -137,7 +139,6 @@
           </div>
     </div>
     @if(isset($cartao['parent']))
-
       @foreach($cartao['parent'] As $kp=>$parent)
       <div class="row ml-0 mr-0 {{ $parent['page']['mb'] }}">
             <div class="col-md-12">
@@ -192,6 +193,7 @@
                     </tr>
                   </thead>
                   <tbody>
+
                     @foreach($parent['atividade'] As $key=>$relatorio)
                     <tr id="{{$parent['dados']->id.'_'.$relatorio->mes}}" title="De dois cliques par editar" ondblclick="gerenteAtividade($(this),'{{$relatorio->ac}}')" style="cursor:pointer">
                       <td class="text-left"><input type="hidden" name="var_cartao" value="{{base64_encode(json_encode($cartao))}}">
@@ -241,12 +243,13 @@
           </svg>
           Voltar
       </a>
-      <button type="button" title="Imprimir" onclick="window.print();" class="btn btn-primary">
+      <button type="button" title="Imprimir" onclick="window.print();" class="btn btn-light">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-printer" viewBox="0 0 16 16">
           <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/>
           <path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"/>
         </svg>
       </button>
+      <button type="button" id="registar-compilar" name="registrar" class="btn btn-primary">  Registrar</button>
     </div>
   </div>
 
@@ -265,6 +268,65 @@
           $('.btn-voltar').on('click',function(e){
               window.close();
               //openPageLink(e,$(this).attr('href'),$('[name="ano"]').val());
+          });
+          function relCalback(data){
+            document.location.reload(true)
+          }
+          function registrarCompilar(frm){
+            $.ajaxSetup({
+                   headers: {
+                       'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+                   }
+            });
+            var ajaxurl = "{{route('relatorios.registrar',['id'=>$cartao['dados']->id])}}";
+
+            $.ajax({
+                type: 'POST',
+                url: ajaxurl,
+                dataType: 'json',
+                success: function (data) {
+                  if(data.exec){
+                    //cancelEdit(id);
+     							 if(data.mens){
+     								 lib_formatMensagem('.mens',data.mens,'success');
+     							 }
+                   window.opener = relCalback(data);
+                   //window.close();
+     						 }else{
+     							 lib_formatMensagem('.mens',data.mens,'danger');
+     						 }
+                 /*
+                  if(data.cartao.totais){
+                    var array = data.cartao.totais;
+                    var id_pub = data.cartao.dados.id;
+                    var eq = 1;
+                    $.each(array,function(i,k){
+                       $('#pub-'+id_pub+' .tf-1 th:eq('+(eq)+')').html(k);
+                      eq++;
+                    });
+                  }
+                  if(data.cartao.medias){
+                    var array = data.cartao.medias;
+                    var id_pub = data.cartao.dados.id;
+                    var eq = 1;
+                    $.each(array,function(i,k){
+                       $('#pub-'+id_pub+' .tf-2 th:eq('+(eq)+')').html(k);
+                      eq++;
+                    });
+                  }
+                  if(data.salvarRelatorios.obs && data.salvarRelatorios.mes){
+                    var selector = '#'+id_pub+'_'+data.salvarRelatorios.mes+' td';
+                    $(selector).last().html(data.salvarRelatorios.obs);
+                  }*/
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+          }
+          $('#registar-compilar').on('click',function(e){
+              registrarCompilar();
+
           });
       });
   </script>

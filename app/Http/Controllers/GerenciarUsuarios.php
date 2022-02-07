@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\URL;
 use App\Models\User;
 use App\Models\usuario;
 use App\Models\grupo;
-use App\Models\Relatorio;
+use App\Models\relatorio;
 use App\Qlib\Qlib;
 use App\Http\Requests\StorePostRequest;
 class GerenciarUsuarios extends Controller
@@ -77,14 +77,33 @@ class GerenciarUsuarios extends Controller
             }
         }
 
-        $sql = "SELECT * FROM usuarios $compleSql ORDER BY nome ASC";
-        $usuarios = DB::select($sql);
+
       }else{
-        $usuarios = usuario::OrderBy('nome','asc')->get();
+        //$usuarios = usuario::OrderBy('nome','asc')->get();
+        $compleSql = false;
+      }
+      $sql = "SELECT * FROM usuarios $compleSql ORDER BY nome ASC";
+      $usuarios = DB::select($sql);
+      //Verificação de envio de relatorio
+      if($usuarios){
+        $GerenciarRelatorios = new GerenciarRelatorios($user);
+        foreach ($usuarios as $k => $val) {
+          $usuarios[$k]->relatorio = $GerenciarRelatorios->verificarRelatorioMensal(['id_publicador'=>$val->id]);
+          $usuarios[$k]->compilado = $GerenciarRelatorios->verificarRelatorioMensal(['id_publicador'=>$val->id,'tipo'=>'compilado']);
+          if($usuarios[$k]->compilado){
+            $usuarios[$k]->class = 'text-success';
+          }elseif($usuarios[$k]->relatorio){
+            $usuarios[$k]->class = 'text-warning';
+          }else{
+            $usuarios[$k]->class = 'text-danger';
+          }
+        }
       }
       $grupos = grupo::all();
       $title = 'Todos os publicadores';
       $titulo = $title;
+      //dd($usuarios);
+
       return view('usuarios.index',['usuarios'=>$usuarios,'grupos'=>$grupos,'title'=>$title,'titulo'=>$titulo]);
     }
 
@@ -301,6 +320,12 @@ class GerenciarUsuarios extends Controller
                 $totalRevisitas += isset($atividade[0]->revisita) ? $atividade[0]->revisita : 0;
                 $totalEstudos += isset($atividade[0]->estudo) ? $atividade[0]->estudo : 0;
                 $meses_relatados++;
+                if(isset($atividade[0]->compilado)){
+                  if($atividade[0]->compilado=='s')
+                    $atividade[0]->class = 'text-success';
+                  if($atividade[0]->compilado=='n')
+                    $atividade[0]->class = 'text-danger';
+                }
               }else{
                 $ativi['id'] = 0;
                 $ativi['publicacao'] = 0;

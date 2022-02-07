@@ -22,5 +22,6 @@ class Relatorio extends Model
         'estudo',
         'privilegio',
         'obs',
+        'compilado',
     ];
 }

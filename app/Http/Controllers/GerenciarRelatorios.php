@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\relatorio;
 use App\Models\User;
+use App\Models\usuario;
+use App\Qlib\Qlib;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -23,16 +25,55 @@ class GerenciarRelatorios extends Controller
         $titulo = $title;
         return view('relatorios.index',['relatorios'=>$relatorios,'title'=>$title,'titulo'=>$titulo]);
     }
-    public function create()
+    public function create($id=false)
     {
-        $title = 'Cadastrar um grupo';
+        $meses = Qlib::Meses();
+        $title = 'RELATÓRIO DE SERVIÇO DE CAMPO';
         $titulo = $title;
-        return view('relatorios.create',['title'=>$title,'titulo'=>$titulo]);
+        $mes = isset($_GET['m'])?$_GET['m']:(date('m')-1);
+        if($mes==0){
+          $mes = 12;
+        }
+        $mesExt = $meses[Qlib::zerofill($mes,2)];
+        $ano = isset($_GET['ano'])?$_GET['ano']:date('Y');
+        $dadosPub = usuario::find($id);
+        $dados = [
+          ['type'=>'hidden','campo'=>'id_publicador','label'=>'id_publicador','valor'=>$id],
+          ['type'=>'hidden','campo'=>'mes','label'=>'Mes','valor'=>$mes],
+          ['type'=>'hidden','campo'=>'ano','label'=>'ano','valor'=>$ano],
+          ['type'=>'hidden','campo'=>'id_grupo','label'=>'id grupo','valor'=>$dadosPub['id_grupo']],
+          ['type'=>'number','campo'=>'publicacao','label'=>'Publicações(Impressas e eletrônicas)','valor'=>0],
+          ['type'=>'number','campo'=>'video','label'=>'Videos mostrados','valor'=>0],
+          ['type'=>'number','campo'=>'hora','label'=>'Horas','valor'=>0],
+          ['type'=>'number','campo'=>'revisita','label'=>'Revisitas','valor'=>0],
+          ['type'=>'number','campo'=>'estudo','label'=>'Estudos biblícos','valor'=>0],
+          ['type'=>'text','campo'=>'obs','label'=>'Observações','valor'=>''],
+        ];
+        $relatorio_cad = relatorio::where('id_publicador','=',$id)->where('mes','=',$mes)->where('ano','=',$ano)->get();
+        if($dsal = $relatorio_cad->all()){
+            foreach ($dados as $key => $value) {
+              if(isset($dsal[0][$value['campo']])){
+                $dados[$key]['valor'] = $dsal[0][$value['campo']];
+              }
+            }
+            if(isset($dsal[0]['id'])){
+              array_push($dados,['type'=>'number','campo'=>'id','label'=>'id','valor'=>$dsal[0]['id']]);
+            }
+        }
+        //dd($dados);
+        return view('relatorios.create',['dados'=>$dados,'dadosPub'=>$dadosPub,'mesExt'=>$mesExt,'mes'=>$mes,'ano'=>$ano,'title'=>$title,'titulo'=>$titulo]);
     }
-    public function store(Request $request)
+    public function store(Request $request,User $user)
     {
         //return redirect()->route('relatorios-index');
         $dados = $request->all();
+        $ac = 'cad';
+        $relatorios_gravados = 0;
+        if(isset($dados['id_publicador']) && isset($dados['mes']) && isset($dados['ano'])){
+          $ac = 'alt';
+          $relatorios_gravados = relatorio::where('id_publicador','=',$dados['id_publicador'])->where('mes','=',$dados['mes'])->where('ano','=',$dados['ano'])->count();
+          //dd($relatorios_gravados);
+        }
         //$dados['enviado_por'] = '{"user_id":"4","nome":"Waldir Bertges","ip":"177.104.65.201"}';
         $arr_obs = ['p'=>'','pa'=>'Pioneiro Auxiliar','pr'=>'Pioneiro Regular'];
         if(isset($dados['id_publicador'])){
@@ -52,26 +93,25 @@ class GerenciarRelatorios extends Controller
         if($privilegio!='p'){
           $dados['obs'] = $arr_obs[$privilegio].' '.$dados['obs'];
         }
-        $salvarRelatorios = relatorio::create($dados);
-        /*if(isset($dados['var_cartao']) && !empty($dados['var_cartao'])){
-            $json_cartao = base64_decode($dados['var_cartao']);
-            $arr_cartao = json_decode($json_cartao,true);
-            $dados['id_publicador'] = isset($arr_cartao['dados']['id'])?$arr_cartao['dados']['id']:0;
-            $dados['id_grupo'] = isset($arr_cartao['dados']['id_grupo'])?$arr_cartao['dados']['id_grupo']:0;
-            $dados['ano'] = isset($arr_cartao['ano_servico'])?$arr_cartao['ano_servico']:0;
-            $dados['mes']
-            //var_dump($arr_cartao);
-            echo $arr_cartao['ano'];
-        }*/
+        if($relatorios_gravados==0){
+          $salvarRelatorios = relatorio::create($dados);
+        }else{
+          $salvarRelatorios = $this->update($request,$user);
+        }
+
         $ret['exec'] = false;
         if($salvarRelatorios){
-          $GerenciarUsuarios = new GerenciarUsuarios;
+          $GerenciarUsuarios = new GerenciarUsuarios($user);
           $ret['exec'] = true;
           $ret['salvarRelatorios'] = $salvarRelatorios;
           $ret['mens'] = 'Registro gravado com sucesso!';
           $ret['cartao']=$GerenciarUsuarios->cardData($dados['id_publicador']);
         }else{
           $ret['mens'] = 'Erro ao gravar!';
+        }
+
+        if(isset($_GET['redirect'])){
+          $ret['redirect'] = $_GET['redirect'];
         }
         return json_encode($ret);
         //echo json_encode($dados);
@@ -87,7 +127,7 @@ class GerenciarRelatorios extends Controller
           return redirect()->route('relatorios-index');
         }
     }
-    public function update(Request $request,$id=false,User $user){
+    public function update(Request $request,User $user,$id=false){
       //if($request)
       $data = [];
       foreach ($request->all() as $key => $value) {
@@ -114,6 +154,7 @@ class GerenciarRelatorios extends Controller
         $data['obs'] = $arr_obs[$privilegio].' '.$data['obs'];
       }
       $salvarRelatorios=false;
+      unset($data['_token']);
       if(!empty($data)){
         $salvarRelatorios=relatorio::where('id',$data['id'])->update($data);
       }
@@ -128,6 +169,9 @@ class GerenciarRelatorios extends Controller
         $ret['exec'] = false;
         $ret['mens'] = 'Erro ao gravar!';
       }
+      if(isset($_GET['redirect'])){
+        $ret['redirect'] = $_GET['redirect'];
+      }
       return json_encode($ret);
         /*
         $data = [
@@ -139,9 +183,73 @@ class GerenciarRelatorios extends Controller
         return redirect()->route('relatorios-index');
         */
     }
-    public function destroy($id)
+    public function destroy(request $request,User $user)
     {
-        grupo::where('id',$id)->delete();
-        return redirect()->route('relatorios-index');
+
+      $deletar = false;
+      $dados = $request->all();
+      if(isset($dados['id_publicador']) && isset($dados['mes']) && isset($dados['ano'])){
+          $deletar = relatorio::where('id_publicador','=',$dados['id_publicador'])->where('mes','=',$dados['mes'])->where('ano','=',$dados['ano'])->delete();
+      }
+      if($deletar){
+        $GerenciarUsuarios = new GerenciarUsuarios($user);
+        $ret['exec'] = true;
+        $ret['mens'] = 'Excluido com sucesso!';
+        $ret['cartao']=$GerenciarUsuarios->cardData($dados['id_publicador']);
+        $ret['salvarRelatorios'] = $dados;
+      }else{
+        $ret['exec'] = false;
+        $ret['mens'] = 'Erro ao gravar entre em contato com o suporte!';
+      }
+      return json_encode($ret);
+        //return redirect()->route('relatorios-index');
+    }
+    public function verificarRelatorioMensal($config=false)
+    {
+        $ret = false;
+        $id_publicador = isset($config['id_publicador'])?$config['id_publicador']:false;
+        $tipo = isset($config['tipo'])?$config['tipo']:false;
+        if(isset($id_publicador)){
+            $mes = isset($config['mes'])?$config['mes']:(date('m')-1);
+            $ano = isset($config['ano'])?$config['ano']:date('Y');
+            if($mes==0){
+              $mes = 12;
+            }
+            if($tipo=='compilado'){
+              $ret = relatorio::where('id_publicador','=',$id_publicador)->where('mes','=',$mes)->where('ano','=',$ano)->where('compilado','=','s')->count();
+            }else{
+              $ret = relatorio::where('id_publicador','=',$id_publicador)->where('mes','=',$mes)->where('ano','=',$ano)->count();
+            }
+        }
+        return $ret;
+    }
+    //Para o secretário registrar ou compilar os relatorios
+    public function registrar($id=false)
+    {
+      $ret['exec'] = false;
+      $mes = isset($_GET['m'])?$_GET['m']:false;
+      $ano = isset($_GET['y'])?$_GET['y']:false;
+      $mens = false;
+      $registrar = false;
+      $dados = [
+        'compilado'=>'s',
+      ];
+
+      if($mes && $ano){
+        $registrar = relatorio::where('id_publicador','=',$id)->
+          where('compilado','=','n')->
+          where('mes','=',$mes)->
+          where('ano','=',$ano)->
+          update($dados);
+      }else{
+        $registrar = relatorio::where('id_publicador','=',$id)->where('compilado','=','n')->update($dados);
+      }
+      if($registrar){
+        $ret['exec'] = true;
+        $mens = 'Foram compilados ('.$registrar.') relatorios';
+      }
+
+      $ret['mens'] = $mens;
+      return $ret;
     }
 }

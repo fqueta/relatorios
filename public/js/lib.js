@@ -87,7 +87,7 @@ function abrirjanelaPadrao(url,windo){
 		var height = screen.availHeight;
 		//var height = $(document).height();
 		//height = new Number(height) - new Number(100);
-	}
+	} 
 	//alert(height);
 	abrirjanela(url, windo, wid, height, "left="+meio+",toolbar=no, location=no, directories=no, status=no, menubar=no");
 }
@@ -166,8 +166,11 @@ function gerenteAtividade(obj,ac){
   }
   $('#'+id+' td:eq(1) input').select();
 }
-function cancelEdit(id){
+function cancelEdit(id,ac){
   //var temaImput = '<input type="{type}" style="width:{wid}px" name="{name}" value="{value}" class="form-control text-center"> {btn}';
+  if(typeof ac == 'undefined'){
+    ac = 'edit';
+  }
   var temaImput = '{value}';
   var arr = ['publicacao','video','hora','revisita','estudo','obs'];
   var selId = $('#'+id);
@@ -181,8 +184,6 @@ function cancelEdit(id){
     if(i==5){
        var wid='200';
        var t='text';
-       //'<button type="button" onclick="cancelarEdit('+id+')" title="Cancelar edição" data-toggle="tooltip"  class="btn btn-secondary" name="button"><i class="fa fa-times"></i></button>';
-       //var b='<button type="button" onclick="submitRelatorio(\''+id+'\',\''+ac+'\')" title="Salvar" class="btn btn-primary" name="button"><i class="fa fa-check"></i></button>'+
        td.removeClass('d-flex');
     }else{
       var wid='100';
@@ -190,7 +191,11 @@ function cancelEdit(id){
       var t='number';
     }
     var v = s.val();
-    var c = temaImput.replace('{value}',v);
+    if(ac=='del'){
+      var c = temaImput.replace('{value}','');
+    }else{
+      var c = temaImput.replace('{value}',v);
+    }
     //c = c.replace('{value}',v);
     //c = c.replace('{wid}',wid);
     //c = c.replace('{type}',t);
@@ -199,7 +204,74 @@ function cancelEdit(id){
   }
 }
 function delRegistro(id){
-	alert(id);
+  var don = $('#'+id+' input');
+  console.log(don);
+  var arr = [];
+  var seriali = '';
+  $.each(don,function(i,k){
+    var ke = k.name;
+    ke = ke.replace(id,'');
+     arr[ke] = k.value;
+     seriali += ke+'='+k.value+'&';
+    //console.log(k.name);
+  });
+  //var var_cartao = atob(arr['var_cartao']);
+  $.ajaxSetup({
+         headers: {
+             'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+         }
+     });
+
+     var formData = seriali,state = jQuery('#btn-save').val();
+     if(ac=='del'){
+       var type = "DELETE";
+     }else{
+       var type = "POST";
+     }
+     var ac='del',ajaxurl = $('[name="routAjax_'+ac+'"]').val();
+     $.ajax({
+         type: type,
+         url: ajaxurl,
+         data: formData,
+         dataType: 'json',
+         success: function (data) {
+
+           if(data.exec){
+             cancelEdit(id,'del');
+             if(data.mens){
+               lib_formatMensagem('.mens',data.mens,'success');
+             }
+           }else{
+             lib_formatMensagem('.mens',data.mens,'danger');
+           }
+           if(data.cartao.totais){
+             var array = data.cartao.totais;
+             var id_pub = data.cartao.dados.id;
+             var eq = 1;
+             $.each(array,function(i,k){
+                $('#pub-'+id_pub+' .tf-1 th:eq('+(eq)+')').html(k);
+               eq++;
+             });
+           }
+           if(data.cartao.medias){
+             var array = data.cartao.medias;
+             var id_pub = data.cartao.dados.id;
+             var eq = 1;
+             $.each(array,function(i,k){
+                $('#pub-'+id_pub+' .tf-2 th:eq('+(eq)+')').html(k);
+               eq++;
+             });
+           }
+           if(data.salvarRelatorios.obs && data.salvarRelatorios.mes){
+             var selector = '#'+id_pub+'_'+data.salvarRelatorios.mes+' td';
+             $(selector).last().html(data.salvarRelatorios.obs);
+           }
+
+         },
+         error: function (data) {
+             console.log(data);
+         }
+     });
 }
 function submitRelatorio(id,ac){
   var don = $('#'+id+' input');
@@ -220,7 +292,7 @@ function submitRelatorio(id,ac){
            }
        });
 
-       var formData = seriali;
+       var formData = seriali+'compilado=s';
        var state = jQuery('#btn-save').val();
        if(ac=='cad'){
          var type = "POST";

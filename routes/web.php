@@ -41,13 +41,14 @@ Route::prefix('publicadores')->group(function(){
 
 Route::prefix('relatorios')->group(function(){
     //Route::get('/',[GerenciarUsuarios::class,'index'])->name('usuarios.index');
-    Route::get('/create',[GerenciarRelatorios::class,'create'])->name('relatorios.create');
+    Route::get('/create/{id}',[GerenciarRelatorios::class,'create'])->where('id', '[0-9]+')->name('relatorios.create');
     Route::post('/',[GerenciarRelatorios::class,'store'])->name('relatorios.store');
-    //Route::get('/{id}/edit',[GerenciarUsuarios::class,'edit'])->where('id', '[0-9]+')->name('usuarios-edit');
+    //Route::get('/{id}/edit',[GerenciarUsuarios::class,'edit'])->name('usuarios-edit');
     //Route::put('/{id}',[GerenciarRelatorios::class,'update'])->where('id', '[0-9]+')->name('relatorios.update');
     Route::post('/update',[GerenciarRelatorios::class,'update'])->name('relatorios.update');
     //Route::delete('/{id}',[GerenciarUsuarios::class,'destroy'])->where('id', '[0-9]+')->name('usuarios-destroy');
-    Route::delete('/',[GerenciarUsuarios::class,'destroy'])->name('usuarios.destroy');
+    Route::post('/delete',[GerenciarRelatorios::class,'destroy'])->name('relatorios.destroy');
+    Route::post('/registrar/{id}',[GerenciarRelatorios::class,'registrar'])->where('id', '[0-9]+')->name('relatorios.registrar');
 
     //Route::get('/{id}/cartao',[GerenciarUsuarios::class,'cartao'])->name('usuarios.cartao');
     //Route::get('/cards',[GerenciarUsuarios::class,'cards'])->name('usuarios.cards');

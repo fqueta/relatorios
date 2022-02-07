@@ -136,20 +136,23 @@
                 </thead>
                 <tbody>
                   @foreach($usuarios as $key => $usuario)
-                    <tr>
+                    <tr class="{{$usuario->class}}">
                       <td> <input type="checkbox" class="checkbox-table" name="check_{{$usuario->id}}" value="s"> </td>
                       <td> {{$usuario->id}} </td>
                       <td> {{$usuario->nome}} </td>
                       <td> @if($usuario->inativo=='n') Sim @elseif($usuario->inativo=='s') Não @endif </td>
                       <td> {{$usuario->obs}} </td>
                       <td class="d-flex text-right">
-                         <a href="{{ route('usuarios.edit',['id'=>$usuario->id]) }}" class="btn btn-light mr-2">
+                         <a href="{{ route('usuarios.edit',['id'=>$usuario->id]) }}" class="btn btn-light mr-1">
                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                             <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                             <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
                           </svg>
                         </a>
-                         <a href="{{ route('usuarios.cartao',['id'=>$usuario->id]) }}" title="Cartão do publicador" class="btn btn-primary mr-2 print-card">
+                         <a href="{{ route('relatorios.create',['id'=>$usuario->id]) }}" title="Relatório mensal" class="btn btn-warning relatorios-create mr-1">
+                           <i class="fa fa-list"></i>
+                        </a>
+                         <a href="{{ route('usuarios.cartao',['id'=>$usuario->id]) }}" title="Cartão do publicador" class="btn btn-primary mr-1 print-card">
                            <i class="fa fa-file-pdf"></i>
                         </a>
                         <form action="{{ route('usuarios-destroy',['id'=>$usuario->id]) }}" id="frm-{{$usuario->id}}" method="POST">
@@ -182,7 +185,7 @@
       <script>
           function confirmDeleteUsuario(obj){
               var id = obj.data('id');
-              if(window.confirm('DESEJA MESMO ESCLUIR?')){
+              if(window.confirm('DESEJA MESMO EXCLUIR?')){
                 $('#frm-'+id).submit();
               }
               //alert('modal agora');
@@ -194,6 +197,13 @@
               });
               $('.print-card').on('click',function(e){
                   openPageLink(e,$(this).attr('href'),$('#painel-ano').val());
+              });
+              $('.relatorios-create').on('click',function(e){
+                  e.preventDefault();
+                  url = $(this).attr('href');
+                  //alert( window.location.href);
+                  window.location = url+'?redirect='+btoa(window.location.href);
+                  //openPageLink(e,$(this).attr('href'),$('#painel-ano').val());
               });
               $('#open-all-cards').on('click',function(e){
                   openPageLink(e,$(this).attr('href'),$('#painel-ano').val());
