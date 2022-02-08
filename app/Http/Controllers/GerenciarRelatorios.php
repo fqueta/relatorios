@@ -42,11 +42,11 @@ class GerenciarRelatorios extends Controller
           ['type'=>'hidden','campo'=>'mes','label'=>'Mes','valor'=>$mes],
           ['type'=>'hidden','campo'=>'ano','label'=>'ano','valor'=>$ano],
           ['type'=>'hidden','campo'=>'id_grupo','label'=>'id grupo','valor'=>$dadosPub['id_grupo']],
-          ['type'=>'number','campo'=>'publicacao','label'=>'Publicações(Impressas e eletrônicas)','valor'=>0],
-          ['type'=>'number','campo'=>'video','label'=>'Videos mostrados','valor'=>0],
-          ['type'=>'number','campo'=>'hora','label'=>'Horas','valor'=>0],
-          ['type'=>'number','campo'=>'revisita','label'=>'Revisitas','valor'=>0],
-          ['type'=>'number','campo'=>'estudo','label'=>'Estudos biblícos','valor'=>0],
+          ['type'=>'number','campo'=>'publicacao','label'=>'Publicações(Impressas e eletrônicas)','valor'=>''],
+          ['type'=>'number','campo'=>'video','label'=>'Videos mostrados','valor'=>''],
+          ['type'=>'number','campo'=>'hora','label'=>'Horas','valor'=>''],
+          ['type'=>'number','campo'=>'revisita','label'=>'Revisitas','valor'=>''],
+          ['type'=>'number','campo'=>'estudo','label'=>'Estudos biblícos','valor'=>''],
           ['type'=>'text','campo'=>'obs','label'=>'Observações','valor'=>''],
         ];
         $relatorio_cad = relatorio::where('id_publicador','=',$id)->where('mes','=',$mes)->where('ano','=',$ano)->get();

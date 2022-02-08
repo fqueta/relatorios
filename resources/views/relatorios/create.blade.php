@@ -22,7 +22,7 @@
               <div class="mens">
               </div>
               @if(isset($dados))
-                    <table class="table table-bordered">
+                    <table class="table table-bordered table-hover table-striped">
                       <thead>
 
                       </thead>
@@ -38,8 +38,13 @@
                             <input class="form-control text-center" type="{{$v1['type']}}" name="{{$v1['campo']}}" value="{{$v1['valor']}}">
                           @else
                           <tr>
-                            <td width="80%">{{$v1['label']}}</td>
-                            <td width="20%"><input class="form-control text-center" type="{{$v1['type']}}" name="{{$v1['campo']}}" value="{{$v1['valor']}}"></td>
+                            @if($v1['campo']=='obs')
+                              <td colspan="2">{{$v1['label']}}<br><input onclick="$(this).select();" class="form-control text-left" type="{{$v1['type']}}" name="{{$v1['campo']}}" value="{{$v1['valor']}}"></td>
+
+                            @else
+                              <td width="80%">{{$v1['label']}}</td>
+                              <td width="20%"><input onclick="$(this).select();" class="form-control text-center" type="{{$v1['type']}}" name="{{$v1['campo']}}" value="{{$v1['valor']}}"></td>
+                            @endif
                           </tr>
                           @endif
                         @endforeach
