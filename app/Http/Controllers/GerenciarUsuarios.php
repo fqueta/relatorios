@@ -92,9 +92,12 @@ class GerenciarUsuarios extends Controller
           $usuarios[$k]->compilado = $GerenciarRelatorios->verificarRelatorioMensal(['id_publicador'=>$val->id,'tipo'=>'compilado']);
           if($usuarios[$k]->compilado){
             $usuarios[$k]->class = 'text-success';
+            $usuarios[$k]->status = 'Compilado';
           }elseif($usuarios[$k]->relatorio){
             $usuarios[$k]->class = 'text-warning';
+            $usuarios[$k]->status = 'Enviado';
           }else{
+            $usuarios[$k]->status = 'Pendente';
             $usuarios[$k]->class = 'text-danger';
           }
         }
@@ -321,10 +324,14 @@ class GerenciarUsuarios extends Controller
                 $totalEstudos += isset($atividade[0]->estudo) ? $atividade[0]->estudo : 0;
                 $meses_relatados++;
                 if(isset($atividade[0]->compilado)){
-                  if($atividade[0]->compilado=='s')
+                  if($atividade[0]->compilado=='s'){
                     $atividade[0]->class = 'text-success';
-                  if($atividade[0]->compilado=='n')
+                    $atividade[0]->status = 'Compilado';
+                  }
+                  if($atividade[0]->compilado=='n'){
+                    $atividade[0]->status = 'Pendente';
                     $atividade[0]->class = 'text-danger';
+                  }
                 }
               }else{
                 $ativi['id'] = 0;

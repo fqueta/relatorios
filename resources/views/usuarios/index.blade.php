@@ -63,11 +63,11 @@
     <div class="col-md-12">
       <div class="card">
         <div class="card-body">
-            <form action="{{ route('usuarios.index') }}" method="GET">
+            <form id="frm-filtar" action="{{ route('usuarios.index') }}" method="GET">
                 <div class="form-row">
                   <div class="form-group col-md-2">
                     <label for="inputState">Situação</label>
-                    <select id="inputState" title="Ativo ou inativo" name="fil[inativo]" class="form-control">
+                    <select id="ativo" title="Ativo ou inativo" name="fil[inativo]" class="form-control">
                       <option value="t" @if(isset($_GET['fil']['inativo'])&&$_GET['fil']['inativo']=='t') selected @endif>Todos</option>
                       <option value="n" @if(isset($_GET['fil']['inativo'])&&$_GET['fil']['inativo']=='n') selected @endif>Ativo</option>
                       <option value="s" @if(isset($_GET['fil']['inativo'])&&$_GET['fil']['inativo']=='s') selected @endif>Inativo</option>
@@ -76,10 +76,10 @@
                   @if(isset($grupos))
                   <div class="form-group col-md-3">
                     <label for="inputState">grupo</label>
-                    <select id="inputState" name="fil[id_grupo]" class="form-control">
+                    <select id="grupos" name="fil[id_grupo]" class="form-control">
                       <option selected value="">Todos grupos</option>
                       @foreach ($grupos as $k => $grupo)
-                      <option @if(isset($_GET['fil']['id_grupo'])&&$_GET['fil']['id_grupo']==$grupo->id) selected @endif value="{{$grupo->id}}">{{$grupo->grupo}}</option>
+                      <option @if(isset($_GET['fil']['id_grupo']) && $_GET['fil']['id_grupo']==$grupo->id) selected @endif value="{{$grupo->id}}">{{$grupo->grupo}}</option>
                       @endforeach
                     </select>
                   </div>
@@ -110,8 +110,13 @@
                     </div>
                   </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group col-md-12 px-0">
                     <button type="submit" class="btn btn-primary">Filtrar</button>
+                </div>
+                <div class="col-md-12">
+                  <label title="Relatório deste mês pendente"><i class="fa fa-circle text-danger"></i> Relatório Pendente</label>
+                  <label title="Relatório deste mês enviado para o secretário"><i class="fa fa-circle text-warning"></i> Relatório Enviado</label>
+                  <label title="Relatório deste mês foi compilado pelo secretário"><i class="fa fa-circle text-success"></i> Relatório Enviado</label>
                 </div>
             </form>
           </div>
@@ -129,8 +134,8 @@
                     <th><input type="checkbox" name="check-all" value=""></th>
                     <th>Id</th>
                     <th>Nome</th>
-                    <th>Ativo</th>
-                    <th>Obs</th>
+                    <th>Privilêgio</th>
+                    <th class="text-right">Status</th>
                     <th class="text-center">...</th>
                   </tr>
                 </thead>
@@ -140,8 +145,8 @@
                       <td> <input type="checkbox" class="checkbox-table" name="check_{{$usuario->id}}" value="s"> </td>
                       <td> {{$usuario->id}} </td>
                       <td> {{$usuario->nome}} </td>
-                      <td> @if($usuario->inativo=='n') Sim @elseif($usuario->inativo=='s') Não @endif </td>
-                      <td> {{$usuario->obs}} </td>
+                      <td> @if($usuario->pioneiro=='pa') P. Auxiliar @elseif($usuario->pioneiro=='pr') P. Regular  @elseif($usuario->pioneiro=='p') Publicador @else Publicador @endif </td>
+                      <td><div class="text-right" title="Relatório {{$usuario->status}} "> {{$usuario->status}} </div></td>
                       <td class="d-flex text-right">
                          <a href="{{ route('usuarios.edit',['id'=>$usuario->id]) }}" class="btn btn-light mr-1">
                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
@@ -212,10 +217,16 @@
                 e.preventDefault();
                 confirmDeleteUsuario($(this));
               });
+              $('#grupos').on('change',function(){
+                  var grupo = $(this).val();
+                  //alert(grupo);
+                  $('#frm-filtar').submit();
+              });
               $('.btn').on('click', function () {
-                $(this).find(input).removeAttr('checked');
+                $(this).find('input').removeAttr('checked');
                 $(this).removeClass('active');
               });
+              
           });
       </script>
   @stop
