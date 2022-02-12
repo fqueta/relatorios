@@ -109,14 +109,15 @@
                       </label>
                     </div>
                   </div>
-                </div>
-                <div class="form-group col-md-12 px-0">
+                  <div class="form-group col-md-6">
                     <button type="submit" class="btn btn-primary">Filtrar</button>
-                </div>
-                <div class="col-md-12">
-                  <label title="Relatório deste mês pendente"><i class="fa fa-circle text-danger"></i> Relatório Pendente</label>
-                  <label title="Relatório deste mês enviado para o secretário"><i class="fa fa-circle text-warning"></i> Relatório Enviado</label>
-                  <label title="Relatório deste mês foi compilado pelo secretário"><i class="fa fa-circle text-success"></i> Relatório Enviado</label>
+                  </div>
+                  <div class="form-group col-md-6 text-right">
+                    <label for="">Legenda dos status dos reletórios deste mês</label><br>
+                    <label title="Relatório deste mês pendente" style="font-weight:500"><i class="fa fa-circle text-danger"></i> Relatório Pendente</label>
+                    <label title="Relatório deste mês enviado para o secretário" style="font-weight:500"><i class="fa fa-circle text-warning"></i> Relatório Enviado</label>
+                    <label title="Relatório deste mês foi compilado pelo secretário" style="font-weight:500"><i class="fa fa-circle text-success"></i> Relatório Enviado</label>
+                  </div>
                 </div>
             </form>
           </div>
