@@ -30,11 +30,13 @@
           </div>
           @endforeach
         </div>
-        @endif
+     @endif
         <div class="row">
           <div class="col-md-12">
             <h4>{{$resumo['config_table']['data']['titulo']}}</h5>
           </div>
+          
+        @include('layout.progressbar')
         @if(isset($resumo['total_resumo']))
         @foreach($resumo['total_resumo'] As $key=>$value)
 

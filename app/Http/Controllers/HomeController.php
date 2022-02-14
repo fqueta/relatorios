@@ -18,10 +18,13 @@ class HomeController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    protected $user;
+    public function __construct(User $user)
     {
         $this->middleware('auth');
+        $this->user = $user;
     }
+    
     public function teste(){
       //$dados = $request->all();
       //var_dump($dados);
@@ -32,33 +35,35 @@ class HomeController extends Controller
       var_dump($dados);
     }
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
+    
     public function index()
     {
         $ano_servico = date('Y');
         $ano_atual = $ano_servico;
-        $mes_atual = (int)date('m');
+        $mes_atual =  isset($_GET['mes'])?$_GET['mes']:date('m');
         if($mes_atual > 8){
           $ano_servico++;
         }
         $ano = isset($_GET['ano'])?$_GET['ano']:$ano_servico;
         if($ano < $ano_servico){
-            $ano_servico = $ano;
+          $ano_servico = $ano;
         }else{
           if($mes_atual > 8){
             $ano = $ano+1;
           }
         }
-
-        $mes = isset($_GET['mes'])?$_GET['mes']:date('m');
+        
+        $mes = $mes_atual;
         if($mes == '01'){
           $mes = '12';
           $ano = date('Y') - 1;
+        }else{
+          $mes--;
+
         }
+        $controllerRelatorio = new GerenciarRelatorios($this->user);
+        $estatisticas = $controllerRelatorio->estatisticas($mes,$ano);
+        
         $compleSql = " WHERE mes='$mes' AND ano='$ano' AND hora > '0'";
         //$relatorios = relatorio::where('mes','=',$mes)->orWhere('ano','=',$ano)->get();
         //$complePub = " AND pri";
@@ -85,7 +90,7 @@ class HomeController extends Controller
             'publicacao'=>'Publicação','video'=>'Vídeos mostrados','hora'=>'Horas','revisita'=>'Revisitas','estudo'=>'Estudos bíblicos'
           ],
           'data'=>[
-            'titulo'=>'RESUMO DOS RELATORIOS DE '.$mesExt[$mes].' DE '.$ano,
+            'titulo'=>'RESUMO DOS RELATORIOS DE '.$mesExt[Qlib::zerofill($mes,2)].' DE '.$ano,
             'mes'=>$mes,
             'ano'=>$ano,
           ]
@@ -144,7 +149,7 @@ class HomeController extends Controller
         $totalPubMes = '';
         $totalVid = '';
         //$resumo = $publicadores;
-        return view('home',['resumo'=>$publicadores]);
+        return view('home',['resumo'=>$publicadores,'estatisticas'=>$estatisticas]);
     }
     public function resumo(){
 

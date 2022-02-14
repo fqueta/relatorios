@@ -34,6 +34,7 @@ class GerenciarUsuarios extends Controller
       }else{
         $compleSql=false;
       }*/
+      $meses = Qlib::Meses();
       if(isset($_GET['fil'])){
         //Qlib::lib_print($_GET['fil']);
         $compleSql="WHERE ativo='s'";
@@ -106,15 +107,34 @@ class GerenciarUsuarios extends Controller
       $title = 'Todos os publicadores';
       $titulo = $title;
       //dd($usuarios);
+      $view = isset($_GET['view']) ? $_GET['view'] : 'index';
+      $mes_atual = isset($_GET['m']) ? $_GET['m'] : date('m');
+      $ano = isset($_GET['ano']) ? $_GET['ano'] : date('Y');
+      $mes = $mes_atual;
+      if($mes == '01'){
+        $mes = '12';
+        $ano = (date('Y') - 1);
+      }else{
+        $mes--;
+      }
+      $controllerRelatorio = new GerenciarRelatorios($this->user);
+      $id_grupo = isset($_GET['fil']['id_grupo'])?$_GET['fil']['id_grupo']:false;
+      $estatisticas = $controllerRelatorio->estatisticas($mes,$ano,$id_grupo);
 
-      return view('usuarios.index',['usuarios'=>$usuarios,'grupos'=>$grupos,'title'=>$title,'titulo'=>$titulo]);
+      return view('usuarios.'.$view,['usuarios'=>$usuarios,'grupos'=>$grupos,'title'=>$title,'titulo'=>$titulo,'meses'=>$meses,'mes_atual'=>$mes,'estatisticas'=>$estatisticas]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    
+    public function lista($user=false)
+    {
+      $this->authorize('is_admin', $user);
+      $compleSql = false;      
+      $title = 'Lista de publicadores';
+      $titulo = $title;
+      $limit = false;
+      $dadosPubs = DB::select("select * from usuarios $compleSql Order By nome ASC $limit");
+      return view('usuarios.lista',['usuarios'=>$dadosPubs,'titulo'=>$title,'title'=>$titulo]);
+    }
     public function create(User $user)
     {
         $this->authorize('is_admin', $user);

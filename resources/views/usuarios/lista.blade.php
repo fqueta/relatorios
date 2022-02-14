@@ -3,76 +3,16 @@
 @section('title', 'Dashboard')
 
 @section('content_header')
-   <h4>{{$titulo}}</h4>
+    <!--<h1>{{$titulo}}</h1>-->
 @stop
 
 @extends('layout.busca')
 
 @section('content')
   <div class="row">
-    <div class="modal fade" id="config-imp-cartao" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title">Atenção</h4>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-              <span class="sr-only">Close</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <p>Informe o Ano de serviço que deseja exibir...</p>
-            <form action="{{ route('usuarios.cards') }}" method="GET">
-              <div class="form-row">
-                <div class="form-group col-md-12">
-                  <label for="inputEmail4">Ano</label>
-                  <input type="number" value="{{ date('Y') }}" class="form-control" id="ano" name="ano" placeholder="Selecione o ano">
-                </div>
-              </div>
-
-              <button type="submit" class="btn btn-primary">Abrir</button>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <!--<button type="button" class="btn btn-primary">Abrir</button>-->
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-6 mb-3 d-print-none">
-      @if(isset($meses))
-      <select name="mes" class="form-control" id="mes">
-          @foreach($meses As $k=>$v)
-            <option @if(isset($mes_atual) && $mes_atual==$k) selected @endif value="{{$k}}">{{$v}}</option>
-          @endforeach
-      </select>
-      @endif
-      <!--
-      <p>Todos os publicadores ativos da congregação</p>
-    -->
-    </div>
-    <div class="col-md-2 d-print-none">
-      <form action="" method="GET">
-        <div class="form-row">
-          <div class="form-group col-md-12">
-            <!--<label for="inputEmail4">Ano</label>-->
-            <input type="number" class="form-control" value="@if(isset($_GET['ano'])&&!empty($_GET['ano'])){{$_GET['ano']}}@else{{date('Y')}}@endif" name="ano" id="painel-ano">
-          </div>
-        </div>
-        <!--<div class="form-group col-md-6">
-          <button type="submit" class="btn btn-primary">OK</button>
-        </div>-->
-      </form>
-    </div>
-    <div class="col-md-4 text-right mb-3 d-print-none">
-        <a href="{{route('usuarios.cards')}}" id="open-all-cards" data-target="#config-imp-cartao" class="btn btn-light"> <i class="fa fa-file-pdf"></i> Todos cartões</a>
-        <a href="{{ route('usuarios.create') }}" class="btn btn-success"><i class="fa fa-plus"></i> Novo publicador </a>
-    </div>
-    <div class="col-md-12 d-print-none">
+    <!--
+    <div class="col-md-12">
       <div class="card">
-      <div class="card-header"><h5>Localizar</h5></div>
-        
         <div class="card-body">
             <form id="frm-filtar" action="{{ route('usuarios.index') }}" method="GET">
                 <div class="form-row">
@@ -130,41 +70,38 @@
                     <label title="Relatório deste mês enviado para o secretário" style="font-weight:500"><i class="fa fa-circle text-warning"></i> Relatório Enviado</label>
                     <label title="Relatório deste mês foi compilado pelo secretário" style="font-weight:500"><i class="fa fa-circle text-success"></i> Relatório Enviado</label>
                   </div>
-                  @include('layout.progressbar')
                 </div>
             </form>
           </div>
         </div>
-  </div>
+    </div>-->
 
     <div class="col-md-12">
       <div class="card">
-      <div class="card-header"><h5>{{$titulo}}</h5></div>
-        
+        <div class="card-header"><h5>{{$titulo}}</h5></div>
         <div class="card-body table-responsive">
 
 
               <table class="table dataTable dtr-inline table-hover">
                 <thead>
                   <tr>
-                    <th class="d-print-none"><input type="checkbox" name="check-all" value=""></th>
-                    <th class="d-print-none">Id</th>
+                    <th><input type="checkbox" name="check-all" value=""></th>
+                    <th>Id</th>
                     <th>Nome</th>
                     <th>Privilêgio</th>
                     <th class="text-right">Status</th>
-                    <th class="text-center d-print-none">...</th>
+                    <th class="text-center">...</th>
                   </tr>
                 </thead>
                 <tbody>
                   @foreach($usuarios as $key => $usuario)
                     <tr class="{{$usuario->class}}">
-                      <td class="d-print-none"> <input type="checkbox" class="checkbox-table" name="check_{{$usuario->id}}" value="s"> </td>
-                      <td class="d-print-none"> {{$usuario->id}} </td>
-                      <td><div>{{$usuario->nome}}</div> <div class=" d-print-block d-none"> <label>Endereço:</label> {{$usuario->endereco}} <label>Tel:</label> {{$usuario->tel}} <label for="">Batismo</label> {{$usuario->data_batismo}}</div> </td>
+                      <td> <input type="checkbox" class="checkbox-table" name="check_{{$usuario->id}}" value="s"> </td>
+                      <td> {{$usuario->id}} </td>
+                      <td> {{$usuario->nome}} </td>
                       <td> @if($usuario->pioneiro=='pa') P. Auxiliar @elseif($usuario->pioneiro=='pr') P. Regular  @elseif($usuario->pioneiro=='p') Publicador @else Publicador @endif </td>
-                      <td><div class="text-right" title="Relatório {{$usuario->status}} "> {{$usuario->status}} </div>
-                    </td>
-                      <td class="d-flex text-right d-print-none">
+                      <td><div class="text-right" title="Relatório {{$usuario->status}} "> {{$usuario->status}} </div></td>
+                      <td class="d-flex text-right">
                          <a href="{{ route('relatorios.create',['id'=>$usuario->id]) }}" title="Relatório mensal" class="btn btn-primary relatorios-create mr-1">
                            <i class="fa fa-list"></i> Relatório
                         </a>
@@ -190,7 +127,6 @@
                         </form>
                     </td>
                   </tr>
-                  
                   @endforeach
                 </tbody>
               </table>
@@ -224,11 +160,9 @@
               });
               $('.relatorios-create').on('click',function(e){
                   e.preventDefault();
-                  var url = $(this).attr('href');
+                  url = $(this).attr('href');
                   //alert( window.location.href);
-                  var mes = $('#mes').val();
-                  var ano = $('#painel-ano').val();
-                  window.location = url+'?redirect='+btoa(window.location.href)+'&m='+mes+'&ano='+ano;
+                  window.location = url+'?redirect='+btoa(window.location.href);
                   //openPageLink(e,$(this).attr('href'),$('#painel-ano').val());
               });
               $('#open-all-cards').on('click',function(e){
@@ -248,11 +182,12 @@
                 $(this).removeClass('active');
               });
               $('#imprimir-lista-pub').on('click', function () {
-                //var url = $('#frm-filtar').serialize();
-                //abrirjanelaPadrao("{{route('usuarios.index')}}?view=lista&"+url);
-                window.print();
+                var url = $('#frm-filtar').serialize();
+                abrirjanelaPadrao("{{route('publicadores.lista')}}?"+url);
               });
-              
+              if($(window).width()>778)
+                $('a.nav-link').click();
+          
           });
       </script>
   @stop

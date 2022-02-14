@@ -37,6 +37,7 @@ Route::prefix('publicadores')->group(function(){
 
     Route::get('/{id}/cartao',[GerenciarUsuarios::class,'cartao'])->name('usuarios.cartao');
     Route::get('/cards',[GerenciarUsuarios::class,'cards'])->name('usuarios.cards');
+    //Route::get('/lista',[GerenciarUsuarios::class,'lista'])->name('publicadores.lista');
 });
 
 Route::prefix('relatorios')->group(function(){

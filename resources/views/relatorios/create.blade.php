@@ -22,7 +22,7 @@
               <div class="mens">
               </div>
               @if(isset($dados))
-                    <table class="table table-bordered table-hover table-striped">
+                    <table class="table table-bordered table-hover">
                       <thead>
 
                       </thead>

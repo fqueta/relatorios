@@ -295,29 +295,7 @@
      						 }else{
      							 lib_formatMensagem('.mens',data.mens,'danger');
      						 }
-                 /*
-                  if(data.cartao.totais){
-                    var array = data.cartao.totais;
-                    var id_pub = data.cartao.dados.id;
-                    var eq = 1;
-                    $.each(array,function(i,k){
-                       $('#pub-'+id_pub+' .tf-1 th:eq('+(eq)+')').html(k);
-                      eq++;
-                    });
-                  }
-                  if(data.cartao.medias){
-                    var array = data.cartao.medias;
-                    var id_pub = data.cartao.dados.id;
-                    var eq = 1;
-                    $.each(array,function(i,k){
-                       $('#pub-'+id_pub+' .tf-2 th:eq('+(eq)+')').html(k);
-                      eq++;
-                    });
-                  }
-                  if(data.salvarRelatorios.obs && data.salvarRelatorios.mes){
-                    var selector = '#'+id_pub+'_'+data.salvarRelatorios.mes+' td';
-                    $(selector).last().html(data.salvarRelatorios.obs);
-                  }*/
+                 
                 },
                 error: function (data) {
                     console.log(data);

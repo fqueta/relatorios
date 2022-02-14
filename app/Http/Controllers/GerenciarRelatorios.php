@@ -57,7 +57,7 @@ class GerenciarRelatorios extends Controller
               }
             }
             if(isset($dsal[0]['id'])){
-              array_push($dados,['type'=>'number','campo'=>'id','label'=>'id','valor'=>$dsal[0]['id']]);
+              array_push($dados,['type'=>'hidden','campo'=>'id','label'=>'id','valor'=>$dsal[0]['id']]);
             }
         }
         //dd($dados);
@@ -250,6 +250,30 @@ class GerenciarRelatorios extends Controller
       }
 
       $ret['mens'] = $mens;
+      return $ret;
+    }
+    public function estatisticas($mes=false,$ano=false,$id_grupo=false)
+    {
+      $mes = isset($_GET['m']) ? $_GET['m'] : date('m'); 
+      $ano = isset($_GET['ano']) ? $_GET['ano'] : date('Y'); 
+      if($mes == '01'){
+        $mes = '12';
+        $ano = (date('Y') - 1);
+      }else{
+        $mes--;
+      }
+      $ret = false;
+      $totalPublicadores['todos'] = usuario::count();
+      $totalPublicadores['ativos'] = usuario::where('inativo','=','n')->count();
+      $totalPublicadores['inativos'] = usuario::where('inativo','=','s')->count();
+      $totalRelatorios['enviados'] = relatorio::where('hora','>','0')->where('mes','=',$mes)->where('ano','=',$ano)->count();
+      if($id_grupo){
+        $totalRelatorios['enviados'] = relatorio::where('id_grupo','=',$id_grupo)->where('hora','>','0')->where('mes','=',$mes)->where('ano','=',$ano)->count();
+      }
+      $progressBar['enviado'] = round(($totalRelatorios['enviados'] * 100)/$totalPublicadores['ativos'],0);
+      $ret['totalPublicadores'] = $totalPublicadores;
+      $ret['totalRelatorios'] = $totalRelatorios;
+      $ret['progressBar'] = $progressBar;
       return $ret;
     }
 }
