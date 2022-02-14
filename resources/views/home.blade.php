@@ -16,7 +16,7 @@
           @foreach($resumo['total_cards'] As $k=>$vtot)
           <div class="col-lg-3 col-6">
                 <!-- small box -->
-                <div class="small-box bg-info">
+                <div class="small-box bg-{{$vtot['color']}}">
                   <div class="inner">
                     <h3>{{$vtot['valor']}}</h3>
 
@@ -25,7 +25,7 @@
                   <div class="icon">
                     <i class="ion ion-bag"></i>
                   </div>
-                  <a href="{{route('usuarios.index')}}{{$vtot['link']}}" class="small-box-footer">Mais infomações <i class="fas fa-arrow-circle-right"></i></a>
+                  <a href="{{$vtot['link']}}" class="small-box-footer">Mais infomações <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
           </div>
           @endforeach

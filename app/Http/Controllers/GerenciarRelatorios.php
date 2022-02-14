@@ -149,9 +149,13 @@ class GerenciarRelatorios extends Controller
         }
       }
       $data['privilegio'] = $privilegio;
-      if($privilegio!='p'){
+      if($privilegio=='p'){
+        $data['obs'] = str_replace($arr_obs['pa'],'',$data['obs']);
+        $data['obs'] = str_replace($arr_obs['pr'],'',$data['obs']);
+      }else{
         $data['obs'] = str_replace($arr_obs[$privilegio],'',$data['obs']);
         $data['obs'] = $arr_obs[$privilegio].' '.$data['obs'];
+        
       }
       $salvarRelatorios=false;
       unset($data['_token']);

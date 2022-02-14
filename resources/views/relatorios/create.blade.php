@@ -13,7 +13,7 @@
     </div>
     <div class="col-md-12 mb-5">
       <input type="hidden" name="raiz" value="{{url('/')}}">
-      <form class="" id="frm-relatorio" action="{{ route('grupos-store') }}" method="post">
+      <form class="" id="frm-relatorio" action="" method="post">
         <div class="card card-primary card-outline">
             <div class="card-header">
               <h4>{{$titulo}}</h4>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\relatorio;
+use App\Models\Assistencia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
@@ -141,10 +142,21 @@ class HomeController extends Controller
         $publicadores['total_relatorios']['geral'] = count($relatorios);
         $publicadores['total_resumo'] = $arr_resumo;
         $publicadores['config_table'] = $config_table;
+        $asistenciaFimSemana = Assistencia::where('num_reuniao','=',2)->where('mes','=',$mes)->where('ano','=',$ano)->sum('qtd');
+        $t_reuniaoFimSemana = Assistencia::where('num_reuniao','=',2)->where('mes','=',$mes)->where('ano','=',$ano)->count();
+        if($asistenciaFimSemana && $t_reuniaoFimSemana){
+          $mediaFimSemana = round($asistenciaFimSemana/$t_reuniaoFimSemana);
+          $colorAss = 'success';
+        }else{
+          $mediaFimSemana = 0;
+          $colorAss = 'danger';
+        }
+        //$mediaAssitencia['fim_semana'] = Assistencia:: ->where('num_reuniao','=',2)->where('mes','=',$mes)->where('ano','=',$ano)->count();
         $publicadores['total_cards'] = [
-            ['valor'=>$publicadores_todos,'url'=>'todos','label'=>'Publicadores','color'=>'light','link'=>''],
-            ['valor'=>$publicadores_ativos,'url'=>'ativos','label'=>'Publicadores Ativos','color'=>'primary','link'=>'?fil[inativo]=n'],
-            ['valor'=>$publicadores_inativos,'url'=>'inativos','label'=>'Publicadores Inativos','color'=>'secondary','link'=>'?fil[inativo]=s'],
+            ['valor'=>$publicadores_todos,'url'=>'todos','label'=>'Publicadores','color'=>'info','link'=>route('usuarios.index')],
+            ['valor'=>$publicadores_ativos,'url'=>'ativos','label'=>'Publicadores Ativos','color'=>'success','link'=>route('usuarios.index').'?fil[inativo]=n'],
+            ['valor'=>$publicadores_inativos,'url'=>'inativos','label'=>'Publicadores Inativos','color'=>'danger','link'=>route('usuarios.index').'?fil[inativo]=s'],
+            ['valor'=>$mediaFimSemana,'url'=>'media-fim-semana','label'=>'Assistência fim de semana','color'=>$colorAss,'link'=>route('assistencias.index').'/'.$mes.'_'.$ano.'/edit'],
         ];
         $totalPubMes = '';
         $totalVid = '';
