@@ -87,7 +87,7 @@ function abrirjanelaPadrao(url,windo){
 		var height = screen.availHeight;
 		//var height = $(document).height();
 		//height = new Number(height) - new Number(100);
-	} 
+	}
 	//alert(height);
 	abrirjanela(url, windo, wid, height, "left="+meio+",toolbar=no, location=no, directories=no, status=no, menubar=no");
 }
@@ -509,4 +509,26 @@ function salvarAssitencia(frm,dados){
                console.log(data);
            }
        });
+}
+function mask(o, f) {
+	setTimeout(function() {
+		var v = clientes_mascaraTelefone(o.value);
+		if (v != o.value && o.value!='') {
+		  o.value = v;
+		}
+	  }, 1);
+}
+function clientes_mascaraTelefone(v) {
+	var r = v.replace(/\D/g, "");
+	  r = r.replace(/^0/, "");
+	  if (r.length > 10) {
+		r = r.replace(/^(\d\d)(\d{5})(\d{4}).*/, "($1)$2-$3");
+	  } else if (r.length > 5) {
+		r = r.replace(/^(\d\d)(\d{4})(\d{0,4}).*/, "($1)$2-$3");
+	  } else if (r.length > 2) {
+		r = r.replace(/^(\d\d)(\d{0,5})/, "($1)$2");
+	  } else {
+		r = r.replace(/^(\d*)/, "($1");
+	  }
+	  return r;
 }

@@ -21,7 +21,7 @@
       </div>
       <div class="form-group col-md-4">
           <label for="tel">Celular</label>
-          <input type="tel" class="form-control @error('tel') is-invalid @enderror" id="tel" data-mask="(99)9999-99999" name="tel" aria-describedby="tel" placeholder="(00)00000-0000" value="@if(isset($usuario['tel'])){{$usuario['tel']}}@elseif($usuario['ac']=='cad'){{old('tel')}}@endif">
+          <input type="tel" class="form-control @error('tel') is-invalid @enderror" id="tel" onblur="mask(this, clientes_mascaraTelefone);" onkeypress="mask(this, clientes_mascaraTelefone);" name="tel" aria-describedby="tel" placeholder="informe o celular" value="@if(isset($usuario['tel'])){{$usuario['tel']}}@elseif($usuario['ac']=='cad'){{old('tel')}}@endif">
           @error('tel')
               <div class="alert alert-danger">{{ $message }}</div>
           @enderror
