@@ -72,11 +72,11 @@ class UserController extends Controller
         $dados = $request->all();
         $dados['password'] = Hash::make($dados['password']);
         //$permission = isset($dados['permission'])?$dados['permission']:'user';
-        if ($dados['image']->isValid()){
+        /*if ($dados['image']->isValid()){
             $nameFile = Str::of($dados['name'])->slug('-').'.'.$dados['image']->getClientOriginalExtension();
             $image = $dados['image']->storeAs('users',$nameFile);
             $dados['image'] = $image;
-        }
+        }*/
         //dd($dados);
         User::create($dados);
         return redirect()->route('users.index')->with('message','Cadastro realizado com sucesso');

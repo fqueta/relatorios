@@ -6,7 +6,6 @@
     <h1>{{$titulo}}</h1>
 @stop
 @section('content')
-  <p>The .table-bordered class adds borders on all sides of the table and the cells:</p>
   <div class="row">
     @can('is_admin')
         <div class="col-md-12">
@@ -82,8 +81,8 @@
                                         <td>{{  $item->profile }}</td>
                                         @can('is_admin')
                                             <td class="d-flex">
-                                              <a href=" {{ route('users.show',['id'=>$item->id]) }} " class="btn btn-primary mr-2" title="Visualizar">
-                                               <i class="fa fa-search"></i>
+                                              <a href=" {{ route('users.edit',['id'=>$item->id]) }} " class="btn btn-primary mr-2" title="Visualizar">
+                                               <i class="fa fa-pen"></i>
                                              </a>
                                              <form action="{{ route('users.destroy',['id'=>$item->id]) }}" method="POST">
                                                @csrf
@@ -111,7 +110,7 @@
   @stop
 
   @section('css')
-      <link rel="stylesheet" href="/css/admin_custom.css">
+      <!--<link rel="stylesheet" href="/css/admin_custom.css">-->
   @stop
 
   @section('js')

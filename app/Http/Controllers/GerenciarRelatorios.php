@@ -44,7 +44,7 @@ class GerenciarRelatorios extends Controller
           ['type'=>'hidden','campo'=>'id_grupo','label'=>'id grupo','valor'=>$dadosPub['id_grupo']],
           ['type'=>'number','campo'=>'publicacao','label'=>'Publicações(Impressas e eletrônicas)','valor'=>''],
           ['type'=>'number','campo'=>'video','label'=>'Videos mostrados','valor'=>''],
-          ['type'=>'number','campo'=>'hora','label'=>'Horas','valor'=>''],
+          ['type'=>'tel','campo'=>'hora','label'=>'Horas','valor'=>''],
           ['type'=>'number','campo'=>'revisita','label'=>'Revisitas','valor'=>''],
           ['type'=>'number','campo'=>'estudo','label'=>'Estudos biblícos','valor'=>''],
           ['type'=>'text','campo'=>'obs','label'=>'Observações','valor'=>''],

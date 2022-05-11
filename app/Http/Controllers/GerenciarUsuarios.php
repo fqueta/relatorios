@@ -124,11 +124,11 @@ class GerenciarUsuarios extends Controller
       return view('usuarios.'.$view,['usuarios'=>$usuarios,'grupos'=>$grupos,'title'=>$title,'titulo'=>$titulo,'meses'=>$meses,'mes_atual'=>$mes,'estatisticas'=>$estatisticas]);
     }
 
-    
+
     public function lista($user=false)
     {
       $this->authorize('is_admin', $user);
-      $compleSql = false;      
+      $compleSql = false;
       $title = 'Lista de publicadores';
       $titulo = $title;
       $limit = false;

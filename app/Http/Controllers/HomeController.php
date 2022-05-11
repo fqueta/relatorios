@@ -25,7 +25,7 @@ class HomeController extends Controller
         $this->middleware('auth');
         $this->user = $user;
     }
-    
+
     public function teste(){
       //$dados = $request->all();
       //var_dump($dados);
@@ -36,7 +36,7 @@ class HomeController extends Controller
       var_dump($dados);
     }
 
-    
+
     public function index()
     {
         $ano_servico = date('Y');
@@ -53,7 +53,7 @@ class HomeController extends Controller
             $ano = $ano+1;
           }
         }
-        
+
         $mes = $mes_atual;
         if($mes == '01'){
           $mes = '12';
@@ -64,7 +64,7 @@ class HomeController extends Controller
         }
         $controllerRelatorio = new GerenciarRelatorios($this->user);
         $estatisticas = $controllerRelatorio->estatisticas($mes,$ano);
-        
+
         $compleSql = " WHERE mes='$mes' AND ano='$ano' AND hora > '0'";
         //$relatorios = relatorio::where('mes','=',$mes)->orWhere('ano','=',$ano)->get();
         //$complePub = " AND pri";

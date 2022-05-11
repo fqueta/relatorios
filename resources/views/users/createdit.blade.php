@@ -48,18 +48,19 @@
             <option value="pre_registred"  @if(isset($users['status'])&&$users['status']=='pre_registred') selected @endif >Pré cadastrado</option>
           </select>
       </div>
+      <!--
       <div class="form-group col-md-6">
           <label for="ativo">Genero</label>
           <select class="form-control" name="gender">
             <option value="male" @if(isset($users['gender'])&&$users['gender']=='male') selected @endif >Masculino</option>
             <option value="female"  @if(isset($users['gender'])&&$users['gender']=='female') selected @endif >Feminino</option>
           </select>
-      </div>
+      </div>-->
       <div class="form-group col-md-12 mb-5">
-        @include('admin.partes.form_img')
+        <!--include('admin.partes.form_img')-->
       </div>
       <div class="col-md-12 div-salvar">
-        <div class=form-group"">
+        <div class="form-group">
           <a href=" {{route('users.index')}} " class="btn btn-light"><i class="fa fa-chevron-left"></i> Voltar</a>
           <button type="submit" class="btn btn-primary">Salvar <i class="fa fa-chevron-right"></i></button>
         </div>
