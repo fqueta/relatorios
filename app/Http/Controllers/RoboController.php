@@ -78,12 +78,10 @@ class RoboController extends Controller
             }
         }
         $retu['exec'] = false;
-        $retu['mens'] = Qlib::formatMensagem([
-            'mens'=>'Erro ao executar robo','color'=>'danger'
-        ]);
+        $retu['mens'] = Qlib::formatMensagemInfo('Erro ao executar robo','danger');
         if($ret){
             $retu['exec'] = true;
-            $retu['mens'] = Qlib::formatMensagem(['mens'=>'Robo Executado com sucesso','color'=>'success']);
+            $retu['mens'] = Qlib::formatMensagemInfo('Robo Executado com sucesso','success');
             $retu['ret'] = $ret;
         }
         return response()->json($retu);
@@ -100,10 +98,11 @@ class RoboController extends Controller
         }
         return $ret;
     }
+    /*
     public function removerEtiqueta($var = null)
     {
         (!$var){
 
         }
-    }
+    }*/
 }
