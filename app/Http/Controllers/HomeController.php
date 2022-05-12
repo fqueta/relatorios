@@ -157,10 +157,10 @@ class HomeController extends Controller
         $publicadores['total_cards'] = [
             ['valor'=>$publicadores_todos,'url'=>'todos','label'=>'Publicadores','color'=>'info','link'=>route('publicadores.index')],
             ['valor'=>$publicadores_ativos,'url'=>'ativos','label'=>'Publicadores Ativos','color'=>'success','link'=>route('publicadores.index').'?filter[inativo]=n'],
-            ['valor'=>$publicadores_inrregulares,'url'=>'inrregulares','label'=>'Publicadores Inrregulares','color'=>'warning','link'=>route('publicadores.index').'?filter[tags][]=inrregular'],
+            ['valor'=>$publicadores_inrregulares,'url'=>'inrregulares','label'=>'Inrregulares','color'=>'warning','link'=>route('publicadores.index').'?filter[tags][]=inrregular'],
             ['valor'=>$publicadores_srevi,'url'=>'sem-revisitas','label'=>'Sem Revisitas','color'=>'warning','link'=>route('publicadores.index').'?filter[tags][]=sem_revisitas_6meses'],
-            ['valor'=>$publicadores_inativos,'url'=>'ativos','label'=>'Publicadores Inativos','color'=>'danger','link'=>route('publicadores.index').'?filter[inativo]=n'],
-            ['valor'=>$mediaFimSemana,'url'=>'media-fim-semana','label'=>'Assistência f.de semana','color'=>$colorAss,'link'=>route('assistencias.index').'/'.$mes.'_'.$ano.'/edit'],
+            ['valor'=>$publicadores_inativos,'url'=>'ativos','label'=>'Inativos','color'=>'danger','link'=>route('publicadores.index').'?filter[inativo]=n'],
+            ['valor'=>$mediaFimSemana,'url'=>'media-fim-semana','label'=>'Assistência','color'=>$colorAss,'link'=>route('assistencias.index').'/'.$mes.'_'.$ano.'/edit'],
         ];
         $totalPubMes = '';
         $totalVid = '';
