@@ -6,6 +6,8 @@ use App\Http\Controllers\GerenciarGrupo;
 use App\Http\Controllers\GerenciarUsuarios;
 use App\Http\Controllers\GerenciarRelatorios;
 use App\Http\Controllers\AssistenciaController;
+use App\Http\Controllers\PublicadoresController;
+use App\Http\Controllers\RoboController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,7 +29,7 @@ Route::prefix('grupos')->group(function(){
     Route::delete('/{id}',[GerenciarGrupo::class,'destroy'])->where('id', '[0-9]+')->name('grupos-destroy');
 });
 
-Route::prefix('publicadores')->group(function(){
+Route::prefix('usuarios')->group(function(){
     Route::get('/',[GerenciarUsuarios::class,'index'])->name('usuarios.index');
     Route::get('/create',[GerenciarUsuarios::class,'create'])->name('usuarios.create');
     Route::post('/',[GerenciarUsuarios::class,'store'])->name('usuarios.store');
@@ -38,6 +40,17 @@ Route::prefix('publicadores')->group(function(){
     Route::get('/{id}/cartao',[GerenciarUsuarios::class,'cartao'])->name('usuarios.cartao');
     Route::get('/cards',[GerenciarUsuarios::class,'cards'])->name('usuarios.cards');
     //Route::get('/lista',[GerenciarUsuarios::class,'lista'])->name('publicadores.lista');
+});
+Route::prefix('publicadores')->group(function(){
+    Route::get('/',[PublicadoresController::class,'index'])->name('publicadores.index');
+    Route::get('/create',[PublicadoresController::class,'create'])->name('publicadores.create');
+    Route::post('/',[PublicadoresController::class,'store'])->name('publicadores.store');
+    Route::get('/{id}/edit',[PublicadoresController::class,'edit'])->where('id', '[0-9]+')->name('publicadores.edit');
+    Route::put('/{id}',[PublicadoresController::class,'update'])->where('id', '[0-9]+')->name('publicadores.update');
+    Route::delete('/{id}',[PublicadoresController::class,'destroy'])->where('id', '[0-9]+')->name('publicadores-destroy');
+
+    Route::get('/{id}/cartao',[PublicadoresController::class,'cartao'])->name('publicadores.cartao');
+    Route::get('/cards',[PublicadoresController::class,'cards'])->name('publicadores.cards');
 });
 
 Route::prefix('relatorios')->group(function(){
@@ -50,9 +63,9 @@ Route::prefix('relatorios')->group(function(){
     //Route::delete('/{id}',[GerenciarUsuarios::class,'destroy'])->where('id', '[0-9]+')->name('usuarios-destroy');
     Route::post('/delete',[GerenciarRelatorios::class,'destroy'])->name('relatorios.destroy');
     Route::post('/registrar/{id}',[GerenciarRelatorios::class,'registrar'])->where('id', '[0-9]+')->name('relatorios.registrar');
-
-    //Route::get('/{id}/cartao',[GerenciarUsuarios::class,'cartao'])->name('usuarios.cartao');
-    //Route::get('/cards',[GerenciarUsuarios::class,'cards'])->name('usuarios.cards');
+});
+Route::prefix('robo')->group(function(){
+    Route::get('/ler-relatorios',[RoboController::class,'lerRelatorios'])->name('robo.ler-relatorios');
 });
 Route::prefix('users')->group(function(){
     Route::get('/',[UserController::class,'index'])->name('users.index');

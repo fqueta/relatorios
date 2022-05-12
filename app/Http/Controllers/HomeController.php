@@ -135,9 +135,11 @@ class HomeController extends Controller
           }
         }
         //dd($arr_resumo);
-        $publicadores_ativos = Qlib::totalReg('usuarios',"WHERE inativo='n'");
-        $publicadores_inativos = Qlib::totalReg('usuarios',"WHERE inativo='s'");
-        $publicadores_todos = Qlib::totalReg('usuarios',"");
+        $publicadores_ativos = Qlib::totalReg('publicadores',"WHERE inativo='n'");
+        $publicadores_inativos = Qlib::totalReg('publicadores',"WHERE inativo='s'");
+        $publicadores_inrregulares = Qlib::totalReg('publicadores',"WHERE tags LIKE '%inrregular%'");
+        $publicadores_srevi = Qlib::totalReg('publicadores',"WHERE tags LIKE '%sem_revisitas_6meses%'");
+        $publicadores_todos = Qlib::totalReg('publicadores',"");
         $publicadores['relatorios'] = $relatorios;
         $publicadores['total_relatorios']['geral'] = count($relatorios);
         $publicadores['total_resumo'] = $arr_resumo;
@@ -153,10 +155,12 @@ class HomeController extends Controller
         }
         //$mediaAssitencia['fim_semana'] = Assistencia:: ->where('num_reuniao','=',2)->where('mes','=',$mes)->where('ano','=',$ano)->count();
         $publicadores['total_cards'] = [
-            ['valor'=>$publicadores_todos,'url'=>'todos','label'=>'Publicadores','color'=>'info','link'=>route('usuarios.index')],
-            ['valor'=>$publicadores_ativos,'url'=>'ativos','label'=>'Publicadores Ativos','color'=>'success','link'=>route('usuarios.index').'?fil[inativo]=n'],
-            ['valor'=>$publicadores_inativos,'url'=>'inativos','label'=>'Publicadores Inativos','color'=>'danger','link'=>route('usuarios.index').'?fil[inativo]=s'],
-            ['valor'=>$mediaFimSemana,'url'=>'media-fim-semana','label'=>'Assistência fim de semana','color'=>$colorAss,'link'=>route('assistencias.index').'/'.$mes.'_'.$ano.'/edit'],
+            ['valor'=>$publicadores_todos,'url'=>'todos','label'=>'Publicadores','color'=>'info','link'=>route('publicadores.index')],
+            ['valor'=>$publicadores_ativos,'url'=>'ativos','label'=>'Publicadores Ativos','color'=>'success','link'=>route('publicadores.index').'?filter[inativo]=n'],
+            ['valor'=>$publicadores_inrregulares,'url'=>'inrregulares','label'=>'Publicadores Inrregulares','color'=>'warning','link'=>route('publicadores.index').'?filter[tags][]=inrregular'],
+            ['valor'=>$publicadores_srevi,'url'=>'sem-revisitas','label'=>'Sem Revisitas','color'=>'warning','link'=>route('publicadores.index').'?filter[tags][]=sem_revisitas_6meses'],
+            ['valor'=>$publicadores_inativos,'url'=>'ativos','label'=>'Publicadores Inativos','color'=>'danger','link'=>route('publicadores.index').'?filter[inativo]=n'],
+            ['valor'=>$mediaFimSemana,'url'=>'media-fim-semana','label'=>'Assistência f.de semana','color'=>$colorAss,'link'=>route('assistencias.index').'/'.$mes.'_'.$ano.'/edit'],
         ];
         $totalPubMes = '';
         $totalVid = '';

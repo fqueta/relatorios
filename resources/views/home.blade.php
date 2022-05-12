@@ -14,7 +14,7 @@
       @if(isset($resumo['total_cards']))
         <div class="row">
           @foreach($resumo['total_cards'] As $k=>$vtot)
-          <div class="col-lg-3 col-6">
+          <div class="col-lg-2 col-6">
                 <!-- small box -->
                 <div class="small-box bg-{{$vtot['color']}}">
                   <div class="inner">
@@ -35,7 +35,7 @@
           <div class="col-md-12">
             <h4>{{$resumo['config_table']['data']['titulo']}}</h5>
           </div>
-          
+
         @include('layout.progressbar')
         @if(isset($resumo['total_resumo']))
         @foreach($resumo['total_resumo'] As $key=>$value)
