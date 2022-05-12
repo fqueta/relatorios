@@ -66,7 +66,7 @@
       </form>
     </div>
     <div class="col-md-4 text-right mb-3 d-print-none">
-        <a href="{{route($routa.'.cards')}}" id="open-all-cards" data-target="#config-imp-cartao" class="btn btn-light"> <i class="fa fa-file-pdf"></i> Todos cartões</a>
+        <a href="{{route('usuarios.cards')}}" id="open-all-cards" data-target="#config-imp-cartao" class="btn btn-light"> <i class="fa fa-file-pdf"></i> Todos cartões</a>
         <a href="{{ route($routa.'.create') }}" class="btn btn-success"><i class="fa fa-plus"></i> Novo publicador </a>
     </div>
     <div class="col-md-12 d-print-none">
