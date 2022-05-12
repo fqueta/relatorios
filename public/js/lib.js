@@ -299,7 +299,7 @@ function delRegistro(id){
          }
      });
 }
-/*
+
 function submitRelatorio(id,ac){
   var don = $('#'+id+' input');
   console.log(don);
@@ -371,7 +371,7 @@ function submitRelatorio(id,ac){
        });
   //console.log(arr);
 }
-*/
+
 function alerta(msg,id,title,tam,fechar,time,fecha){
 
 	if(typeof(fechar) == 'undefined')
