@@ -102,7 +102,7 @@ class AssistenciaController extends Controller
         //$assistencias = DB::select("SELECT distinct mes,ano FROM assistencias ORDER BY ANO DESC");
         //$dadasAss = [];
         //$ass = $assistencias->;
-        dd($assistencias);
+        //dd($assistencias);
         if($assistencias){
           foreach ($assistencias as $key => $assistencia){
               if(isset($assistencia->mes) && !empty($assistencia->mes)){

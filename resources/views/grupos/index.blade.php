@@ -38,7 +38,7 @@
                           <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
                         </svg>
                       </a>
-                      <a href="{{ route('usuarios.index') }}?fil[inativo]=t&fil[id_grupo]={{$grupo->id}}" class="btn btn-primary" title="Publicadores do grupo"><i class="fa fa-users"></i></a>
+                      <a href="{{ route('publicadores.index') }}?filter[inativo]=&filter[id_grupo]={{$grupo->id}}" class="btn btn-primary" title="Publicadores do grupo"><i class="fa fa-users"></i></a>
                       <form action="{{ route('grupos-destroy',['id'=>$grupo->id]) }}" method="POST">
                         @csrf
                         @method('DELETE')
