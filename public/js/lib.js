@@ -1937,12 +1937,11 @@ function lib_roboEtiqueta(){
     },function(res){
         $('#preload').fadeOut("fast");
         $('.mens').html(res.mens);
-        /*if(m=res.value.matricula){
-            $('[name="matricula"]').val(m);
-            $('#txt-matricula').html(m);
-        }else{
-            $('[name="matricula"]').val('');
-            $('#txt-matricula').html('');
-        }*/
     });
+}
+function lib_imprimeCartaoFiltro() {
+    let ano = $('[name="ano"]').val();
+    let url = window.location.href+'&ano='+ano+'&popup=s';
+    url = url.replace('publicadores','usuarios/cards');
+    abrirjanelaPadraoConsulta(url);
 }

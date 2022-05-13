@@ -83,7 +83,7 @@ class GerenciarUsuarios extends Controller
         //$usuarios = usuario::OrderBy('nome','asc')->get();
         $compleSql = false;
       }
-      $sql = "SELECT * FROM usuarios $compleSql ORDER BY nome ASC";
+      $sql = "SELECT * FROM publicadores $compleSql ORDER BY nome ASC";
       $usuarios = DB::select($sql);
       //Verificação de envio de relatorio
       if($usuarios){
@@ -132,7 +132,7 @@ class GerenciarUsuarios extends Controller
       $title = 'Lista de publicadores';
       $titulo = $title;
       $limit = false;
-      $dadosPubs = DB::select("select * from usuarios $compleSql Order By nome ASC $limit");
+      $dadosPubs = DB::select("select * from publicadores $compleSql Order By nome ASC $limit");
       return view('usuarios.lista',['usuarios'=>$dadosPubs,'titulo'=>$title,'title'=>$titulo]);
     }
     public function create(User $user)
@@ -268,7 +268,7 @@ class GerenciarUsuarios extends Controller
           }
         }
         //$compleSql = " id_publicador='$id' AND ano='$ano_servico'";
-        $dados = DB::select("select * from usuarios WHERE id='$id'");
+        $dados = DB::select("select * from publicadores WHERE id='$id'");
         //$total_horas = DB::select("select SUM(hora) from relatorios WHERE $compleSql");
         $arr_sequecia_meses = [
             '9'=>['mes'=>'Setembro','ano'=>$ano,'ano_servico'=>$ano-1],
@@ -412,7 +412,7 @@ class GerenciarUsuarios extends Controller
       $titulo = '';
       $cartao = $this->cardData($id);
       //$parent = usuario::where('parent','=',$id);
-      $parent = DB::select("SELECT * FROM usuarios WHERE parent ='".$id."'");
+      $parent = DB::select("SELECT * FROM publicadores WHERE parent ='".$id."'");
       if($parent){
         $l = 0;
         foreach ($parent as $key => $value) {
@@ -439,11 +439,14 @@ class GerenciarUsuarios extends Controller
     public function cards(){
         $compleSql = false;
         $limit = '';
-        $dadosPubs = DB::select("select * from usuarios $compleSql Order By nome ASC $limit");
+
+        $dadosPubs = DB::select("select * from publicadores $compleSql Order By nome ASC $limit");
+        $pbs = new PublicadoresController($this->user);
+        $dadosPubs = $pbs->queryPublicador2();
         $cartao = [];
-        if(!empty($dadosPubs)){
+        if(isset($dadosPubs['publicador']) && !empty($dadosPubs['publicador'])){
           $l = 0;
-          foreach ($dadosPubs as $key => $value) {
+          foreach ($dadosPubs['publicador'] as $key => $value) {
             if($l==2){
               $l = 1;
             }else{

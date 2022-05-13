@@ -113,9 +113,12 @@
                 <div class="form-row">
                   <div class="col-md-6">
                     <button type="submit" class="btn btn-primary">Filtrar</button>
+                    <button type="button" id="imprimir-lista-pub" class="btn btn-default"><i class="fas fa-file-archive-o" aria-hidden="true"></i> Imprimir lista</button>
+                    @if(isset($_GET['filter']))
+                    <button type="button" id="imprimir-cartao-pub" onclick="lib_imprimeCartaoFiltro()" class="btn btn-default"> <i class="fas fa-file-pdf-o" aria-hidden="true"></i> Imprimir cartao</button>
                     <a href=" {{route($routa.'.index')}} " class="btn btn-default" title="Limpar Filtros" type="button"> <i class="fas fa-times"></i> Limpar</a>
-                    <button type="button" id="imprimir-lista-pub" class="btn btn-light">Imprimir</button>
-                    <button type="button" id="imprimir-lista-pub" class="btn btn-outline-success" onclick="lib_roboEtiqueta()" title="Etiquetar Publicadores"> <i class="fa fa-tag"></i></button>
+                    @endif
+                    <button type="button" id="" class="btn btn-outline-success" onclick="lib_roboEtiqueta()" title="Etiquetar Publicadores"> <i class="fa fa-tag"></i></button>
                   </div>
                   <div class="col-md-6 text-right">
                     <label for="">Legenda dos status dos reletórios deste mês</label><br>

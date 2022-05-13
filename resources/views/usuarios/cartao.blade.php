@@ -256,11 +256,11 @@
   @stop
 
   @section('css')
-      <link rel="stylesheet" href=" {{url('/')}}/css/lib.css">
+  @include('qlib.csslib')
   @stop
 
   @section('js')
-  <script src=" {{url('/')}}/js/lib.js"></script>
+  @include('qlib.jslib')
   <script>
       $(function(){
           if($(window).width()>778)
@@ -295,7 +295,7 @@
      						 }else{
      							 lib_formatMensagem('.mens',data.mens,'danger');
      						 }
-                 
+
                 },
                 error: function (data) {
                     console.log(data);
