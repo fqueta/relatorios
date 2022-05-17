@@ -324,7 +324,7 @@ class PublicadoresController extends Controller
     {
         $this->authorize('is_admin', $user);
         $meses = Qlib::Meses();
-        $title = 'Publicadores Cadastradas';
+        $title = 'Publicadores Cadastrados';
         $titulo = $title;
         $queryPublicador = $this->queryPublicador2($_GET);
         $queryPublicador['config']['exibe'] = 'html';

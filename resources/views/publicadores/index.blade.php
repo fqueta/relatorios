@@ -70,7 +70,7 @@
         <a href="{{ route($routa.'.create') }}" class="btn btn-success"><i class="fa fa-plus"></i> Novo publicador </a>
     </div>
     <div class="col-md-12 d-print-none">
-      <div class="card card-primary card-outline">
+      <div class="card card-secondary card-outline">
       <div class="card-header"><h5>Localizar</h5></div>
 
         <div class="card-body">
@@ -135,7 +135,7 @@
   <div class="col-md-12 mens"></div>
 
     <div class="col-md-12">
-      <div class="card card-primary card-outline">
+      <div class="card card-secondary card-outline">
       <div class="card-header"><h5>{{$titulo}}</h5></div>
 
         <div class="card-body table-responsive">
