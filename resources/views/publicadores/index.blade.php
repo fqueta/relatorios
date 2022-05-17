@@ -217,7 +217,7 @@
           }
           $(function(){
               $('.print-card').on('click',function(e){
-                  openPageLink(e,$(this).attr('href'),$('#painel-ano').val());
+                  openPageLink(e,$(this).attr('href'),$('#painel-ano').val(),'&popup=s');
               });
               $('.relatorios-create').on('click',function(e){
                   e.preventDefault();

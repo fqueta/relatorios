@@ -145,9 +145,12 @@ function abrirjanelaPadraoConsulta(url){
 	abrirjanela(url, "consultaCliente", wid, height, "left="+meio+",toolbar=no, location=no, directories=no, status=no, menubar=no");
 }
 
-function openPageLink(ev,url,ano){
+function openPageLink(ev,url,ano,compleUrl){
   ev.preventDefault();
-  var u = url.trim()+'?ano='+ano;
+  if(typeof compleUrl=='undefined'){
+      compleUrl = '';
+  }
+  var u = url.trim()+'?ano='+ano+compleUrl;
 	abrirjanelaPadrao(u);
 	//window.location = u;
 }
@@ -1937,6 +1940,9 @@ function lib_roboEtiqueta(){
     },function(res){
         $('#preload').fadeOut("fast");
         $('.mens').html(res.mens);
+        if(res.exec){
+            location.reload();
+        }
     });
 }
 function lib_imprimeCartaoFiltro() {

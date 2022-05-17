@@ -9,10 +9,14 @@ use Illuminate\Support\Facades\DB;
 
 class RoboController extends Controller
 {
-    public function lerRelatorios()
+    public function lerRelatorios($id_publicador=false)
     {
         $ret = false;
-        $pub = Publicador::where('ativo','=','s')->where('excluido','=','n')->where('deletado','=','n')->OrderBy('id','asc')->get();
+        if($id_publicador){
+            $pub = Publicador::where('ativo','=','s')->where('excluido','=','n')->where('deletado','=','n')->OrderBy('id','asc')->where('id','=',$id_publicador)->get();
+        }else{
+            $pub = Publicador::where('ativo','=','s')->where('excluido','=','n')->where('deletado','=','n')->OrderBy('id','asc')->get();
+        }
         if(!empty($pub)){
             foreach ($pub as $k => $v) {
 

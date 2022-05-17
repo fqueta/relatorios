@@ -104,6 +104,11 @@ class GerenciarRelatorios extends Controller
           $GerenciarUsuarios = new GerenciarUsuarios($user);
           $ret['exec'] = true;
           $ret['salvarRelatorios'] = $salvarRelatorios;
+          dd($salvarRelatorios);
+          if(isset($salvarRelatorios['id_publicador'])){
+            $rb = new RoboController;
+            $ret['lerRelatorios'] = $rb->lerRelatorios($salvarRelatorios['id_publicador']);
+          }
           $ret['mens'] = 'Registro gravado com sucesso!';
           $ret['cartao']=$GerenciarUsuarios->cardData($dados['id_publicador']);
         }else{
@@ -158,17 +163,21 @@ class GerenciarRelatorios extends Controller
 
       }
       $salvarRelatorios=false;
+      //dd($data);
       unset($data['_token']);
       if(!empty($data)){
         $salvarRelatorios=relatorio::where('id',$data['id'])->update($data);
       }
-      //dd($salvarRelatorios);
       if($salvarRelatorios){
         $GerenciarUsuarios = new GerenciarUsuarios($user);
         $ret['exec'] = true;
         $ret['salvarRelatorios'] = $data;
         $ret['mens'] = 'Registro gravado com sucesso!';
         $ret['cartao']=$GerenciarUsuarios->cardData($data['id_publicador']);
+        if(isset($data['id_publicador'])){
+            $rb = new RoboController;
+            $ret['lerRelatorios'] = $rb->lerRelatorios($data['id_publicador']);
+        }
       }else{
         $ret['exec'] = false;
         $ret['mens'] = 'Erro ao gravar!';
