@@ -12,6 +12,11 @@
 
 </style>
 @endif
+<style media="print">
+    #DataTables_Table_0_filter label,#DataTables_Table_0_info{
+        display: none;
+    }
+</style>
 <div id="preload">
     <div class="lds-dual-ring"></div>
 </div>

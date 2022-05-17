@@ -324,7 +324,7 @@ class PublicadoresController extends Controller
     {
         $this->authorize('is_admin', $user);
         $meses = Qlib::Meses();
-        $title = 'Publicadors Cadastradas';
+        $title = 'Publicadores Cadastradas';
         $titulo = $title;
         $queryPublicador = $this->queryPublicador2($_GET);
         $queryPublicador['config']['exibe'] = 'html';
@@ -416,11 +416,11 @@ class PublicadoresController extends Controller
     {
         $id = $publicador;
         $dados = Publicador::where('id',$id)->get();
-        $routa = 'publicadors';
+        $routa = 'publicadores';
         //$this->authorize('ler', $this->routa);
 
         if(!empty($dados)){
-            $title = 'Editar Cadastro de publicadors';
+            $title = 'Editar Cadastro de publicadores';
             $titulo = $title;
             $dados[0]['ac'] = 'alt';
             if(isset($dados[0]['config'])){
