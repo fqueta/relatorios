@@ -124,7 +124,7 @@
                     <label for="">Legenda dos status dos reletórios deste mês</label><br>
                     <label title="Relatório deste mês pendente" style="font-weight:500"><i class="fa fa-circle text-danger"></i> Relatório Pendente</label>
                     <label title="Relatório deste mês enviado para o secretário" style="font-weight:500"><i class="fa fa-circle text-warning"></i> Relatório Enviado</label>
-                    <label title="Relatório deste mês foi compilado pelo secretário" style="font-weight:500"><i class="fa fa-circle text-success"></i> Relatório Enviado</label>
+                    <label title="Relatório deste mês foi compilado pelo secretário" style="font-weight:500"><i class="fa fa-circle text-success"></i> Relatório Recebido</label>
                   </div>
                   @include('layout.progressbar')
                 </div>
