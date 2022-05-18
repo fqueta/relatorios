@@ -32,7 +32,7 @@ Route::prefix('grupos')->group(function(){
 Route::prefix('usuarios')->group(function(){
     Route::get('/',[GerenciarUsuarios::class,'index'])->name('usuarios.index');
     Route::get('/create',[GerenciarUsuarios::class,'create'])->name('usuarios.create');
-    Route::post('/',[GerenciarUsuarios::class,'store'])->name('usuarios.store');
+    Route::post('/',[PublicadoresController::class,'store'])->name('usuarios.store');
     Route::get('/{id}/edit',[GerenciarUsuarios::class,'edit'])->where('id', '[0-9]+')->name('usuarios.edit');
     Route::put('/{id}',[GerenciarUsuarios::class,'update'])->where('id', '[0-9]+')->name('usuarios.update');
     Route::delete('/{id}',[GerenciarUsuarios::class,'destroy'])->where('id', '[0-9]+')->name('usuarios-destroy');

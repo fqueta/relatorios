@@ -38,10 +38,10 @@ class PublicadoresController extends Controller
         ];
 
         $publicador =  Publicador::where('excluido','=','n')->where('deletado','=','n')->orderBy('id',$config['order']);
-        //$publicador =  DB::table('publicadors')->where('excluido','=','n')->where('deletado','=','n')->orderBy('id',$config['order']);
+        //$publicador =  DB::table('publicadores')->where('excluido','=','n')->where('deletado','=','n')->orderBy('id',$config['order']);
 
         $publicador_totais = new stdClass;
-        $campos = isset($_SESSION['campos_publicadors_exibe']) ? $_SESSION['campos_publicadors_exibe'] : $this->campos();
+        $campos = isset($_SESSION['campos_publicadores_exibe']) ? $_SESSION['campos_publicadores_exibe'] : $this->campos();
         $tituloTabela = 'Lista de todos cadastros';
         $arr_titulo = false;
         if(isset($get['filter'])){
@@ -106,7 +106,7 @@ class PublicadoresController extends Controller
         $meses = Qlib::Meses();
         $userLogado = Auth::user();
         $user = $userLogado->id;
-        $campos = isset($_SESSION['campos_publicadors_exibe']) ? $_SESSION['campos_publicadors_exibe'] : $this->campos();
+        $campos = isset($_SESSION['campos_publicadores_exibe']) ? $_SESSION['campos_publicadores_exibe'] : $this->campos();
         if(isset($_GET['filter'])){
             //Qlib::lib_print($campos);
             $compleSql="WHERE ativo='s'";
@@ -363,7 +363,7 @@ class PublicadoresController extends Controller
         $titulo = $title;
         $config = [
             'ac'=>'cad',
-            'frm_id'=>'frm-publicadors',
+            'frm_id'=>'frm-publicadores',
             'route'=>$this->routa,
         ];
         $value = [
@@ -381,13 +381,17 @@ class PublicadoresController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'nome' => ['required','string','unique:publicadors'],
+            'nome' => ['required','string','unique:publicadores'],
         ]);
+        $userLogado = Auth::user();
+        $user = $userLogado->id;
+
         $dados = $request->all();
         $ajax = isset($dados['ajax'])?$dados['ajax']:'n';
         $dados['ativo'] = isset($dados['ativo'])?$dados['ativo']:'n';
-
+        $dados['autor'] = isset($dados['autor'])?$dados['autor']:$user;
         //dd($dados);
+
         $salvar = Publicador::create($dados);
         $route = $this->routa.'.index';
         $ret = [
@@ -428,12 +432,13 @@ class PublicadoresController extends Controller
             }
             $listFiles = false;
             $campos = $this->campos();
+            /*
             if(isset($dados[0]['token'])){
                 $listFiles = _upload::where('token_produto','=',$dados[0]['token'])->get();
-            }
+            }*/
             $config = [
                 'ac'=>'alt',
-                'frm_id'=>'frm-publicadors',
+                'frm_id'=>'frm-publicadores',
                 'route'=>$this->routa,
                 'id'=>$id,
             ];
@@ -528,7 +533,7 @@ class PublicadoresController extends Controller
         //$this->authorize('delete', $this->routa);
         $config = $request->all();
         $ajax =  isset($config['ajax'])?$config['ajax']:'n';
-        $routa = 'publicadors';
+        $routa = 'publicadores';
         if (!$post = Publicador::find($id)){
             if($ajax=='s'){
                 $ret = response()->json(['mens'=>'Registro não encontrado!','color'=>'danger','return'=>route($this->view.'.index')]);
