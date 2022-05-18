@@ -181,7 +181,7 @@
                           </svg>
                         </a>
 
-                        <form action="{{ route('usuarios-destroy',['id'=>$usuario->id]) }}" id="frm-{{$usuario->id}}" method="POST">
+                        <form action="{{ route('publicadores-destroy',['id'=>$usuario->id]) }}" id="frm-{{$usuario->id}}" method="POST">
                           @csrf
                           @method('DELETE')
                           <button type="button" data-del="true" data-id="{{$usuario->id}}" name="button" title="Excluir" class="btn btn-light">
