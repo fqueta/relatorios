@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Publicador;
 use App\Models\relatorio;
 use App\Models\User;
 use App\Models\usuario;
@@ -36,7 +37,7 @@ class GerenciarRelatorios extends Controller
         }
         $mesExt = $meses[Qlib::zerofill($mes,2)];
         $ano = isset($_GET['ano'])?$_GET['ano']:date('Y');
-        $dadosPub = usuario::find($id);
+        $dadosPub = Publicador::find($id);
         $dados = [
           ['type'=>'hidden','campo'=>'id_publicador','label'=>'id_publicador','valor'=>$id],
           ['type'=>'hidden','campo'=>'mes','label'=>'Mes','valor'=>$mes],
@@ -77,7 +78,7 @@ class GerenciarRelatorios extends Controller
         //$dados['enviado_por'] = '{"user_id":"4","nome":"Waldir Bertges","ip":"177.104.65.201"}';
         $arr_obs = ['p'=>'','pa'=>'Pioneiro Auxiliar','pr'=>'Pioneiro Regular'];
         if(isset($dados['id_publicador'])){
-          $dadosPub = DB::select("SELECT pioneiro FROM usuarios WHERE id='".$dados['id_publicador']."'");
+          $dadosPub = DB::select("SELECT pioneiro FROM publicadores WHERE id='".$dados['id_publicador']."'");
           if($dadosPub){
             if(empty($dadosPub[0]->pioneiro)){
               $privilegio = 'p';
@@ -104,7 +105,7 @@ class GerenciarRelatorios extends Controller
           $GerenciarUsuarios = new GerenciarUsuarios($user);
           $ret['exec'] = true;
           $ret['salvarRelatorios'] = $salvarRelatorios;
-          dd($salvarRelatorios);
+          //dd($salvarRelatorios);
           if(isset($salvarRelatorios['id_publicador'])){
             $rb = new RoboController;
             $ret['lerRelatorios'] = $rb->lerRelatorios($salvarRelatorios['id_publicador']);
@@ -142,7 +143,7 @@ class GerenciarRelatorios extends Controller
       }
       $arr_obs = ['p'=>'','pa'=>'Pioneiro Auxiliar','pr'=>'Pioneiro Regular'];
       if(isset($data['id_publicador'])){
-        $dadosPub = DB::select("SELECT pioneiro FROM usuarios WHERE id='".$data['id_publicador']."'");
+        $dadosPub = DB::select("SELECT pioneiro FROM publicadores WHERE id='".$data['id_publicador']."'");
         if($dadosPub){
           if(empty($dadosPub[0]->pioneiro)){
             $privilegio = 'p';
@@ -165,7 +166,7 @@ class GerenciarRelatorios extends Controller
       $salvarRelatorios=false;
       //dd($data);
       unset($data['_token']);
-      if(!empty($data)){
+      if(!empty($data) && isset($data['id'])){
         $salvarRelatorios=relatorio::where('id',$data['id'])->update($data);
       }
       if($salvarRelatorios){
@@ -276,14 +277,14 @@ class GerenciarRelatorios extends Controller
         $mes--;
       }
       $ret = false;
-      $totalPublicadores['todos'] = usuario::count();
-      $totalPublicadores['inativos'] = usuario::where('inativo','=','s')->count();
+      $totalPublicadores['todos'] = Publicador::count();
+      $totalPublicadores['inativos'] = Publicador::where('inativo','=','s')->count();
       $totalRelatorios['enviados'] = relatorio::where('hora','>','0')->where('mes','=',$mes)->where('ano','=',$ano)->count();
       if($id_grupo){
         $totalRelatorios['enviados'] = relatorio::where('id_grupo','=',$id_grupo)->where('hora','>','0')->where('mes','=',$mes)->where('ano','=',$ano)->count();
-        $totalPublicadores['ativos'] = usuario::where('inativo','=','n')->where('id_grupo','=',$id_grupo)->count();
+        $totalPublicadores['ativos'] = Publicador::where('inativo','=','n')->where('id_grupo','=',$id_grupo)->count();
       }else{
-        $totalPublicadores['ativos'] = usuario::where('inativo','=','n')->count();
+        $totalPublicadores['ativos'] = Publicador::where('inativo','=','n')->count();
       }
       $progressBar['enviado'] = round(($totalRelatorios['enviados'] * 100)/$totalPublicadores['ativos'],0);
       $ret['totalPublicadores'] = $totalPublicadores;
