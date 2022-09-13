@@ -42,14 +42,14 @@ class HomeController extends Controller
         $ano_servico = date('Y');
         $ano_atual = $ano_servico;
         $mes_atual =  isset($_GET['mes'])?$_GET['mes']:date('m');
-        if($mes_atual > 8){
+        if($mes_atual > 9){
           $ano_servico++;
         }
         $ano = isset($_GET['ano'])?$_GET['ano']:$ano_servico;
         if($ano < $ano_servico){
           $ano_servico = $ano;
         }else{
-          if($mes_atual > 8){
+          if($mes_atual > 9){
             $ano = $ano+1;
           }
         }
