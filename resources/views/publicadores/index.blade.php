@@ -48,9 +48,6 @@
           @endforeach
       </select>
       @endif
-      <!--
-      <p>Todos os publicadores ativos da congregação</p>
-    -->
     </div>
     <div class="col-md-2 d-print-none">
       <form action="" method="GET">

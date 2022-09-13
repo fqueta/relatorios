@@ -165,7 +165,10 @@ class HomeController extends Controller
         $totalPubMes = '';
         $totalVid = '';
         //$resumo = $publicadores;
-        return view('home',['resumo'=>$publicadores,'estatisticas'=>$estatisticas]);
+        return view('home',['resumo'=>$publicadores,'estatisticas'=>$estatisticas,
+        //'mes_atual'=>Qlib::zerofill($mes,2),
+        'mes_atual'=>$mes_atual,
+        'meses'=>$mesExt]);
     }
     public function resumo(){
 

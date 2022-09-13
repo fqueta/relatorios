@@ -32,10 +32,35 @@
         </div>
      @endif
         <div class="row">
-          <div class="col-md-12">
-            <h4>{{$resumo['config_table']['data']['titulo']}}</h5>
-          </div>
+            <form action="" method="GET" id="fil-data" style="width: 100%">
+                <div class="row mx-0">
+                    <div class="col-md-2 d-print-none">
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label for="">Ano de entrega</label><br>
+                            <input type="number" class="form-control" value="@if(isset($_GET['ano'])&&!empty($_GET['ano'])){{$_GET['ano']}}@else{{date('Y')}}@endif" name="ano" id="painel-ano">
+                            </div>
+                        </div>
+                        <!--<div class="form-group col-md-6">
+                            <button type="submit" class="btn btn-primary">OK</button>
+                        </div>-->
+                    </div>
+                    <div class="col-md-10 mb-3 d-print-none">
+                        @if(isset($meses))
+                        <label for="">Mês de entrega</label><br>
+                        <select name="mes" class="form-control" id="mes" onchange="$('#fil-data').submit();">
+                            @foreach($meses As $k=>$v)
+                            <option @if(isset($mes_atual) && $mes_atual==$k) selected @endif value="{{$k}}">{{$v}}</option>
+                            @endforeach
+                        </select>
+                        @endif
+                    </div>
+                    <div class="col-md-12">
+                        <h4>{{$resumo['config_table']['data']['titulo']}}</h5>
+                    </div>
 
+                </div>
+            </form>
         @include('layout.progressbar')
         @if(isset($resumo['total_resumo']))
         @foreach($resumo['total_resumo'] As $key=>$value)
