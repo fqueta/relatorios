@@ -8,11 +8,9 @@
 
 @section('content')
     <!--<p>Welcome to this beautiful admin panel.</p>-->
-  @can('user')
-      <h3>Seja bem vindo para ter acesso entre em contato com o suporte</h3>
-  @else
-      @if(isset($resumo['total_cards']))
-        <div class="row">
+  @can('is_admin')
+  @if(isset($resumo['total_cards']))
+  <div class="row">
           @foreach($resumo['total_cards'] As $k=>$vtot)
           <div class="col-lg-2 col-6">
                 <!-- small box -->
@@ -91,6 +89,8 @@
         </div>
         @endforeach
         @endif
+    @else
+      <h3>Seja bem vindo para ter acesso entre em contato com o suporte</h3>
     @endcan
 
 

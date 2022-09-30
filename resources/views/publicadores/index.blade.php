@@ -160,6 +160,19 @@
                             {!! @$usuario->tags_html !!}
                           </div>
                           <div class=" d-print-block d-none"> <label>Endereço:</label> {{$usuario->endereco}} <label>Tel:</label> {{$usuario->tel}} <label for="">Batismo</label> {{$usuario->data_batismo}}</div>
+                        @if (isset($usuario->config['nome_contato_em']))
+
+                            <div class="col-12 px-0 d-print-block d-none">
+                                <label for="contato_em">Contato de Emergência:</label>
+                                <span>
+                                    {{$usuario->config['nome_contato_em']}}
+                                </span>
+                                <label for="telefone_em">Telefone:</label>
+                                <span>
+                                    {{$usuario->config['telefone_contato_em']}}
+                                </span>
+                            </div>
+                        @endif
                         </td>
                       <td> @if($usuario->pioneiro=='pa') P. Auxiliar @elseif($usuario->pioneiro=='pr') P. Regular  @elseif($usuario->pioneiro=='p') Publicador @else Publicador @endif </td>
                       <td><div class="text-right" title="Relatório {{$usuario->status}} "> {{$usuario->status}} </div>

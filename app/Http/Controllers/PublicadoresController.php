@@ -173,6 +173,9 @@ class PublicadoresController extends Controller
         if($usuarios){
             $GerenciarRelatorios = new GerenciarRelatorios($this->user);
             foreach ($usuarios as $k => $val) {
+                if(isset($val->config)){
+                    $val->config=Qlib::lib_json_array($val->config);
+                }
                 $usuarios[$k]->relatorio = $GerenciarRelatorios->verificarRelatorioMensal(['id_publicador'=>$val->id]);
                 $usuarios[$k]->compilado = $GerenciarRelatorios->verificarRelatorioMensal(['id_publicador'=>$val->id,'tipo'=>'compilado']);
                 if($usuarios[$k]->compilado){
@@ -315,6 +318,10 @@ class PublicadoresController extends Controller
                 'tam'=>'10',
                 'cp_busca'=>'tags]['
             ],
+            'sep1'=>['label'=>'Contato de Emergência','active'=>false,'tam'=>'12','script'=>'<h5>Contato de Emergência</h5>','type'=>'html_script','class_div'=>'bg-secondary'],
+            'config[nome_contato_em]'=>['label'=>'Nome','active'=>true,'type'=>'text','exibe_busca'=>'d-block','event'=>'','tam'=>'10','placeholder'=>'','cp_busca'=>'config][nome_contato_em'],
+            'config[telefone_contato_em]'=>['label'=>'Telefone','active'=>true,'type'=>'tel','exibe_busca'=>'d-block','event'=>'onblur=mask(this,clientes_mascaraTelefone); onkeypress=mask(this,clientes_mascaraTelefone);','tam'=>'2','placeholder'=>'','cp_busca'=>'config][telefone_contato_em'],
+
             'obs'=>['label'=>'Observação','active'=>false,'type'=>'textarea','exibe_busca'=>'d-block','event'=>'','tam'=>'12'],
             'ativo'=>['label'=>'Liberar','active'=>true,'type'=>'chave_checkbox','value'=>'s','valor_padrao'=>'s','exibe_busca'=>'d-none','event'=>'','tam'=>'3','arr_opc'=>['s'=>'Sim','n'=>'Não']],
 

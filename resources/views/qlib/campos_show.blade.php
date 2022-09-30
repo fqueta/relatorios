@@ -7,6 +7,9 @@
             @if (isset($config['arr_opc']))
                 {{@$config['arr_opc'][$config['value']]}}
             @endif
+            @if($config['campo']=='bairro')
+        @endif
+
         </div>
     @elseif ($config['type']=='hidden')
     @elseif ($config['type']=='select_multiple')
@@ -52,7 +55,7 @@
         <!--config['checked'] é o gravado no bando do dedos e o value é o valor para ficar checado-->
         <div class="col-{{$config['tam']}} {{$config['class_div']}}" div-id="{{$config['campo']}}">
             <label for="{{$config['campo']}}">{{$config['label']}}</label><br>
-            @if(isset($config['value'])){{$config['value']}}@endif
+            @if(isset($config['value'])){!! $config['value'] !!}@endif
         </div>
     @elseif ($config['type']=='html')
         @php
@@ -68,9 +71,6 @@
             @endif
         </div>
     @elseif ($config['type']=='html_vinculo')
-        @php
-           $config['script'] = isset($config['script'])?$config['script']:false;
-        @endphp
         <div class="col-{{$config['tam']}} {{$config['class_div']}}" div-id="{{$config['campo']}}">
             <div class="card card-secondary card-outline">
                 <div class="card-header">
@@ -89,7 +89,6 @@
                         @endif
                         @php
                             $d = $config['data_selector'];
-
                         @endphp
                         @if (isset($config['data_selector']['table']) && is_array($config['data_selector']['table']))
                         <div class="col-md-12 ">
@@ -97,9 +96,11 @@
                                     @if (@$config['data_selector']['tipo']=='array')
                                         @foreach ($config['data_selector']['list'] as $klis=>$vlis)
                                             <div class="row" id="tr-{{$klis}}-{{@$config['data_selector']['list'][$klis]['id']}}">
+
+
                                                 @foreach ($config['data_selector']['campos'] as $kb=>$vb)
                                                     @if ($vb['type']=='arr_tab')
-                                                        {{App\Qlib\Qlib::qShow([
+                                                        {!! App\Qlib\Qlib::qShow([
                                                             'type'=>@$vb['type'],
                                                             'campo'=>$kb,
                                                             'label'=>$vb['label'],
@@ -120,7 +121,7 @@
                                                             'script'=>@$vb['script_show'],
                                                             'valor_padrao'=>@$vb['valor_padrao'],
                                                             'dados'=>@$vb['dados'],
-                                                        ])}}
+                                                        ]) !!}
                                                     @else
                                                         @php
                                                             if(isset($vb['cp_busca']) && !empty($vb['cp_busca']))
@@ -132,13 +133,26 @@
                                                                     $value = $config['data_selector']['list'][$klis][$kb];
                                                                 }
                                                             }else{
-                                                                $value = @$config['data_selector']['list'][$klis][$kb];
+                                                                $vlue = @$config['data_selector']['list'][$klis][$kb];
                                                                 if(isset($vb['arr_opc'])){
-                                                                    $value = isset($vb['arr_opc'][$value])?$vb['arr_opc'][$value]:$value;
+                                                                    $value = isset($vb['arr_opc'][$vlue])?$vb['arr_opc'][$vlue]:$vlue;
+                                                                    $value = $vlue;
+                                                                }else{
+                                                                    $value = $vlue;
                                                                 }
                                                             }
-                                                        @endphp
-                                                    {{App\Qlib\Qlib::qShow([
+                                                            if ($vb['label']=='Quadra'){
+                                                                $value = $vlue;
+                                                            }
+                                                        //  if($kb=='bairro'){
+                                                        //     echo $vb['type'];
+                                                        //     echo $value;
+                                                        //     dd($config['data_selector']);
+                                                        //  }
+                                                     @endphp
+
+
+                                                    {!! App\Qlib\Qlib::qShow([
                                                         'type'=>@$vb['type'],
                                                         'campo'=>$kb,
                                                         'label'=>$vb['label'],
@@ -159,7 +173,7 @@
                                                         'script'=>@$vb['script_show'],
                                                         'valor_padrao'=>@$vb['valor_padrao'],
                                                         'dados'=>@$vb['dados'],
-                                                        ])}}
+                                                        ]) !!}
                                                     @endif
                                                 @endforeach
                                                 <div class="col-12">
@@ -171,7 +185,7 @@
                                         <div class="row" id="tr-{{@$config['data_selector']['list']['id']}}">
                                             @foreach ($config['data_selector']['campos'] as $kb=>$vb)
 
-                                                @if ($vb['type']=='text')
+                                                @if ($vb['type']=='text' || $vb['type']=='date' || $vb['type']=='tel' || $vb['type']=='number')
                                                     @php
                                                         if(isset($vb['cp_busca']) && !empty($vb['cp_busca']))
                                                         {
@@ -184,8 +198,11 @@
                                                         }else{
                                                             $value = @$config['data_selector']['list'][$kb];
                                                         }
+                                                        if($vb['type']=='date'){
+                                                            $value = App\Qlib\Qlib::dataExibe($value);
+                                                        }
                                                     @endphp
-                                                    {{App\Qlib\Qlib::qShow([
+                                                    {!! App\Qlib\Qlib::qShow([
                                                         'type'=>@$vb['type'],
                                                         'campo'=>$kb,
                                                         'label'=>$vb['label'],
@@ -206,7 +223,7 @@
                                                         'script'=>@$vb['script_show'],
                                                         'valor_padrao'=>@$vb['valor_padrao'],
                                                         'dados'=>@$vb['dados'],
-                                                    ])}}
+                                                    ]) !!}
 
                                                 @elseif ($vb['type']=='arr_tab'||$vb['type']=='select')
                                                     @php
@@ -225,7 +242,7 @@
                                                         }
                                                     @endphp
 
-                                                    {{App\Qlib\Qlib::qShow([
+                                                    {!! App\Qlib\Qlib::qShow([
                                                         'type'=>@$vb['type'],
                                                         'campo'=>$kb,
                                                         'label'=>$vb['label'],
@@ -246,7 +263,7 @@
                                                         'script'=>@$vb['script_show'],
                                                         'valor_padrao'=>@$vb['valor_padrao'],
                                                         'dados'=>@$vb['dados'],
-                                                        ])}}
+                                                        ]) !!}
                                                 @endif
                                             @endforeach
                                         </div>
@@ -272,12 +289,17 @@
     @elseif($config['type']=='text')
     <div class="col-{{$config['tam']}}" div-id="{{$config['campo']}}">
         <label for="{{$config['campo']}}">{{$config['label']}}:</label>
-        {{@$config['value']}}
+        {!! @$config['value'] !!}
+    </div>
+    @elseif($config['type']=='date')
+    <div class="col-{{$config['tam']}}" div-id="{{$config['campo']}}">
+        <label for="{{$config['campo']}}">{{$config['label']}}:</label>
+        {{ @$config['value'] }}
     </div>
     @else
     <div class="col-{{$config['tam']}}" div-id="{{$config['campo']}}">
         <label for="{{$config['campo']}}">{{$config['label']}}:</label>
-        {{@$config['value']}}
+        {!! @$config['value'] !!}
     </div>
     @endif
 @endif
