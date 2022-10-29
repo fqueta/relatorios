@@ -270,14 +270,15 @@ class GerenciarRelatorios extends Controller
     }
     public function estatisticas($mes=false,$ano=false,$id_grupo=false)
     {
-      $mes = isset($_GET['m']) ? $_GET['m'] : date('m');
-      $ano = isset($_GET['ano']) ? $_GET['ano'] : date('Y');
-      if($mes == '01'){
-        $mes = '12';
-        $ano = (date('Y') - 1);
-      }else{
-        $mes--;
-      }
+      $dt = Qlib::anoTeocratico();
+      $mes = isset($_GET['m']) ? $_GET['m'] : $dt['mes'];
+      $ano = isset($_GET['ano']) ? $_GET['ano'] : $dt['ano'];
+    //   if($mes == '01'){
+    //     $mes = '12';
+    //     $ano = (date('Y') - 1);
+    //   }else{
+    //     $mes--;
+    //   }
       $ret = false;
       $totalPublicadores['todos'] = Publicador::count();
       $totalPublicadores['inativos'] = Publicador::where('inativo','=','s')->count();
