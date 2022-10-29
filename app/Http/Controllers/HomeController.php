@@ -39,29 +39,29 @@ class HomeController extends Controller
 
     public function index()
     {
-        $ano_servico = date('Y');
+        $dt = Qlib::anoTeocratico();
+        $ano_servico = $dt['ano'];
         $ano_atual = $ano_servico;
-        $mes_atual =  isset($_GET['mes'])?$_GET['mes']:date('m');
-        if($mes_atual > 9){
-          $ano_servico++;
-        }
+        $mes_atual =  isset($_GET['mes'])?$_GET['mes']:$dt['mes'];
+        // if($mes_atual > 9){
+        //   $ano_servico++;
+        // }
         $ano = isset($_GET['ano'])?$_GET['ano']:$ano_servico;
-        if($ano < $ano_servico){
-          $ano_servico = $ano;
-        }else{
-          if($mes_atual > 9){
-            $ano = $ano+1;
-          }
-        }
+        // if($ano < $ano_servico){
+        //   $ano_servico = $ano;
+        // }else{
+        //   if($mes_atual > 9){
+        //     $ano = $ano+1;
+        //   }
+        // }
 
         $mes = $mes_atual;
-        if($mes == '01'){
-          $mes = '12';
-          $ano = date('Y') - 1;
-        }else{
-          $mes--;
-
-        }
+        // if($mes == '01'){
+        //   $mes = '12';
+        //   $ano = date('Y') - 1;
+        // }else{
+        //   $mes--;
+        // }
         $controllerRelatorio = new GerenciarRelatorios($this->user);
         $estatisticas = $controllerRelatorio->estatisticas($mes,$ano);
 
@@ -168,7 +168,7 @@ class HomeController extends Controller
         return view('home',['resumo'=>$publicadores,'estatisticas'=>$estatisticas,
         //'mes_atual'=>Qlib::zerofill($mes,2),
         'mes_atual'=>$mes_atual,
-        'meses'=>$mesExt]);
+        'meses'=>$mesExt,'ano'=>$ano]);
     }
     public function resumo(){
 

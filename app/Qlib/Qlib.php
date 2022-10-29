@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Permission;
 use App\Models\Qoption;
+use Spatie\Permission\Models\Permission as ModelsPermission;
 
 class Qlib
 {
@@ -30,6 +31,7 @@ class Qlib
 				//$sql = "SELECT valor FROM qoptions WHERE url = '$valor' AND ativo='s' AND excluido='n' AND deletado='n'";
 
                 //$result = Qlib::dados_tab('qoptions',['sql'=>$sql]);
+
                 $result = Qoption::where('url','=',$valor)->
                 where('ativo','=','s')->
                 where('excluido','=','n')->
@@ -423,7 +425,8 @@ class Qlib
             $arr_permissions = [];
             $logado = Auth::user();
             $id_permission = $logado->id_permission;
-            $dPermission = Permission::findOrFail($id_permission);
+
+            $dPermission = ModelsPermission::findOrFail($id_permission);
             if($dPermission && $dPermission->active=='s'){
                 $arr_permissions = Qlib::lib_json_array($dPermission->id_menu);
                 if(isset($arr_permissions[$perm][$url])){
@@ -435,12 +438,12 @@ class Qlib
     }
     static public function html_vinculo($config = null)
     {
-        /**
-        Qlib::html_vinculo([
-            'campos'=>'',
-            'type'=>'html_vinculo',
-            'dados'=>'',
-        ]);
+        /*
+        // Qlib::html_vinculo([
+        //     'campos'=>'',
+        //     'type'=>'html_vinculo',
+        //     'dados'=>'',
+        // ]);
          */
 
         $ret = false;
@@ -763,4 +766,19 @@ class Qlib
 		}
 		return date($saida, $timestamp_final);
 	}
+    static public function anoTeocratico(){
+        $ano = date('Y');
+        $mes = date('m');
+        $mes = (int)$mes;
+        if($mes == 1){
+            $mes = 12;
+            $ano = date('Y') - 1;
+        }else{
+            $mes--;
+        }
+        if($mes>8){
+            $ano = date('Y')+1;
+        }
+        return ['ano'=>$ano,'mes'=>$mes];
+    }
 }

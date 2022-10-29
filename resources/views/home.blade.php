@@ -36,7 +36,7 @@
                         <div class="form-row">
                             <div class="form-group col-md-12">
                                 <label for="">Ano de entrega</label><br>
-                            <input type="number" class="form-control" value="@if(isset($_GET['ano'])&&!empty($_GET['ano'])){{$_GET['ano']}}@else{{date('Y')}}@endif" name="ano" id="painel-ano">
+                            <input type="number" class="form-control" value="@if(isset($ano)&&!empty($ano)){{$ano}}@else{{date('Y')}}@endif" name="ano" id="painel-ano">
                             </div>
                         </div>
                         <!--<div class="form-group col-md-6">

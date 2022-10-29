@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\grupo;
 use App\Models\Publicador;
 use App\Models\relatorio;
 use App\Models\User;
@@ -224,8 +225,9 @@ class GerenciarRelatorios extends Controller
         $id_publicador = isset($config['id_publicador'])?$config['id_publicador']:false;
         $tipo = isset($config['tipo'])?$config['tipo']:false;
         if(isset($id_publicador)){
-            $mes = isset($config['mes'])?$config['mes']:(date('m')-1);
-            $ano = isset($config['ano'])?$config['ano']:date('Y');
+            $dt = Qlib::anoTeocratico();
+            $mes = isset($config['mes'])?$config['mes']:$dt['mes'];
+            $ano = isset($config['ano'])?$config['ano']:$dt['ano'];
             if($mes==0){
               $mes = 12;
             }

@@ -209,15 +209,16 @@ class PublicadoresController extends Controller
         $titulo = $title;
         //dd($usuarios);
         $view = isset($_GET['view']) ? $_GET['view'] : 'index';
-        $mes_atual = isset($_GET['m']) ? $_GET['m'] : date('m');
-        $ano = isset($_GET['ano']) ? $_GET['ano'] : date('Y');
+        $dt = Qlib::anoTeocratico();
+        $mes_atual = isset($_GET['m']) ? $_GET['m'] : $dt['mes'];
+        $ano = isset($_GET['ano']) ? $_GET['ano'] : $dt['ano'];
         $mes = $mes_atual;
-        if($mes == '01'){
-            $mes = '12';
-            $ano = (date('Y') - 1);
-        }else{
-            $mes--;
-        }
+        // if($mes == '01'){
+        //     $mes = '12';
+        //     $ano = (date('Y') - 1);
+        // }else{
+        //     $mes--;
+        // }
         $controllerRelatorio = new GerenciarRelatorios($this->user);
         $id_grupo = isset($_GET['fil']['id_grupo'])?$_GET['fil']['id_grupo']:false;
         $estatisticas = $controllerRelatorio->estatisticas($mes,$ano,$id_grupo);
@@ -336,15 +337,16 @@ class PublicadoresController extends Controller
         $queryPublicador = $this->queryPublicador2($_GET);
         $queryPublicador['config']['exibe'] = 'html';
         $routa = $this->routa;
-        $mes_atual = isset($_GET['m']) ? $_GET['m'] : date('m');
-        $ano = isset($_GET['ano']) ? $_GET['ano'] : date('Y');
+        $dt = Qlib::anoTeocratico();
+        $mes_atual = isset($_GET['m']) ? $_GET['m'] : $dt['mes'];
+        $ano = isset($_GET['ano']) ? $_GET['ano'] : $dt['ano'];
         $mes = $mes_atual;
-        if($mes == '01'){
-            $mes = '12';
-            $ano = (date('Y') - 1);
-        }else{
-            $mes--;
-        }
+        // if($mes == '01'){
+        //     $mes = '12';
+        //     // $ano = (date('Y') - 1);
+        // }else{
+        //     $mes--;
+        // }
         $controllerRelatorio = new GerenciarRelatorios($this->user);
         $id_grupo = isset($_GET['fil']['id_grupo'])?$_GET['fil']['id_grupo']:false;
         $estatisticas = $controllerRelatorio->estatisticas($mes,$ano,$id_grupo);
@@ -359,6 +361,7 @@ class PublicadoresController extends Controller
             //'arr_titulo'=>$queryPublicador['arr_titulo'],
             //'config'=>$queryPublicador['config'],
             'routa'=>$routa,
+            'ano'=>$ano,
             'view'=>'publicadores','meses'=>$meses,'mes_atual'=>$mes,'estatisticas'=>$estatisticas,
             'i'=>0,
         ]);
