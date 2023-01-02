@@ -770,15 +770,16 @@ class Qlib
         $ano = date('Y');
         $mes = date('m');
         $mes = (int)$mes;
-        if($mes>8){
-            $ano = date('Y')+1;
-        }
         if($mes == 1){
             $mes = 12;
-            $ano = date('Y') - 1;
+            // $ano = date('Y') - 1;
         }else{
             $mes--;
         }
+        if($mes>8 && $mes!=12){
+            $ano = date('Y')+1;
+        }
+
         return ['ano'=>$ano,'mes'=>$mes];
     }
 }
