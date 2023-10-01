@@ -143,7 +143,8 @@ class GerenciarRelatorios extends Controller
         }
       }
       $arr_obs = ['p'=>'','pa'=>'Pioneiro Auxiliar','pr'=>'Pioneiro Regular'];
-      if(isset($data['id_publicador'])){
+      $privilegio = isset($data['privilegio'])?$data['privilegio']:false;
+      if(isset($data['id_publicador']) && !$privilegio){
         $dadosPub = DB::select("SELECT pioneiro FROM publicadores WHERE id='".$data['id_publicador']."'");
         if($dadosPub){
           if(empty($dadosPub[0]->pioneiro)){
@@ -154,8 +155,8 @@ class GerenciarRelatorios extends Controller
         }else{
           $privilegio = 'p';
         }
-      }
-      $data['privilegio'] = $privilegio;
+    }
+    $data['privilegio'] = $privilegio;
       if($privilegio=='p'){
         $data['obs'] = str_replace($arr_obs['pa'],'',$data['obs']);
         $data['obs'] = str_replace($arr_obs['pr'],'',$data['obs']);
@@ -165,7 +166,6 @@ class GerenciarRelatorios extends Controller
 
       }
       $salvarRelatorios=false;
-      //dd($data);
       unset($data['_token']);
       if(!empty($data) && isset($data['id'])){
         $salvarRelatorios=relatorio::where('id',$data['id'])->update($data);

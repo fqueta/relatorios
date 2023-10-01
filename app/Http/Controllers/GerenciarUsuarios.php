@@ -260,13 +260,14 @@ class GerenciarUsuarios extends Controller
           $ano_servico++;
         }
         $ano = isset($_GET['ano'])?$_GET['ano']:$ano_servico;
-        if($ano < $ano_servico){
-            $ano_servico = $ano;
-        }else{
-          if($mes_atual > 8){
-            $ano = $ano+1;
-          }
-        }
+        // if($ano < $ano_servico){
+        //     $ano_servico = $ano;
+        // }else{
+        //     if($mes_atual > 8){
+        //         $ano = $ano+1;
+        //     }
+        // }
+        // dd($ano);
         //$compleSql = " id_publicador='$id' AND ano='$ano_servico'";
         $dados = DB::select("select * from publicadores WHERE id='$id'");
         //$total_horas = DB::select("select SUM(hora) from relatorios WHERE $compleSql");
@@ -418,7 +419,7 @@ class GerenciarUsuarios extends Controller
         $cartao['medias']['estudos'] = round($mediasEstudos) ;
         $url = url()->current();
         $cartao['url'] = $url;
-        //dd($cartao);
+        // dd($cartao);
         return $cartao;
     }
     public function cartao($id){

@@ -117,33 +117,38 @@ class PublicadoresController extends Controller
                     $compleOr = false;
                     $i=0;
                     foreach ($valor as $k => $v) {
-                        if($i==0){
-                            $or = ' AND (';
-                            $and = false;
-                        }else{
-                            $or = false;
-                            $and = 'OR';
+                        if(!empty($v)){
+
+                            if($i==0){
+                                $or = ' AND (';
+                                $and = false;
+                            }else{
+                                $or = false;
+                                $and = 'OR';
+                            }
+                            if($key=='priv'){
+                                $campo_bus = 'pioneiro';
+                            }elseif($key=='func'){
+                                $campo_bus = 'fun';
+                            }else{
+                                $campo_bus = $key;
+                            }
+                            if($k==0 && $key=='priv'){
+                                $compleOr .="$or $and $campo_bus=''";
+                                $i++;
+                            }elseif($key=='tags'){
+                                $compleOr .="$or $and $key LIKE '%\"$v\"%'";
+                                $i++;
+                            }else{
+                                $compleOr .="$or $and $campo_bus='$v'";
+                                $i++;
+                            }
                         }
-                        if($key=='priv'){
-                            $campo_bus = 'pioneiro';
-                        }elseif($key=='func'){
-                            $campo_bus = 'fun';
+                        if($compleOr){
+                            $compleOr .= ')';
                         }
-                        if($k==0 && $key=='priv'){
-                            $compleOr .="$or $and $campo_bus=''";
-                            $i++;
-                        }elseif($key=='tags'){
-                            $compleOr .="$or $and $key LIKE '%\"$v\"%'";
-                            $i++;
-                        }else{
-                            $compleOr .="$or $and $campo_bus='$v'";
-                            $i++;
-                        }
+                        $compleSql .= $compleOr;
                     }
-                    if($compleOr){
-                        $compleOr .= ')';
-                    }
-                    $compleSql .= $compleOr;
                 }else{
                     /*
                     if(isset($campos[$key]['type']) && $campos[$key]['type']=='select'){

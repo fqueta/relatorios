@@ -100,6 +100,7 @@ class RoboController extends Controller
                 $ret[$mes]['data'] = Qlib::CalcularMeses($hoje,($mesesAtras-$mes));
             }
         }
+        // dd($ret);
         return $ret;
     }
     /*
