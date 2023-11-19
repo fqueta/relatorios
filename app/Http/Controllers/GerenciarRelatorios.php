@@ -27,7 +27,7 @@ class GerenciarRelatorios extends Controller
         $titulo = $title;
         return view('relatorios.index',['relatorios'=>$relatorios,'title'=>$title,'titulo'=>$titulo]);
     }
-    public function create($id=false)
+    public function create_bk($id=false)
     {
         $meses = Qlib::Meses();
         $title = 'RELATÓRIO DE SERVIÇO DE CAMPO';
@@ -51,6 +51,56 @@ class GerenciarRelatorios extends Controller
           ['type'=>'number','campo'=>'estudo','label'=>'Estudos biblícos','valor'=>''],
           ['type'=>'text','campo'=>'obs','label'=>'Observações','valor'=>''],
         ];
+        $relatorio_cad = relatorio::where('id_publicador','=',$id)->where('mes','=',$mes)->where('ano','=',$ano)->get();
+        if($dsal = $relatorio_cad->all()){
+            foreach ($dados as $key => $value) {
+              if(isset($dsal[0][$value['campo']])){
+                $dados[$key]['valor'] = $dsal[0][$value['campo']];
+              }
+            }
+            if(isset($dsal[0]['id'])){
+              array_push($dados,['type'=>'hidden','campo'=>'id','label'=>'id','valor'=>$dsal[0]['id']]);
+            }
+        }
+        //dd($dados);
+        return view('relatorios.create',['dados'=>$dados,'dadosPub'=>$dadosPub,'mesExt'=>$mesExt,'mes'=>$mes,'ano'=>$ano,'title'=>$title,'titulo'=>$titulo]);
+    }
+    public function create($id=false)
+    {
+        $meses = Qlib::Meses();
+        $title = 'RELATÓRIO DE SERVIÇO DE CAMPO';
+        $titulo = $title;
+        $mes = isset($_GET['m'])?$_GET['m']:(date('m')-1);
+        if($mes==0){
+          $mes = 12;
+        }
+        $mesExt = $meses[Qlib::zerofill($mes,2)];
+        $ano = isset($_GET['ano'])?$_GET['ano']:date('Y');
+        $dadosPub = Publicador::find($id);
+        if(isset($dadosPub['pioneiro']) && ($dadosPub['pioneiro'] == '' || $dadosPub['pioneiro'] == 'p')){
+            $dados = [
+                ['type'=>'hidden','campo'=>'id_publicador','label'=>'id_publicador','valor'=>$id],
+                ['type'=>'hidden','campo'=>'mes','label'=>'Mes','valor'=>$mes],
+                ['type'=>'hidden','campo'=>'ano','label'=>'ano','valor'=>$ano],
+                ['type'=>'hidden','campo'=>'id_grupo','label'=>'id grupo','valor'=>$dadosPub['id_grupo']],
+                ['type'=>'checkbox','campo'=>'participou','label'=>'Publicador participou em alguma modalidade do ministério durante o mês','valor'=>'s'],
+                ['type'=>'number','campo'=>'estudo','label'=>'Estudos biblícos','valor'=>''],
+                ['type'=>'text','campo'=>'obs','label'=>'Observações','valor'=>''],
+                ];
+        }else{
+            $dados = [
+                ['type'=>'hidden','campo'=>'id_publicador','label'=>'id_publicador','valor'=>$id],
+                ['type'=>'hidden','campo'=>'mes','label'=>'Mes','valor'=>$mes],
+                ['type'=>'hidden','campo'=>'ano','label'=>'ano','valor'=>$ano],
+                ['type'=>'hidden','campo'=>'id_grupo','label'=>'id grupo','valor'=>$dadosPub['id_grupo']],
+                //   ['type'=>'number','campo'=>'publicacao','label'=>'Publicações(Impressas e eletrônicas)','valor'=>''],
+                // ['type'=>'number','campo'=>'video','label'=>'Videos mostrados','valor'=>''],
+                ['type'=>'number','campo'=>'estudo','label'=>'Estudos biblícos','valor'=>''],
+                ['type'=>'tel','campo'=>'hora','label'=>'Horas (se for pioneiro auxiliar ou regular)','valor'=>''],
+                // ['type'=>'number','campo'=>'revisita','label'=>'Revisitas','valor'=>''],
+                ['type'=>'text','campo'=>'obs','label'=>'Observações','valor'=>''],
+                ];
+        }
         $relatorio_cad = relatorio::where('id_publicador','=',$id)->where('mes','=',$mes)->where('ano','=',$ano)->get();
         if($dsal = $relatorio_cad->all()){
             foreach ($dados as $key => $value) {
@@ -142,8 +192,12 @@ class GerenciarRelatorios extends Controller
           $data[$key] = $value;
         }
       }
+      if(!isset($dados['participou'])){
+        $dados['participou'] = 'n';
+      }
       $arr_obs = ['p'=>'','pa'=>'Pioneiro Auxiliar','pr'=>'Pioneiro Regular'];
-      if(isset($data['id_publicador'])){
+      $privilegio = isset($data['privilegio'])?$data['privilegio']:false;
+      if(isset($data['id_publicador']) && !$privilegio){
         $dadosPub = DB::select("SELECT pioneiro FROM publicadores WHERE id='".$data['id_publicador']."'");
         if($dadosPub){
           if(empty($dadosPub[0]->pioneiro)){
@@ -154,8 +208,8 @@ class GerenciarRelatorios extends Controller
         }else{
           $privilegio = 'p';
         }
-      }
-      $data['privilegio'] = $privilegio;
+    }
+    $data['privilegio'] = $privilegio;
       if($privilegio=='p'){
         $data['obs'] = str_replace($arr_obs['pa'],'',$data['obs']);
         $data['obs'] = str_replace($arr_obs['pr'],'',$data['obs']);
@@ -165,7 +219,6 @@ class GerenciarRelatorios extends Controller
 
       }
       $salvarRelatorios=false;
-      //dd($data);
       unset($data['_token']);
       if(!empty($data) && isset($data['id'])){
         $salvarRelatorios=relatorio::where('id',$data['id'])->update($data);

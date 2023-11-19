@@ -41,9 +41,22 @@
                             @if($v1['campo']=='obs')
                               <td colspan="2">{{$v1['label']}}<br><input onclick="$(this).select();" class="form-control text-left" type="{{$v1['type']}}" name="{{$v1['campo']}}" value="{{$v1['valor']}}"></td>
 
+                            @elseif ($v1['type']=='checkbox')
+                                <td width="80%">{{$v1['label']}}</td>
+                                <td width="20%">
+                                    @php
+                                        $checked = '';
+                                        if($v1['valor']=='s'){
+                                            $checked = 'checked';
+                                        }
+                                    @endphp
+                                    <input {{$checked}} class="form-control text-center" type="{{$v1['type']}}" name="{{$v1['campo']}}" value="s">
+                                </td>
                             @else
-                              <td width="80%">{{$v1['label']}}</td>
-                              <td width="20%"><input onclick="$(this).select();" class="form-control text-center" type="{{$v1['type']}}" name="{{$v1['campo']}}" value="{{$v1['valor']}}"></td>
+                                <td width="80%">{{$v1['label']}}</td>
+                                <td width="20%">
+                                    <input onclick="$(this).select();" class="form-control text-center" type="{{$v1['type']}}" name="{{$v1['campo']}}" value="{{$v1['valor']}}">
+                                </td>
                             @endif
                           </tr>
                           @endif

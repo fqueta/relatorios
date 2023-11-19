@@ -157,7 +157,8 @@ function openPageLink(ev,url,ano,compleUrl){
 function gerenteAtividade(obj,ac){
   var id = obj.attr('id');
   var temaImput = '<input type="{type}" {seletor} style="width:{wid}px" name="{name}" value="{value}" class="form-control text-center"> {btn}';
-  var arr = ['publicacao','video','hora','revisita','estudo','obs'];
+  var temaSelect = '<select {selector} name="{name}" style="width:{wid}px" ><option {p} value="p">Publicador</option><option {pa} value="pa">Pioneiro Auxiliar</option><option value="pr" {pr}>Pioneiro Regular</option></select> {btn}';
+  var arr = ['publicacao','video','hora','revisita','estudo','privilegio','obs'];
   var selId = $('#'+id);
   var exec = selId.attr('exec');
   if(exec=='s'){
@@ -169,7 +170,7 @@ function gerenteAtividade(obj,ac){
     if(i==0){
       selId.attr('exec','s');
     }
-    if(i==5){
+    if(i==6){
        var wid='200';
        var t='text';
        var b='<button type="button" onclick="submitRelatorio(\''+id+'\',\''+ac+'\')" title="Salvar" class="btn btn-primary" name="button"><i class="fa fa-check"></i></button>'+
@@ -184,7 +185,36 @@ function gerenteAtividade(obj,ac){
       var t='number';
     }
     var v = s.html();
-    var c = temaImput.replace('{name}',id+arr[i]);
+    if(arr[i]=='privilegio'){
+        if(v=='P.Auxiliar'){
+            var pa = 'selected';
+            var pr = '';
+            var p = '';
+            var vp = 'pa';
+        }else if(v=='P.Regular'){
+            var pa = '';
+            var pr = 'selected';
+            var p = '';
+            var vp = 'pr';
+        }else if(v=='Publicador'){
+            var pa = '';
+            var pr = '';
+            var p = 'selected';
+            var vp = 'p';
+        }else{
+            var pa = '';
+            var pr = '';
+            var p = 'selected';
+            var vp = 'p';
+        }
+        var c = temaSelect.replace('{name}',id+arr[i]);
+        c = c.replace('{pa}',pa);
+        c = c.replace('{pr}',pr);
+        c = c.replace('{p}',p);
+        c = c.replace('{selector}','class="form-control" data-eq="'+eq+'" data-id="'+id+'" onchange="altPrivCartao(this)"');
+    }else{
+        var c = temaImput.replace('{name}',id+arr[i]);
+    }
     c = c.replace('{value}',v);
     c = c.replace('{wid}',wid);
     c = c.replace('{type}',t);
@@ -194,6 +224,13 @@ function gerenteAtividade(obj,ac){
     //array[i]
   }
   $('#'+id+' td:eq(1) input').select();
+}
+function altPrivCartao(obj){
+    var eq = obj.getAttribute('data-eq');
+    var id = obj.getAttribute('data-id');
+    var sel = '#'+id+'';
+    $(sel).find('input[name="privilegio"]').val(obj.value);
+    console.log(sel);
 }
 function cancelEdit(id,ac){
   //var temaImput = '<input type="{type}" style="width:{wid}px" name="{name}" value="{value}" class="form-control text-center"> {btn}';
@@ -305,7 +342,6 @@ function delRegistro(id){
 
 function submitRelatorio(id,ac){
   var don = $('#'+id+' input');
-  console.log(don);
   var arr = [];
   var seriali = '';
   $.each(don,function(i,k){
@@ -313,16 +349,16 @@ function submitRelatorio(id,ac){
     ke = ke.replace(id,'');
      arr[ke] = k.value;
      seriali += ke+'='+k.value+'&';
-    //console.log(k.name);
+    // console.log(k.name);
   });
   var var_cartao = atob(arr['var_cartao']);
-    $.ajaxSetup({
-           headers: {
-               'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
-           }
-       });
+  $.ajaxSetup({
+      headers: {
+          'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+        }
+    });
 
-       var formData = seriali+'compilado=s';
+        var formData = seriali+'compilado=s';
        var state = jQuery('#btn-save').val();
        if(ac=='cad'){
          var type = "POST";
@@ -366,6 +402,21 @@ function submitRelatorio(id,ac){
                var selector = '#'+id_pub+'_'+data.salvarRelatorios.mes+' td';
                $(selector).last().html(data.salvarRelatorios.obs);
              }
+             if(data.salvarRelatorios.privilegio && data.salvarRelatorios.mes){
+               var selector = '#'+id_pub+'_'+data.salvarRelatorios.mes+' td:eq(6)';
+               var pv=data.salvarRelatorios.privilegio;
+               if(pv=='pa'){
+                    pv='P.Auxiliar';
+               }else if(pv=='pr'){
+                    pv='P.Regular';
+               }else if(pv=='p'){
+                    pv='Publicador';
+                }else{
+                    pv='Publicador';
+
+                }
+               $(selector).html(pv);
+            }
 
            },
            error: function (data) {

@@ -8,6 +8,7 @@ use App\Qlib\Qlib;
 use App\Models\User;
 use App\Models\grupo;
 use App\Models\Publicador;
+use App\Models\Relatorio;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -117,33 +118,38 @@ class PublicadoresController extends Controller
                     $compleOr = false;
                     $i=0;
                     foreach ($valor as $k => $v) {
-                        if($i==0){
-                            $or = ' AND (';
-                            $and = false;
-                        }else{
-                            $or = false;
-                            $and = 'OR';
+                        if(!empty($v)){
+
+                            if($i==0){
+                                $or = ' AND (';
+                                $and = false;
+                            }else{
+                                $or = false;
+                                $and = 'OR';
+                            }
+                            if($key=='priv'){
+                                $campo_bus = 'pioneiro';
+                            }elseif($key=='func'){
+                                $campo_bus = 'fun';
+                            }else{
+                                $campo_bus = $key;
+                            }
+                            if($k==0 && $key=='priv'){
+                                $compleOr .="$or $and $campo_bus=''";
+                                $i++;
+                            }elseif($key=='tags'){
+                                $compleOr .="$or $and $key LIKE '%\"$v\"%'";
+                                $i++;
+                            }else{
+                                $compleOr .="$or $and $campo_bus='$v'";
+                                $i++;
+                            }
                         }
-                        if($key=='priv'){
-                            $campo_bus = 'pioneiro';
-                        }elseif($key=='func'){
-                            $campo_bus = 'fun';
+                        if($compleOr){
+                            $compleOr .= ')';
                         }
-                        if($k==0 && $key=='priv'){
-                            $compleOr .="$or $and $campo_bus=''";
-                            $i++;
-                        }elseif($key=='tags'){
-                            $compleOr .="$or $and $key LIKE '%\"$v\"%'";
-                            $i++;
-                        }else{
-                            $compleOr .="$or $and $campo_bus='$v'";
-                            $i++;
-                        }
+                        $compleSql .= $compleOr;
                     }
-                    if($compleOr){
-                        $compleOr .= ')';
-                    }
-                    $compleSql .= $compleOr;
                 }else{
                     /*
                     if(isset($campos[$key]['type']) && $campos[$key]['type']=='select'){
@@ -560,5 +566,25 @@ class PublicadoresController extends Controller
             $ret = redirect()->route($routa.'.index',['mens'=>'Registro deletado com sucesso!','color'=>'success']);
         }
         return $ret;
+    }
+    public function edit_campo_cartao(Request $request){
+        $d = $request->all();
+        $ret['exec']=false;
+        if(isset($d['campo']) && isset($d['value']) && isset($d['mes']) && isset($d['ano']) && isset($d['id_publicador'])){
+            $d[$d['campo']] = $d['value'];
+            unset($d['value'],$d['campo']);
+            // dd($d);
+            $s = Relatorio::where('id_publicador','=',$d['id_publicador'])->where('mes','=',$d['mes'])->where('ano','=',$d['ano'])->update($d);
+            if(!$s){
+                $s = Relatorio::create($d);
+                if(isset($s->id)){
+                    $ret['exec'] = true;
+                    $ret['idCad'] = $s->id;
+                }
+            }else{
+                $ret['exec'] = true;
+            }
+        }
+        return response()->json($ret);
     }
 }

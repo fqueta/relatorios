@@ -91,13 +91,15 @@
                     <th class="text-center">
                         Estudos biblicos
                     </th>
+                    <th class="text-center">
+                        Privilégio
+                    </th>
                     <th class="text-center" style="width:30%">
                         Observações
                     </th>
                   </tr>
                 </thead>
                 <tbody>
-
                   @foreach($cartao['atividade'] As $key=>$relatorio)
                   <tr id="{{$cartao['dados']->id.'_'.$relatorio->mes}}" class="@if(isset($relatorio->class)){{$relatorio->class}}@endif" title="De dois cliques par editar" ondblclick="gerenteAtividade($(this),'{{$relatorio->ac}}')" style="cursor:pointer">
                     <td class="text-left">
@@ -108,6 +110,7 @@
                       <input type="hidden" name="id_grupo" value="{{ $cartao['dados']->id_grupo }}">
                       <input type="hidden" name="ac" value="{{ $relatorio->ac }}">
                       <input type="hidden" name="id" value="{{ $relatorio->id }}">
+                      <input type="hidden" name="privilegio" value="{{ @$relatorio->privilegio }}">
                       {{ $cartao['Schema'][$key]['mes'] }}
                     </td>
                     <td class="text-center">{{ $relatorio->publicacao }}</td>
@@ -115,6 +118,20 @@
                     <td class="text-center">{{ $relatorio->hora }}</td>
                     <td class="text-center">{{ $relatorio->revisita }}</td>
                     <td class="text-center">{{ $relatorio->estudo }}</td>
+                    @php
+
+                        $privi = isset($relatorio->privilegio)?$relatorio->privilegio:false;
+                        if($privi=='pa'){
+                            $privilegio='P.Auxiliar';
+                        }elseif($privi=='pr'){
+                            $privilegio='P.Regular';
+                        }elseif($privi=='p'){
+                            $privilegio='Publicador';
+                        }else{
+                            $privilegio='';
+                        }
+                    @endphp
+                    <td class="text-center">{{ $privilegio }}</td>
                     <td class="text-center">{{ $relatorio->obs }}</td>
                   </tr>
                   @endforeach
