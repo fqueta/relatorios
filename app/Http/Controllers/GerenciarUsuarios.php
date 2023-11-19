@@ -260,31 +260,15 @@ class GerenciarUsuarios extends Controller
           $ano_servico++;
         }
         $ano = isset($_GET['ano'])?$_GET['ano']:$ano_servico;
-        // if($ano < $ano_servico){
-        //     $ano_servico = $ano;
-        // }else{
-        //     if($mes_atual > 8){
-        //         $ano = $ano+1;
-        //     }
-        // }
-        // dd($ano);
+        if($ano < $ano_servico){
+            $ano_servico = $ano;
+        }else{
+          if($mes_atual > 8){
+            $ano = $ano+1;
+          }
+        }
         //$compleSql = " id_publicador='$id' AND ano='$ano_servico'";
         $dados = DB::select("select * from publicadores WHERE id='$id'");
-        //$total_horas = DB::select("select SUM(hora) from relatorios WHERE $compleSql");
-        // $arr_sequecia_meses = [
-        //     '9'=>['mes'=>'Setembro','ano'=>$ano,'ano_servico'=>$ano-1],
-        //     '10'=>['mes'=>'Outubro','ano'=>$ano,'ano_servico'=>$ano-1],
-        //     '11'=>['mes'=>'Novembro','ano'=>$ano,'ano_servico'=>$ano-1],
-        //     '12'=>['mes'=>'Dezembro','ano'=>$ano,'ano_servico'=>$ano-1],
-        //     '1'=>['mes'=>'Janeiro','ano'=>$ano,'ano_servico'=>$ano],
-        //     '2'=>['mes'=>'Fevereiro','ano'=>$ano,'ano_servico'=>$ano],
-        //     '3'=>['mes'=>'Marco','ano'=>$ano,'ano_servico'=>$ano],
-        //     '4'=>['mes'=>'Abril','ano'=>$ano,'ano_servico'=>$ano],
-        //     '5'=>['mes'=>'Maio','ano'=>$ano,'ano_servico'=>$ano],
-        //     '6'=>['mes'=>'Junho','ano'=>$ano,'ano_servico'=>$ano],
-        //     '7'=>['mes'=>'Julho','ano'=>$ano,'ano_servico'=>$ano],
-        //     '8'=>['mes'=>'Agosto','ano'=>$ano,'ano_servico'=>$ano],
-        // ];
         $arr_sequecia_meses = [
             '9'=>['mes'=>'Setembro','ano'=>$ano,'ano_servico'=>$ano],
             '10'=>['mes'=>'Outubro','ano'=>$ano,'ano_servico'=>$ano],
@@ -320,21 +304,21 @@ class GerenciarUsuarios extends Controller
             $cartao['dados']->tipo = 'Ungido';
           }
 
-          if(isset($dados[0]->fun) && $dados[0]->fun =='anc'){
-            $cartao['dados']->fun = 'Ancião';
-          }elseif (isset($dados[0]->fun) && $dados[0]->fun =='sm') {
-            $cartao['dados']->fun = 'Servo ministerial';
-          }else {
-            $cartao['dados']->fun = false;
-          }
+        //   if(isset($dados[0]->fun) && $dados[0]->fun =='anc'){
+        //     $cartao['dados']->fun = 'Ancião';
+        //   }elseif (isset($dados[0]->fun) && $dados[0]->fun =='sm') {
+        //     $cartao['dados']->fun = 'Servo ministerial';
+        //   }else {
+        //     $cartao['dados']->fun = false;
+        //   }
 
-          if(isset($dados[0]->pioneiro) && $dados[0]->pioneiro =='pr'){
-            $cartao['dados']->pioneiro = 'Pioneiro regular';
-          }elseif (isset($dados[0]->pioneiro) && $dados[0]->pioneiro =='pe') {
-            $cartao['dados']->pioneiro = 'Pioneiro especial';
-          }else {
-            $cartao['dados']->pioneiro = false;
-          }
+        //   if(isset($dados[0]->pioneiro) && $dados[0]->pioneiro =='pr'){
+        //     $cartao['dados']->pioneiro = 'Pioneiro regular';
+        //   }elseif (isset($dados[0]->pioneiro) && $dados[0]->pioneiro =='pe') {
+        //     $cartao['dados']->pioneiro = 'Pioneiro especial';
+        //   }else {
+        //     $cartao['dados']->pioneiro = false;
+        //   }
         }else{
           $cartao['dados'] = array();
         }
@@ -349,6 +333,7 @@ class GerenciarUsuarios extends Controller
         foreach ($arr_sequecia_meses as $key => $value) {
               $sql = "select * from relatorios WHERE id_publicador='$id' AND mes='$key' AND ano='".$value['ano_servico']."' ORDER BY id ASC";
               $atividade  = DB::select($sql);
+            //   dd($atividade);
               if(!empty($atividade)){
                 $cartao['atividade'][$key]  = $atividade[0];
                 $cartao['atividade'][$key]->ac = 'alt';
@@ -358,12 +343,12 @@ class GerenciarUsuarios extends Controller
                 $totalRevisitas += isset($atividade[0]->revisita) ? $atividade[0]->revisita : 0;
                 $totalEstudos += isset($atividade[0]->estudo) ? $atividade[0]->estudo : 0;
                 $meses_relatados++;
-                if(isset($atividade[0]->compilado)){
-                  if($atividade[0]->compilado=='s'){
+                if(isset($atividade[0]->participou)){
+                  if($atividade[0]->participou=='s'){
                     $atividade[0]->class = 'text-success';
                     $atividade[0]->status = 'Compilado';
                   }
-                  if($atividade[0]->compilado=='n'){
+                  if($atividade[0]->participou=='n'){
                     $atividade[0]->status = 'Pendente';
                     $atividade[0]->class = 'text-danger';
                   }
@@ -372,6 +357,7 @@ class GerenciarUsuarios extends Controller
                 $ativi['id'] = 0;
                 $ativi['publicacao'] = 0;
                 $ativi['video'] = 0;
+                $ativi['participou'] = 'n';
                 $ativi['hora'] = 0;
                 $ativi['estudo'] = 0;
                 $ativi['revisita'] = 0;
@@ -390,33 +376,33 @@ class GerenciarUsuarios extends Controller
               $cartao['sql'][$key]['sql'] = $sql;
               //$atividades =
         };
-        $cartao['totais']['publicacao'] = $totalPublicacao;
-        $cartao['totais']['videos'] = $totalVideos;
+        // $cartao['totais']['publicacao'] = $totalPublicacao;
+        // $cartao['totais']['videos'] = $totalVideos;
         $cartao['totais']['horas'] = $totalHoras;
-        $cartao['totais']['revisitas'] = $totalRevisitas;
-        $cartao['totais']['estudos'] = $totalEstudos;
+        // $cartao['totais']['revisitas'] = $totalRevisitas;
+        // $cartao['totais']['estudos'] = $totalEstudos;
 
 
         $cartao['meses_relatados'] = $meses_relatados;
-        if($cartao['meses_relatados']>0){
-          $mediasPublicacao = ($cartao['totais']['publicacao'] / $cartao['meses_relatados']) ;
-          $mediasvideos = ($cartao['totais']['videos'] / $cartao['meses_relatados']) ;
-          $mediasHoras = ($cartao['totais']['horas'] / $cartao['meses_relatados']) ;
-          $mediasRevisitas = ($cartao['totais']['revisitas'] / $cartao['meses_relatados']) ;
-          $mediasEstudos = ($cartao['totais']['estudos'] / $cartao['meses_relatados']) ;
-        }else{
-          $mediasHoras = 0;
-          $mediasPublicacao = 0;
-          $mediasvideos = 0;
-          $mediasHoras = 0;
-          $mediasRevisitas = 0;
-          $mediasEstudos = 0;
-        }
-        $cartao['medias']['publicacao'] = round($mediasPublicacao) ;
-        $cartao['medias']['videos'] = round($mediasvideos) ;
-        $cartao['medias']['horas'] = round($mediasHoras) ;
-        $cartao['medias']['revisitas'] = round($mediasRevisitas) ;
-        $cartao['medias']['estudos'] = round($mediasEstudos) ;
+        // if($cartao['meses_relatados']>0){
+        //   $mediasPublicacao = ($cartao['totais']['publicacao'] / $cartao['meses_relatados']) ;
+        //   $mediasvideos = ($cartao['totais']['videos'] / $cartao['meses_relatados']) ;
+        //   $mediasHoras = ($cartao['totais']['horas'] / $cartao['meses_relatados']) ;
+        //   $mediasRevisitas = ($cartao['totais']['revisitas'] / $cartao['meses_relatados']) ;
+        //   $mediasEstudos = ($cartao['totais']['estudos'] / $cartao['meses_relatados']) ;
+        // }else{
+        //   $mediasHoras = 0;
+        //   $mediasPublicacao = 0;
+        //   $mediasvideos = 0;
+        //   $mediasHoras = 0;
+        //   $mediasRevisitas = 0;
+        //   $mediasEstudos = 0;
+        // }
+        // $cartao['medias']['publicacao'] = round($mediasPublicacao) ;
+        // $cartao['medias']['videos'] = round($mediasvideos) ;
+        // $cartao['medias']['horas'] = round($mediasHoras) ;
+        // $cartao['medias']['revisitas'] = round($mediasRevisitas) ;
+        // $cartao['medias']['estudos'] = round($mediasEstudos) ;
         $url = url()->current();
         $cartao['url'] = $url;
         // dd($cartao);

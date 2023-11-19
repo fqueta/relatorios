@@ -66,8 +66,17 @@
           <div class="col-4 text-right">
              <b> {{ $cartao['dados']->tipo }}</b>
           </div>
-          <div class="col-12 text-right">
-            <b class="mr-3">{{ $cartao['dados']->fun }}</b> <b>{{ $cartao['dados']->pioneiro }}</b>
+          <div class="row w-100 ml-0 mr-0">
+            <div class="col-2">
+                <label for="anciao"> <input @if($cartao['dados']->fun=='anc') checked @endif onclick="salvarFunc(this);" type="checkbox" data-id="{{$cartao['dados']->id}}" value="anc" name="fun" id="anciao"> {{__('Ancião')}}</label>
+            </div>
+            <div class="col-2">
+                <label for="sm"> <input @if($cartao['dados']->fun=='sm') checked @endif onclick="salvarFunc(this);" type="checkbox" data-id="{{$cartao['dados']->id}}" value="sm" name="fun" id="sm"> {{__('Servo ministerial')}}</label>
+            </div>
+            <div class="col-2">
+                <label for="pioneiro"> <input @if($cartao['dados']->pioneiro=='pr') checked @endif onclick="salvarPioneiro(this);" type="checkbox" data-id="{{$cartao['dados']->id}}" value="pioneiro" name="fun" id="pioneiro"> {{__('Pioneiro Regular')}}</label>
+            </div>
+            {{-- <b>{{ $cartao['dados']->pioneiro }}</b> --}}
           </div>
           <div class="col-md-12 table-responsive">
               <table class="table table-bordered table-hover" id="pub-{{$cartao['dados']->id}}">
@@ -77,22 +86,17 @@
                         Ano de serviço<br>{{ $cartao['ano_servico'] }}
                     </th>
                     <th class="text-center">
-                        Publicações
+                        Participou <br>no<br>ministério
                     </th>
                     <th class="text-center">
-                        Videos mostrados
+                        Estudos<br>biblicos
+                    </th>
+                    <th class="text-center">
+                        Pioneiro<br>
+                        Auxiliar
                     </th>
                     <th class="text-center">
                         Horas
-                    </th>
-                    <th class="text-center">
-                        Revisitas
-                    </th>
-                    <th class="text-center">
-                        Estudos biblicos
-                    </th>
-                    <th class="text-center">
-                        Privilégio
                     </th>
                     <th class="text-center" style="width:30%">
                         Observações
@@ -101,56 +105,58 @@
                 </thead>
                 <tbody>
                   @foreach($cartao['atividade'] As $key=>$relatorio)
-                  <tr id="{{$cartao['dados']->id.'_'.$relatorio->mes}}" class="@if(isset($relatorio->class)){{$relatorio->class}}@endif" title="De dois cliques par editar" ondblclick="gerenteAtividade($(this),'{{$relatorio->ac}}')" style="cursor:pointer">
+                  @php
+                      $data_mes_ano = ' data-id_grupo="'.$cartao['dados']->id_grupo.'" data-idp="'.$cartao['dados']->id.'" data-mes="'.$key.'" data-ano="'.$cartao['Schema'][$key]['ano_servico'].'"';
+                  @endphp
+                  <tr id="{{$cartao['dados']->id.'_'.$relatorio->mes}}" class="@if(isset($relatorio->class)){{$relatorio->class}}@endif" title="">
                     <td class="text-left">
                       <input type="hidden" name="var_cartao" value="{{base64_encode(json_encode($cartao))}}">
-                      <input type="hidden" name="ano" value="{{ $cartao['Schema'][$key]['ano_servico'] }}">
+                      {{-- <input type="hidden" name="ano" value="{{ $cartao['Schema'][$key]['ano_servico'] }}">
                       <input type="hidden" name="mes" value="{{ $key }}">
                       <input type="hidden" name="id_publicador" value="{{ $cartao['dados']->id }}">
-                      <input type="hidden" name="id_grupo" value="{{ $cartao['dados']->id_grupo }}">
+                      <input type="hidden" name="id_grupo" value="{{ $cartao['dados']->id_grupo }}"> --}}
                       <input type="hidden" name="ac" value="{{ $relatorio->ac }}">
                       <input type="hidden" name="id" value="{{ $relatorio->id }}">
                       <input type="hidden" name="privilegio" value="{{ @$relatorio->privilegio }}">
                       {{ $cartao['Schema'][$key]['mes'] }}
                     </td>
-                    <td class="text-center">{{ $relatorio->publicacao }}</td>
-                    <td class="text-center">{{ $relatorio->video }}</td>
-                    <td class="text-center">{{ $relatorio->hora }}</td>
-                    <td class="text-center">{{ $relatorio->revisita }}</td>
-                    <td class="text-center">{{ $relatorio->estudo }}</td>
-                    @php
+                    <td class="text-center">
+                        <input type="checkbox" @if ($relatorio->participou=='s') checked @endif onclick="editCampoCartao(this)" name="participou" {!!$data_mes_ano!!} />
+                    </td>
+                    <td class="text-center">
+                        <input type="tel" class="form-control text-center" name="estudo" value="{{ $relatorio->estudo }}" onchange="editCampoCartao(this);" {!!$data_mes_ano!!} />
+                    </td>
+                    <td class="text-center">
+                        <input type="checkbox" @if (@$relatorio->privilegio=='pa') checked @endif onclick="editCampoCartao(this)" name="privilegio" {!!$data_mes_ano!!} />
+                    </td>
+                    <td class="text-center">
+                        <input type="tel" class="form-control text-center" name="hora" value="{{ $relatorio->hora }}" onchange="editCampoCartao(this);" {!!$data_mes_ano!!} />
+                    </td>
+                    <td class="text-center">
+                        <input type="tel" class="form-control" name="obs" value="{{ $relatorio->obs }}" onchange="editCampoCartao(this);" {!!$data_mes_ano!!} />
+                    </td>
 
-                        $privi = isset($relatorio->privilegio)?$relatorio->privilegio:false;
-                        if($privi=='pa'){
-                            $privilegio='P.Auxiliar';
-                        }elseif($privi=='pr'){
-                            $privilegio='P.Regular';
-                        }elseif($privi=='p'){
-                            $privilegio='Publicador';
-                        }else{
-                            $privilegio='';
-                        }
-                    @endphp
-                    <td class="text-center">{{ $privilegio }}</td>
-                    <td class="text-center">{{ $relatorio->obs }}</td>
                   </tr>
                   @endforeach
                 </tbody>
                 <tfoot>
                   <tr class="tf-1">
+                    <th>&nbsp;</th>
+                    <th>&nbsp;</th>
+                    <th>&nbsp;</th>
                     <th>Total</th>
                     @foreach($cartao['totais'] As $k=>$total)
                       <th class="text-center">{{ $total }}</th>
                     @endforeach
                     <th>&nbsp;</th>
                   </tr>
-                  <tr class="tf-2">
+                  {{-- <tr class="tf-2">
                     <th>Média</th>
                     @foreach($cartao['medias'] As $k=>$m)
                       <th class="text-center">{{ $m }}</th>
                     @endforeach
                     <th>&nbsp;</th>
-                  </tr>
+                  </tr> --}}
                 </tfoot>
               </table>
           </div>
@@ -240,13 +246,13 @@
                       @endforeach
                       <th>&nbsp;</th>
                     </tr>
-                    <tr class="tf-2">
+                    {{-- <tr class="tf-2">
                       <th>Média</th>
                       @foreach($parent['medias'] As $km=>$m)
                         <th class="text-center">{{ $m }}</th>
                       @endforeach
                       <th>&nbsp;</th>
-                    </tr>
+                    </tr> --}}
                   </tfoot>
                 </table>
             </div>

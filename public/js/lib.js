@@ -854,6 +854,9 @@ function getAjax(config,funCall,funError){
     if(typeof config.type == 'undefined'){
         config.type = 'GET';
     }
+    if(typeof config.dataType == 'undefined'){
+        config.dataType = 'json';
+    }
     if(typeof config.data == 'undefined'){
         config.data = {ajax:'s'};
     }
@@ -868,11 +871,21 @@ function getAjax(config,funCall,funError){
             lib_funError(res);
         }
     }
+    if(typeof config.csrf == 'undefined'){
+        config.csrf = '';
+    }
+    if(config.csrf){
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+            }
+        });
+    }
     $.ajax({
         type: config.type,
         url: config.url,
         data: config.data,
-        dataType: 'json',
+        dataType: config.dataType,
         beforeSend: function(){
             $('#preload').fadeIn();
         },
@@ -2001,4 +2014,43 @@ function lib_imprimeCartaoFiltro() {
     let url = window.location.href+'&ano='+ano+'&popup=s';
     url = url.replace('publicadores','usuarios/cards');
     abrirjanelaPadraoConsulta(url);
+}
+function editCampoCartao(obj){
+    var campo = obj.getAttribute('name'),mes=obj.getAttribute('data-mes'),ano=obj.getAttribute('data-ano'),id_pub=obj.getAttribute('data-idp'),id_grupo=obj.getAttribute('data-id_grupo'),value=obj.value;
+    if(campo=='participou'){
+        if(obj.checked){
+            value = 's';
+        }else{
+            value = 'n';
+        }
+    }
+    try {
+        if(campo){
+            getAjax({
+                url:'/publicadores/ajax/edit-campo-cartao',
+                type: 'POST',
+                dataType: 'json',
+                csrf: true,
+                data:{
+                    campo: campo,
+                    value: value,
+                    mes: mes,
+                    ano: ano,
+                    id_grupo: id_grupo,
+                    id_publicador: id_pub,
+                }
+            },function(res){
+                $('#preload').fadeOut("fast");
+                $('.mes').html(res.mens);
+                if(res.exec){
+                    $('#info-reserva').remove();
+                }
+            },function(err){
+                $('#preload').fadeOut("fast");
+                console.log(err);
+            });
+        }
+    } catch (error) {
+        console.log(error);
+    }
 }

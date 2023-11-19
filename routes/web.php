@@ -49,6 +49,8 @@ Route::prefix('publicadores')->group(function(){
     Route::put('/{id}',[PublicadoresController::class,'update'])->where('id', '[0-9]+')->name('publicadores.update');
     Route::delete('/{id}',[PublicadoresController::class,'destroy'])->where('id', '[0-9]+')->name('publicadores-destroy');
 
+    Route::post('/ajax/edit-campo',[PublicadoresController::class,'edit_campo'])->name('publicadores.edit_campo');
+    Route::post('/ajax/edit-campo-cartao',[PublicadoresController::class,'edit_campo_cartao'])->name('publicadores.edit_campo_cartao');
     Route::get('/{id}/cartao',[PublicadoresController::class,'cartao'])->name('publicadores.cartao');
     Route::get('/cards',[PublicadoresController::class,'cards'])->name('publicadores.cards');
 });
