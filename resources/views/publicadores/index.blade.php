@@ -131,6 +131,7 @@
   </div>
   <div class="col-md-12 mens"></div>
 
+    @include('relatorios.modal_lancar_relatorio')
     <div class="col-md-12">
       <div class="card card-secondary card-outline">
       <div class="card-header"><h5>{{$titulo}}</h5></div>
@@ -151,7 +152,10 @@
                 </thead>
                 <tbody>
                   @foreach($dados as $key => $usuario)
-                    <tr class="{{$usuario->class}} @if (isset($_GET['idCad']) && $_GET['idCad']==$usuario->id) table-info @endif">
+                    @php
+                        $arr_usuario = (array)$usuario
+                    @endphp
+                    <tr tr-id="{{$usuario->id}}" class="{{$usuario->class}} @if (isset($_GET['idCad']) && $_GET['idCad']==$usuario->id) table-info @endif">
                       <td class="d-print-none"> <input type="checkbox" class="checkbox-table" name="check_{{$usuario->id}}" value="s"> </td>
                       <td class="d-print-none"> {{$usuario->id}} </td>
                       <td>
@@ -178,7 +182,10 @@
                       <td><div class="text-right" title="Relatório {{$usuario->status}} "> {{$usuario->status}} </div>
                     </td>
                       <td class="d-flex text-right d-print-none">
-                         <a href="{{ route('relatorios.create',['id'=>$usuario->id]) }}" title="Relatório mensal" class="btn btn-primary relatorios-create mr-1">
+                         {{-- <a href="{{ route('relatorios.create',['id'=>$usuario->id]) }}" title="Relatório mensal" class="btn btn-primary relatorios-create mr-1">
+                           <i class="fa fa-list"></i> Relatório
+                        </a> --}}
+                         <a href="javascript:void(0);" onclick="lancarRelatorio(this);" data-pub="{{App\Qlib\Qlib::encode_array($arr_usuario)}}" title="Relatório mensal" class="btn btn-primary relatorios-create mr-1">
                            <i class="fa fa-list"></i> Relatório
                         </a>
                          <a href="{{ route('usuarios.cartao',['id'=>$usuario->id]) }}" title="Cartão do publicador" class="btn btn-secondary mr-1 print-card">
@@ -229,15 +236,15 @@
               $('.print-card').on('click',function(e){
                   openPageLink(e,$(this).attr('href'),$('#painel-ano').val(),'&popup=s');
               });
-              $('.relatorios-create').on('click',function(e){
-                  e.preventDefault();
-                  var url = $(this).attr('href');
-                  //alert( window.location.href);
-                  var mes = $('#mes').val();
-                  var ano = $('#painel-ano').val();
-                  window.location = url+'?redirect='+btoa(window.location.href)+'&m='+mes+'&ano='+ano;
-                  //openPageLink(e,$(this).attr('href'),$('#painel-ano').val());
-              });
+            //   $('.relatorios-create').on('click',function(e){
+            //       e.preventDefault();
+            //       var url = $(this).attr('href');
+            //       //alert( window.location.href);
+            //       var mes = $('#mes').val();
+            //       var ano = $('#painel-ano').val();
+            //       window.location = url+'?redirect='+btoa(window.location.href)+'&m='+mes+'&ano='+ano;
+            //       //openPageLink(e,$(this).attr('href'),$('#painel-ano').val());
+            //   });
               $('#open-all-cards').on('click',function(e){
                   openPageLink(e,$(this).attr('href'),$('#painel-ano').val());
               });

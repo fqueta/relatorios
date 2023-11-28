@@ -65,19 +65,19 @@ class HomeController extends Controller
         $controllerRelatorio = new GerenciarRelatorios($this->user);
         $estatisticas = $controllerRelatorio->estatisticas($mes,$ano);
 
-        $compleSql = " WHERE mes='$mes' AND ano='$ano' AND hora > '0'";
+        $compleSql = " WHERE mes='$mes' AND ano='$ano' AND (hora > '0' OR participou='s')";
         //$relatorios = relatorio::where('mes','=',$mes)->orWhere('ano','=',$ano)->get();
         //$complePub = " AND pri";
         //$relatorios = DB::select("SELECT DISTINCT mes,ano,id_publicador,privilegio,obs FROM relatorios $compleSql");
-        $relatorios = DB::select("SELECT * FROM relatorios $compleSql");
-        //echo '<pre>';
-        //print_r($relatorio);
-        //echo '</pre>';
+        $sql = "SELECT * FROM relatorios $compleSql ORDER BY id ASC";
+
+        $relatorios = DB::select($sql);
+        // Qlib::lib_print($relatorios);
         $arr_resumo = [
-          'pr'=>['relatorios'=>0,'publicacao'=>0,'video'=>0,'hora'=>0,'revisita'=>0,'estudo'=>0],
-          'pa'=>['relatorios'=>0,'publicacao'=>0,'video'=>0,'hora'=>0,'revisita'=>0,'estudo'=>0],
-          'p'=>['relatorios'=>0,'publicacao'=>0,'video'=>0,'hora'=>0,'revisita'=>0,'estudo'=>0],
-          'tg'=>['relatorios'=>0,'publicacao'=>0,'video'=>0,'hora'=>0,'revisita'=>0,'estudo'=>0]
+          'pr'=>['relatorios'=>0,'hora'=>0,'estudo'=>0],
+          'pa'=>['relatorios'=>0,'hora'=>0,'estudo'=>0],
+          'p'=>['relatorios'=>0,'hora'=>0,'estudo'=>0],
+          'tg'=>['relatorios'=>0,'hora'=>0,'estudo'=>0]
         ];
         $mesExt = Qlib::Meses();
         $config_table = [
@@ -88,7 +88,7 @@ class HomeController extends Controller
             'tg'=>['label'=>'Totais'],
           ],
           'titulos'=>[
-            'publicacao'=>'Publicação','video'=>'Vídeos mostrados','hora'=>'Horas','revisita'=>'Revisitas','estudo'=>'Estudos bíblicos'
+            'hora'=>'Horas','estudo'=>'Estudos bíblicos'
           ],
           'data'=>[
             'titulo'=>'RESUMO DOS RELATORIOS DE '.$mesExt[Qlib::zerofill($mes,2)].' DE '.$ano,

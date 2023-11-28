@@ -262,26 +262,26 @@ class GerenciarUsuarios extends Controller
         $ano = isset($_GET['ano'])?$_GET['ano']:$ano_servico;
         if($ano < $ano_servico){
             $ano_servico = $ano;
-        }else{
-          if($mes_atual > 8){
-            $ano = $ano+1;
-          }
+        // }else{
+        //   if($mes_atual > 8){
+        //     $ano = $ano+1;
+        //   }
         }
         //$compleSql = " id_publicador='$id' AND ano='$ano_servico'";
         $dados = DB::select("select * from publicadores WHERE id='$id'");
         $arr_sequecia_meses = [
-            '9'=>['mes'=>'Setembro','ano'=>$ano,'ano_servico'=>$ano],
-            '10'=>['mes'=>'Outubro','ano'=>$ano,'ano_servico'=>$ano],
-            '11'=>['mes'=>'Novembro','ano'=>$ano,'ano_servico'=>$ano],
-            '12'=>['mes'=>'Dezembro','ano'=>$ano,'ano_servico'=>$ano],
-            '1'=>['mes'=>'Janeiro','ano'=>$ano,'ano_servico'=>$ano],
-            '2'=>['mes'=>'Fevereiro','ano'=>$ano,'ano_servico'=>$ano],
-            '3'=>['mes'=>'Marco','ano'=>$ano,'ano_servico'=>$ano],
-            '4'=>['mes'=>'Abril','ano'=>$ano,'ano_servico'=>$ano],
-            '5'=>['mes'=>'Maio','ano'=>$ano,'ano_servico'=>$ano],
-            '6'=>['mes'=>'Junho','ano'=>$ano,'ano_servico'=>$ano],
-            '7'=>['mes'=>'Julho','ano'=>$ano,'ano_servico'=>$ano],
-            '8'=>['mes'=>'Agosto','ano'=>$ano,'ano_servico'=>$ano],
+            '9'=>['mes'=>'Setembro','ano'=>$ano,'ano_servico'=>$ano_servico],
+            '10'=>['mes'=>'Outubro','ano'=>$ano,'ano_servico'=>$ano_servico],
+            '11'=>['mes'=>'Novembro','ano'=>$ano,'ano_servico'=>$ano_servico],
+            '12'=>['mes'=>'Dezembro','ano'=>$ano,'ano_servico'=>$ano_servico],
+            '1'=>['mes'=>'Janeiro','ano'=>$ano,'ano_servico'=>$ano_servico],
+            '2'=>['mes'=>'Fevereiro','ano'=>$ano,'ano_servico'=>$ano_servico],
+            '3'=>['mes'=>'Marco','ano'=>$ano,'ano_servico'=>$ano_servico],
+            '4'=>['mes'=>'Abril','ano'=>$ano,'ano_servico'=>$ano_servico],
+            '5'=>['mes'=>'Maio','ano'=>$ano,'ano_servico'=>$ano_servico],
+            '6'=>['mes'=>'Junho','ano'=>$ano,'ano_servico'=>$ano_servico],
+            '7'=>['mes'=>'Julho','ano'=>$ano,'ano_servico'=>$ano_servico],
+            '8'=>['mes'=>'Agosto','ano'=>$ano,'ano_servico'=>$ano_servico],
         ];
         $cartao['ano'] = $ano_atual;
         $cartao['ano_servico'] = $ano_servico;
@@ -331,7 +331,7 @@ class GerenciarUsuarios extends Controller
         $totalEstudos = NULL;
         // dd($arr_sequecia_meses);
         foreach ($arr_sequecia_meses as $key => $value) {
-              $sql = "select * from relatorios WHERE id_publicador='$id' AND mes='$key' AND ano='".$value['ano_servico']."' ORDER BY id ASC";
+             $sql = "select * from relatorios WHERE id_publicador='$id' AND mes='$key' AND ano='".$value['ano_servico']."' ORDER BY id ASC";
               $atividade  = DB::select($sql);
             //   dd($atividade);
               if(!empty($atividade)){

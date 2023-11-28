@@ -188,7 +188,7 @@ class PublicadoresController extends Controller
                     $usuarios[$k]->class = 'text-success';
                     $usuarios[$k]->status = 'Compilado';
                 }elseif($usuarios[$k]->relatorio){
-                    $usuarios[$k]->class = 'text-warning';
+                    $usuarios[$k]->class = 'text-success';
                     $usuarios[$k]->status = 'Enviado';
                 }else{
                     $usuarios[$k]->status = 'Pendente';
@@ -572,17 +572,26 @@ class PublicadoresController extends Controller
         $ret['exec']=false;
         if(isset($d['campo']) && isset($d['value']) && isset($d['mes']) && isset($d['ano']) && isset($d['id_publicador'])){
             $d[$d['campo']] = $d['value'];
+            $campo = $d['campo'];
             unset($d['value'],$d['campo']);
-            // dd($d);
-            $s = Relatorio::where('id_publicador','=',$d['id_publicador'])->where('mes','=',$d['mes'])->where('ano','=',$d['ano'])->update($d);
-            if(!$s){
-                $s = Relatorio::create($d);
-                if(isset($s->id)){
-                    $ret['exec'] = true;
-                    $ret['idCad'] = $s->id;
+            if($campo=='fun' || $campo=='pioneiro'){
+                $df[$campo] = $d[$campo];
+                if($df[$campo]=='n'){
+                    $df[$campo]='';
                 }
+                $s = Publicador::where('id',$d['id_publicador'])->update($df);
             }else{
-                $ret['exec'] = true;
+                // dd($d);
+                $s = Relatorio::where('id_publicador','=',$d['id_publicador'])->where('mes','=',$d['mes'])->where('ano','=',$d['ano'])->update($d);
+                if(!$s){
+                    $s = Relatorio::create($d);
+                    if(isset($s->id)){
+                        $ret['exec'] = true;
+                        $ret['idCad'] = $s->id;
+                    }
+                }else{
+                    $ret['exec'] = true;
+                }
             }
         }
         return response()->json($ret);

@@ -121,10 +121,11 @@ class GerenciarRelatorios extends Controller
         $dados = $request->all();
         $ac = 'cad';
         $relatorios_gravados = 0;
+        // dd($dados);
         if(isset($dados['id_publicador']) && isset($dados['mes']) && isset($dados['ano'])){
           $ac = 'alt';
           $relatorios_gravados = relatorio::where('id_publicador','=',$dados['id_publicador'])->where('mes','=',$dados['mes'])->where('ano','=',$dados['ano'])->count();
-          //dd($relatorios_gravados);
+        //   dd($relatorios_gravados);
         }
         //$dados['enviado_por'] = '{"user_id":"4","nome":"Waldir Bertges","ip":"177.104.65.201"}';
         $arr_obs = ['p'=>'','pa'=>'Pioneiro Auxiliar','pr'=>'Pioneiro Regular'];
@@ -186,70 +187,77 @@ class GerenciarRelatorios extends Controller
     }
     public function update(Request $request,User $user,$id=false){
       //if($request)
-      $data = [];
-      foreach ($request->all() as $key => $value) {
-        if($key!='var_cartao'&&$key!='ac'){
-          $data[$key] = $value;
+    //   dd($request);
+        $data = [];
+        foreach ($request->all() as $key => $value) {
+            if($key!='var_cartao'&&$key!='ac'&&$key!='ajax'){
+            $data[$key] = $value;
+            }
         }
-      }
-      if(!isset($dados['participou'])){
-        $dados['participou'] = 'n';
-      }
-      $arr_obs = ['p'=>'','pa'=>'Pioneiro Auxiliar','pr'=>'Pioneiro Regular'];
-      $privilegio = isset($data['privilegio'])?$data['privilegio']:false;
-      if(isset($data['id_publicador']) && !$privilegio){
-        $dadosPub = DB::select("SELECT pioneiro FROM publicadores WHERE id='".$data['id_publicador']."'");
-        if($dadosPub){
-          if(empty($dadosPub[0]->pioneiro)){
+        if(!isset($data['participou'])){
+            $data['participou'] = 'n';
+        }
+        $arr_obs = ['p'=>'','pa'=>'Pioneiro Auxiliar','pr'=>'Pioneiro Regular'];
+        $privilegio = isset($data['privilegio'])?$data['privilegio']:false;
+        if(isset($data['id_publicador']) && !$privilegio){
+            $dadosPub = DB::select("SELECT pioneiro FROM publicadores WHERE id='".$data['id_publicador']."'");
+            if($dadosPub){
+            if(empty($dadosPub[0]->pioneiro)){
+                $privilegio = 'p';
+            }else{
+                $privilegio = trim($dadosPub[0]->pioneiro);
+            }
+            }else{
             $privilegio = 'p';
-          }else{
-            $privilegio = trim($dadosPub[0]->pioneiro);
-          }
+            }
+        }
+        // dd($data);
+        $data['privilegio'] = $privilegio;
+        // if($privilegio=='p'){
+        //     $data['obs'] = str_replace($arr_obs['pa'],'',$data['obs']);
+        //     $data['obs'] = str_replace($arr_obs['pr'],'',$data['obs']);
+        // }else{
+        //     $data['obs'] = str_replace($arr_obs[$privilegio],'',$data['obs']);
+        //     $data['obs'] = $arr_obs[$privilegio].' '.$data['obs'];
+        // }
+        $salvarRelatorios=false;
+        unset($data['_token']);
+        if(!empty($data) && isset($data['id'])){
+            $salvarRelatorios=relatorio::where('id',$data['id'])->update($data);
+        }
+        if(!$salvarRelatorios && isset($data['mes']) && isset($data['ano']) && isset($data['id_publicador'])){
+            // dd($data);
+            $salvarRelatorios=relatorio::where('mes',$data['mes'])->where('ano',$data['ano'])->where('id_publicador',$data['id_publicador'])->update($data);
+        }
+        if($salvarRelatorios){
+            $GerenciarUsuarios = new GerenciarUsuarios($user);
+            $ret['exec'] = true;
+            $ret['salvarRelatorios'] = $data;
+            $ret['color'] = 'success';
+            $ret['mens'] = 'Registro gravado com sucesso!';
+            $ret['cartao']=$GerenciarUsuarios->cardData($data['id_publicador']);
+            if(isset($data['id_publicador'])){
+                $rb = new RoboController;
+                $ret['lerRelatorios'] = $rb->lerRelatorios($data['id_publicador']);
+            }
         }else{
-          $privilegio = 'p';
+            $ret['exec'] = false;
+            $ret['mens'] = 'Erro ao gravar!';
+            $ret['color'] = 'danger';
         }
-    }
-    $data['privilegio'] = $privilegio;
-      if($privilegio=='p'){
-        $data['obs'] = str_replace($arr_obs['pa'],'',$data['obs']);
-        $data['obs'] = str_replace($arr_obs['pr'],'',$data['obs']);
-      }else{
-        $data['obs'] = str_replace($arr_obs[$privilegio],'',$data['obs']);
-        $data['obs'] = $arr_obs[$privilegio].' '.$data['obs'];
-
-      }
-      $salvarRelatorios=false;
-      unset($data['_token']);
-      if(!empty($data) && isset($data['id'])){
-        $salvarRelatorios=relatorio::where('id',$data['id'])->update($data);
-      }
-      if($salvarRelatorios){
-        $GerenciarUsuarios = new GerenciarUsuarios($user);
-        $ret['exec'] = true;
-        $ret['salvarRelatorios'] = $data;
-        $ret['mens'] = 'Registro gravado com sucesso!';
-        $ret['cartao']=$GerenciarUsuarios->cardData($data['id_publicador']);
-        if(isset($data['id_publicador'])){
-            $rb = new RoboController;
-            $ret['lerRelatorios'] = $rb->lerRelatorios($data['id_publicador']);
+        if(isset($_GET['redirect'])){
+            $ret['redirect'] = $_GET['redirect'];
         }
-      }else{
-        $ret['exec'] = false;
-        $ret['mens'] = 'Erro ao gravar!';
-      }
-      if(isset($_GET['redirect'])){
-        $ret['redirect'] = $_GET['redirect'];
-      }
-      return json_encode($ret);
-        /*
-        $data = [
-           'grupo'=>$request->grupo,
-           'obs'=>$request->obs,
-           'ativo'=>$request->ativo
-        ];
-        grupo::where('id',$id)->update($data);
-        return redirect()->route('relatorios-index');
-        */
+        return json_encode($ret);
+            /*
+            $data = [
+            'grupo'=>$request->grupo,
+            'obs'=>$request->obs,
+            'ativo'=>$request->ativo
+            ];
+            grupo::where('id',$id)->update($data);
+            return redirect()->route('relatorios-index');
+            */
     }
     public function destroy(request $request,User $user)
     {

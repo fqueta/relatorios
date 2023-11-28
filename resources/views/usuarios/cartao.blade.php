@@ -25,6 +25,11 @@
     page-break-before: always;
   }
 </style>
+@php
+    $key = 1;
+    // dd($cartao);
+    $data_campo = ' data-id_grupo="'.$cartao['dados']->id_grupo.'" data-idp="'.$cartao['dados']->id.'" data-mes="'.$key.'" data-ano="'.$cartao['Schema'][$key]['ano_servico'].'"';
+@endphp
   <div class="row table-responsive">
     <div class="col-md-12 text-right mb-3 d-print-none">
       <div class="mens">
@@ -68,13 +73,13 @@
           </div>
           <div class="row w-100 ml-0 mr-0">
             <div class="col-2">
-                <label for="anciao"> <input @if($cartao['dados']->fun=='anc') checked @endif onclick="salvarFunc(this);" type="checkbox" data-id="{{$cartao['dados']->id}}" value="anc" name="fun" id="anciao"> {{__('Ancião')}}</label>
+                <label for="anciao"> <input @if($cartao['dados']->fun=='anc') checked @endif onclick="editCampoCartao(this);" type="checkbox" {!!$data_campo!!} data-id="{{$cartao['dados']->id}}" value="anc" name="fun" id="anciao"> {{__('Ancião')}}</label>
             </div>
             <div class="col-2">
-                <label for="sm"> <input @if($cartao['dados']->fun=='sm') checked @endif onclick="salvarFunc(this);" type="checkbox" data-id="{{$cartao['dados']->id}}" value="sm" name="fun" id="sm"> {{__('Servo ministerial')}}</label>
+                <label for="sm"> <input @if($cartao['dados']->fun=='sm') checked @endif onclick="editCampoCartao(this);" type="checkbox" {!!$data_campo!!} value="sm" name="fun" id="sm"> {{__('Servo ministerial')}}</label>
             </div>
             <div class="col-2">
-                <label for="pioneiro"> <input @if($cartao['dados']->pioneiro=='pr') checked @endif onclick="salvarPioneiro(this);" type="checkbox" data-id="{{$cartao['dados']->id}}" value="pioneiro" name="fun" id="pioneiro"> {{__('Pioneiro Regular')}}</label>
+                <label for="pioneiro"> <input {!!$data_campo!!} @if($cartao['dados']->pioneiro=='pr') checked @endif onclick="editCampoCartao(this);" type="checkbox" value="pr" name="pioneiro" id="pioneiro"> {{__('Pioneiro Regular')}}</label>
             </div>
             {{-- <b>{{ $cartao['dados']->pioneiro }}</b> --}}
           </div>
@@ -121,16 +126,16 @@
                       {{ $cartao['Schema'][$key]['mes'] }}
                     </td>
                     <td class="text-center">
-                        <input type="checkbox" @if ($relatorio->participou=='s') checked @endif onclick="editCampoCartao(this)" name="participou" {!!$data_mes_ano!!} />
+                        <input type="checkbox" @if ($relatorio->participou=='s') checked @endif onclick="editCampoCartao(this)" id="participou-{{$cartao['dados']->id.'_'.$relatorio->mes}}" name="participou" {!!$data_mes_ano!!} />
                     </td>
                     <td class="text-center">
                         <input type="tel" class="form-control text-center" name="estudo" value="{{ $relatorio->estudo }}" onchange="editCampoCartao(this);" {!!$data_mes_ano!!} />
                     </td>
                     <td class="text-center">
-                        <input type="checkbox" @if (@$relatorio->privilegio=='pa') checked @endif onclick="editCampoCartao(this)" name="privilegio" {!!$data_mes_ano!!} />
+                        <input type="checkbox" @if (@$relatorio->privilegio=='pa') checked @endif onclick="editCampoCartao(this)" name="privilegio" id="privilegio-{{$cartao['dados']->id.'_'.$relatorio->mes}}" {!!$data_mes_ano!!} />
                     </td>
                     <td class="text-center">
-                        <input type="tel" class="form-control text-center" name="hora" value="{{ $relatorio->hora }}" onchange="editCampoCartao(this);" {!!$data_mes_ano!!} />
+                        <input type="tel" id="hora-{{$cartao['dados']->id.'_'.$relatorio->mes}}" class="form-control text-center" name="hora" value="{{ $relatorio->hora }}" onchange="editCampoCartao(this);" {!!$data_mes_ano!!} />
                     </td>
                     <td class="text-center">
                         <input type="tel" class="form-control" name="obs" value="{{ $relatorio->obs }}" onchange="editCampoCartao(this);" {!!$data_mes_ano!!} />
@@ -272,7 +277,7 @@
           <path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"/>
         </svg>
       </button>
-      <button type="button" id="registar-compilar" name="registrar" class="btn btn-primary">  Registrar</button>
+      {{-- <button type="button" id="registar-compilar" name="registrar" class="btn btn-primary">  Registrar</button> --}}
     </div>
   </div>
 

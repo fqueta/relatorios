@@ -782,4 +782,10 @@ class Qlib
 
         return ['ano'=>$ano,'mes'=>$mes];
     }
+    static function encode_array($array){
+        return base64_encode(self::lib_array_json($array));
+    }
+    static function decode_array($string_base){
+        return self::lib_json_array(base64_decode($string_base));
+    }
 }

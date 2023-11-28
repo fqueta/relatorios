@@ -66,8 +66,15 @@ function encodeArray(arr){
     var encode = btoa(ar);
     return encode
 }
+function b64DecodeUnicode(str) {
+    // Going backwards: from bytestream, to percent-encoding, to original string.
+    return decodeURIComponent(atob(str).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+}
 function decodeArray(arr){
-	var decode = JSON.parse(atob(arr));
+    var json = b64DecodeUnicode(arr);
+    var decode = JSON.parse(json);
 	return decode
 }
 function __translate(val,val2){
@@ -2016,12 +2023,44 @@ function lib_imprimeCartaoFiltro() {
     abrirjanelaPadraoConsulta(url);
 }
 function editCampoCartao(obj){
-    var campo = obj.getAttribute('name'),mes=obj.getAttribute('data-mes'),ano=obj.getAttribute('data-ano'),id_pub=obj.getAttribute('data-idp'),id_grupo=obj.getAttribute('data-id_grupo'),value=obj.value;
+    var campo = obj.getAttribute('name'),mes=obj.getAttribute('data-mes'),ano=obj.getAttribute('data-ano'),id_pub=obj.getAttribute('data-idp'),id_grupo=obj.getAttribute('data-id_grupo'),value=obj.value,privilegio='p';
+
+    if(campo=='fun'){
+        if(obj.checked){
+            value = obj.value;
+        }else{
+            value = 'n';
+        }
+    }
     if(campo=='participou'){
         if(obj.checked){
             value = 's';
         }else{
             value = 'n';
+        }
+        privilegio = 'p';
+    }
+    if(campo=='pioneiro'){
+        if(obj.checked){
+            value = 'pr';
+        }else{
+            value = 'p';
+        }
+    }
+    if(campo=='hora'){
+        if(document.getElementById('pioneiro').checked){
+            privilegio = 'pr';
+        }else{
+            if(document.getElementById('privilegio-'+id_pub+'_'+mes).checked){
+                privilegio = 'pa';
+            }
+        }
+    }
+    if(campo=='privilegio'){
+        if(obj.checked){
+            value = 'pa';
+        }else{
+            value = 'p';
         }
     }
     try {
@@ -2038,12 +2077,19 @@ function editCampoCartao(obj){
                     ano: ano,
                     id_grupo: id_grupo,
                     id_publicador: id_pub,
+                    privilegio: privilegio,
                 }
             },function(res){
                 $('#preload').fadeOut("fast");
                 $('.mes').html(res.mens);
                 if(res.exec){
-                    $('#info-reserva').remove();
+                    if(campo=='privilegio'){
+                        if(obj.checked){
+                            document.getElementById('participou-'+id_pub+'_'+mes).checked=false;
+                            $('#hora-'+id_pub+'_'+mes).select();
+                        }
+                    }
+                    // $('#info-reserva').remove();
                 }
             },function(err){
                 $('#preload').fadeOut("fast");
@@ -2053,4 +2099,62 @@ function editCampoCartao(obj){
     } catch (error) {
         console.log(error);
     }
+}
+function lancarRelatorio(obj){
+    const lancar = obj.getAttribute('data-pub');
+    var arr_l = decodeArray(lancar);
+    if(arr_l.ativo=='s'){
+        let privilegio = arr_l.pioneiro
+        if(privilegio=='p'){
+            pr = 'Publicador';
+        }else if(privilegio=='pr'){
+            pr = 'P. Regular';
+        }else if(privilegio=='pa'){
+            pr = 'P. Auxiliar';
+        }else{
+            pr = 'Publicador';
+        }
+        let nome = arr_l.nome+'<input type="hidden" name="id_publicador" value="'+arr_l.id+'" /><input type="hidden" name="privilegio" value="'+privilegio+'" /><input type="hidden" name="id_grupo" value="'+arr_l.id_grupo+'" /><br><em class="text-success">'+pr+'</em>';
+        let mo = document.querySelector('select#mes');
+        let ai = document.querySelector('[type="number"]#painel-ano');
+        let s_mes = mo.cloneNode(true);
+        let s_ano = ai.cloneNode(true);
+        s_mes.setAttribute('id', 'modal_mes');
+        s_ano.setAttribute('id', 'modal_ano');
+        $('#lab-nome').html(nome);
+        $('#select_mes').html(s_mes);
+        $('#select_ano').html(s_ano);
+        if(privilegio=='p'){
+            document.querySelector('[name="participou"]').checked = true;
+        }else{
+            document.querySelector('[name="participou"]').checked = false;
+            document.getElementById('frm-s4').querySelector('[name="hora"]').focus();
+        }
+        document.querySelector('[name="hora"]').value = '';
+        $('#lancar-modal').modal('show');
+
+    }
+    console.log(arr_l);
+}
+function submit_s4(){
+    // var ds4 = $('#frm-s4').serialize();
+    submitFormulario($('#frm-s4'),function(res){
+        if(res.mens){
+            lib_formatMensagem('.mens',res.mens,'success');
+        }
+        if(res.exec){
+            $('#lancar-modal').modal('hide');
+            if(id_p=res.salvarRelatorios.id_publicador){
+                $('[tr-id="'+id_p+'"]').removeClass('text-danger').addClass('text-success');
+            }
+        }
+        if(res.return){
+            location.reload();
+            //window.location = res.return
+        }
+        if(res.errors){
+            alert('erros');
+            console.log(res.errors);
+        }
+    });
 }
