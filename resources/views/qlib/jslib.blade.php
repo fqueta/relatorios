@@ -10,7 +10,7 @@
 <script src="{{url('/')}}/js/jquery-ui.min.js"></script>
 <script src="{{url('/')}}/js/jquery.inputmask.bundle.min.js"></script>
 <!--<script src="{{url('/')}}/summernote/summernote.min.js"></script>-->
-<script src=" {{url('/')}}/js/lib.js"></script>
+<script src=" {{url('/')}}/js/lib.js?ver={{config('app.version')}}"></script>
 <script>
     $(function(){
         $('.dataTable').DataTable({

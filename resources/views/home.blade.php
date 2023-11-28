@@ -98,9 +98,9 @@
 @stop
 
 @section('css')
-    <link rel="stylesheet" href="/css/admin_custom.css">
+    @include('qlib.csslib')
 @stop
 
 @section('js')
-    <script> console.log('Hi!'); </script>
+    @include('qlib.jslib')
 @stop
