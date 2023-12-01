@@ -570,8 +570,8 @@ class PublicadoresController extends Controller
     public function edit_campo_cartao(Request $request){
         $d = $request->all();
         $ret['exec']=false;
-        if(isset($d['campo']) && isset($d['value']) && isset($d['mes']) && isset($d['ano']) && isset($d['id_publicador'])){
-            $d[$d['campo']] = $d['value'];
+        if(isset($d['campo']) && isset($d['mes']) && isset($d['ano']) && isset($d['id_publicador'])){
+            $d[$d['campo']] = @$d['value'];
             $campo = $d['campo'];
             unset($d['value'],$d['campo']);
             if($campo=='fun' || $campo=='pioneiro'){
@@ -581,7 +581,6 @@ class PublicadoresController extends Controller
                 }
                 $s = Publicador::where('id',$d['id_publicador'])->update($df);
             }else{
-                // dd($d);
                 $s = Relatorio::where('id_publicador','=',$d['id_publicador'])->where('mes','=',$d['mes'])->where('ano','=',$d['ano'])->update($d);
                 if(!$s){
                     $s = Relatorio::create($d);

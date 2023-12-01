@@ -344,14 +344,14 @@ class GerenciarUsuarios extends Controller
                 $totalEstudos += isset($atividade[0]->estudo) ? $atividade[0]->estudo : 0;
                 $meses_relatados++;
                 if(isset($atividade[0]->participou)){
-                  if($atividade[0]->participou=='s'){
-                    $atividade[0]->class = 'text-success';
-                    $atividade[0]->status = 'Compilado';
-                  }
-                  if($atividade[0]->participou=='n'){
-                    $atividade[0]->status = 'Pendente';
-                    $atividade[0]->class = 'text-danger';
-                  }
+                    if($atividade[0]->participou=='n'){
+                      $atividade[0]->status = 'Pendente';
+                      $atividade[0]->class = 'text-danger';
+                    }
+                    if($atividade[0]->participou=='s' || @$atividade[0]->hora>0){
+                        $atividade[0]->class = 'text-success';
+                        $atividade[0]->status = 'Compilado';
+                    }
                 }
               }else{
                 $ativi['id'] = 0;

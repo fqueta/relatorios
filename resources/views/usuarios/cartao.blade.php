@@ -265,7 +265,7 @@
       @endforeach
     @endif
     <div class="col-12 mt-4 d-print-none div-salvar">
-      <a href=" {{route('usuarios.index')}} " title="Voltar" class="btn btn-secondary btn-voltar">
+      <a href=" {{route('usuarios.index')}} " title="Voltar" data-id_p="{{$cartao['dados']->id}}" class="btn btn-secondary btn-voltar">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-short" viewBox="0 0 16 16">
           <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z"/>
           </svg>
@@ -294,7 +294,10 @@
           if($(window).width()>778)
             $('a.nav-link').click();
           $('.btn-voltar').on('click',function(e){
-              window.close();
+            // var id_pub = $(this).data('id_p');
+            e.preventDefault();
+            window.opener = popupCallback_mark();
+            window.close();
               //openPageLink(e,$(this).attr('href'),$('[name="ano"]').val());
           });
           function relCalback(data){
