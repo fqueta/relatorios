@@ -51,7 +51,7 @@ class GerenciarRelatorios extends Controller
           ['type'=>'number','campo'=>'estudo','label'=>'Estudos biblícos','valor'=>''],
           ['type'=>'text','campo'=>'obs','label'=>'Observações','valor'=>''],
         ];
-        $relatorio_cad = relatorio::where('id_publicador','=',$id)->where('mes','=',$mes)->where('ano','=',$ano)->get();
+        $relatorio_cad = Relatorio::where('id_publicador','=',$id)->where('mes','=',$mes)->where('ano','=',$ano)->get();
         if($dsal = $relatorio_cad->all()){
             foreach ($dados as $key => $value) {
               if(isset($dsal[0][$value['campo']])){
@@ -101,7 +101,7 @@ class GerenciarRelatorios extends Controller
                 ['type'=>'text','campo'=>'obs','label'=>'Observações','valor'=>''],
                 ];
         }
-        $relatorio_cad = relatorio::where('id_publicador','=',$id)->where('mes','=',$mes)->where('ano','=',$ano)->get();
+        $relatorio_cad = Relatorio::where('id_publicador','=',$id)->where('mes','=',$mes)->where('ano','=',$ano)->get();
         if($dsal = $relatorio_cad->all()){
             foreach ($dados as $key => $value) {
               if(isset($dsal[0][$value['campo']])){
@@ -124,7 +124,7 @@ class GerenciarRelatorios extends Controller
         // dd($dados);
         if(isset($dados['id_publicador']) && isset($dados['mes']) && isset($dados['ano'])){
           $ac = 'alt';
-          $relatorios_gravados = relatorio::where('id_publicador','=',$dados['id_publicador'])->where('mes','=',$dados['mes'])->where('ano','=',$dados['ano'])->count();
+          $relatorios_gravados = Relatorio::where('id_publicador','=',$dados['id_publicador'])->where('mes','=',$dados['mes'])->where('ano','=',$dados['ano'])->count();
         //   dd($relatorios_gravados);
         }
         //$dados['enviado_por'] = '{"user_id":"4","nome":"Waldir Bertges","ip":"177.104.65.201"}';
@@ -147,7 +147,7 @@ class GerenciarRelatorios extends Controller
           $dados['obs'] = $arr_obs[$privilegio].' '.$dados['obs'];
         }
         if($relatorios_gravados==0){
-          $salvarRelatorios = relatorio::create($dados);
+          $salvarRelatorios = Relatorio::create($dados);
         }else{
           $salvarRelatorios = $this->update($request,$user);
         }
@@ -223,11 +223,11 @@ class GerenciarRelatorios extends Controller
         $salvarRelatorios=false;
         unset($data['_token']);
         if(!empty($data) && isset($data['id'])){
-            $salvarRelatorios=relatorio::where('id',$data['id'])->update($data);
+            $salvarRelatorios=Relatorio::where('id',$data['id'])->update($data);
         }
         if(!$salvarRelatorios && isset($data['mes']) && isset($data['ano']) && isset($data['id_publicador'])){
             // dd($data);
-            $salvarRelatorios=relatorio::where('mes',$data['mes'])->where('ano',$data['ano'])->where('id_publicador',$data['id_publicador'])->update($data);
+            $salvarRelatorios=Relatorio::where('mes',$data['mes'])->where('ano',$data['ano'])->where('id_publicador',$data['id_publicador'])->update($data);
         }
         if($salvarRelatorios){
             $GerenciarUsuarios = new GerenciarUsuarios($user);
@@ -265,7 +265,7 @@ class GerenciarRelatorios extends Controller
       $deletar = false;
       $dados = $request->all();
       if(isset($dados['id_publicador']) && isset($dados['mes']) && isset($dados['ano'])){
-          $deletar = relatorio::where('id_publicador','=',$dados['id_publicador'])->where('mes','=',$dados['mes'])->where('ano','=',$dados['ano'])->delete();
+          $deletar = Relatorio::where('id_publicador','=',$dados['id_publicador'])->where('mes','=',$dados['mes'])->where('ano','=',$dados['ano'])->delete();
       }
       if($deletar){
         $GerenciarUsuarios = new GerenciarUsuarios($user);
@@ -293,9 +293,9 @@ class GerenciarRelatorios extends Controller
               $mes = 12;
             }
             if($tipo=='compilado'){
-              $ret = relatorio::where('id_publicador','=',$id_publicador)->where('mes','=',$mes)->where('ano','=',$ano)->where('compilado','=','s')->count();
+              $ret = Relatorio::where('id_publicador','=',$id_publicador)->where('mes','=',$mes)->where('ano','=',$ano)->where('compilado','=','s')->count();
             }else{
-              $ret = relatorio::where('id_publicador','=',$id_publicador)->where('mes','=',$mes)->where('ano','=',$ano)->count();
+              $ret = Relatorio::where('id_publicador','=',$id_publicador)->where('mes','=',$mes)->where('ano','=',$ano)->count();
             }
         }
         return $ret;
@@ -313,13 +313,13 @@ class GerenciarRelatorios extends Controller
       ];
 
       if($mes && $ano){
-        $registrar = relatorio::where('id_publicador','=',$id)->
+        $registrar = Relatorio::where('id_publicador','=',$id)->
           where('compilado','=','n')->
           where('mes','=',$mes)->
           where('ano','=',$ano)->
           update($dados);
       }else{
-        $registrar = relatorio::where('id_publicador','=',$id)->where('compilado','=','n')->update($dados);
+        $registrar = Relatorio::where('id_publicador','=',$id)->where('compilado','=','n')->update($dados);
       }
       if($registrar){
         $ret['exec'] = true;
@@ -346,9 +346,9 @@ class GerenciarRelatorios extends Controller
       $ret = false;
       $totalPublicadores['todos'] = Publicador::count();
       $totalPublicadores['inativos'] = Publicador::where('inativo','=','s')->count();
-      $totalRelatorios['enviados'] = relatorio::where('hora','>','0')->where('mes','=',$mes)->where('ano','=',$ano)->count();
+      $totalRelatorios['enviados'] = Relatorio::where('hora','>','0')->where('mes','=',$mes)->where('ano','=',$ano)->count();
       if($id_grupo){
-        $totalRelatorios['enviados'] = relatorio::where('id_grupo','=',$id_grupo)->where('hora','>','0')->where('mes','=',$mes)->where('ano','=',$ano)->count();
+        $totalRelatorios['enviados'] = Relatorio::where('id_grupo','=',$id_grupo)->where('hora','>','0')->where('mes','=',$mes)->where('ano','=',$ano)->count();
         $totalPublicadores['ativos'] = Publicador::where('inativo','=','n')->where('id_grupo','=',$id_grupo)->count();
       }else{
         $totalPublicadores['ativos'] = Publicador::where('inativo','=','n')->count();
