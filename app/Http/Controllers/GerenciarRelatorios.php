@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\grupo;
 use App\Models\Publicador;
-use App\Models\relatorio;
+use App\Models\Relatorio;
 use App\Models\User;
 use App\Models\usuario;
 use App\Qlib\Qlib;
