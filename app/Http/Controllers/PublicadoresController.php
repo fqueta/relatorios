@@ -582,9 +582,9 @@ class PublicadoresController extends Controller
                 $s = Publicador::where('id',$d['id_publicador'])->update($df);
             }else{
                 // dd($d);
-                $s = relatorio::where('id_publicador','=',$d['id_publicador'])->where('mes','=',$d['mes'])->where('ano','=',$d['ano'])->update($d);
+                $s = Relatorio::where('id_publicador','=',$d['id_publicador'])->where('mes','=',$d['mes'])->where('ano','=',$d['ano'])->update($d);
                 if(!$s){
-                    $s = relatorio::create($d);
+                    $s = Relatorio::create($d);
                     if(isset($s->id)){
                         $ret['exec'] = true;
                         $ret['idCad'] = $s->id;
