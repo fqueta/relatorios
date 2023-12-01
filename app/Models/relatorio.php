@@ -15,6 +15,7 @@ class Relatorio extends Model
         'ativo',
         'ano',
         'mes',
+        // 'participou',
         'participou',
         'publicacao',
         'video',
