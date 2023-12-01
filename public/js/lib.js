@@ -2159,11 +2159,5 @@ function submit_s4(){
     });
 }
 function popupCallback_mark(){
-    // $('#tr-id="'+id_publicador+'"').removeClass('text-danger').addClass('text-success');
-    alert('aqui');
     window.location.reload();
-    // console.log(url);
-    // window.location = url;
-    // location.reload();
-    // console.log(id_publicador);
 }

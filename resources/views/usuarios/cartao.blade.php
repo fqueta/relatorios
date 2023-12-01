@@ -296,7 +296,7 @@
           $('.btn-voltar').on('click',function(e){
             // var id_pub = $(this).data('id_p');
             e.preventDefault();
-            window.opener = popupCallback_mark();
+            window.opener.popupCallback_mark();
             window.close();
               //openPageLink(e,$(this).attr('href'),$('[name="ano"]').val());
           });
