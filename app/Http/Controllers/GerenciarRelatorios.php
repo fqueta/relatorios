@@ -346,9 +346,16 @@ class GerenciarRelatorios extends Controller
       $ret = false;
       $totalPublicadores['todos'] = Publicador::count();
       $totalPublicadores['inativos'] = Publicador::where('inativo','=','s')->count();
-      $totalRelatorios['enviados'] = Relatorio::where('hora','>','0')->where('mes','=',$mes)->where('ano','=',$ano)->count();
+      $totalRelatorios['enviados'] = Relatorio::where(function ($query){
+        $query->where('hora','>','0')->orWhere('participou','=','s');
+      })->where('mes','=',$mes)->where('ano','=',$ano)//;
+      ->count();
+    //   $dd = Qlib::eloquentSql($totalRelatorios['enviados']);
+
       if($id_grupo){
-        $totalRelatorios['enviados'] = Relatorio::where('id_grupo','=',$id_grupo)->where('hora','>','0')->where('mes','=',$mes)->where('ano','=',$ano)->count();
+        $totalRelatorios['enviados'] = Relatorio::where('id_grupo','=',$id_grupo)->where(function ($query){
+            $query->where('hora','>','0')->orWhere('participou','=','s');
+        })->where('mes','=',$mes)->where('ano','=',$ano)->count();
         $totalPublicadores['ativos'] = Publicador::where('inativo','=','n')->where('id_grupo','=',$id_grupo)->count();
       }else{
         $totalPublicadores['ativos'] = Publicador::where('inativo','=','n')->count();

@@ -788,4 +788,17 @@ class Qlib
     static function decode_array($string_base){
         return self::lib_json_array(base64_decode($string_base));
     }
+    /**Mtodo para retornar a strig sql do query bilder do eloquento
+     * @param string $query do eloquento sem o meto get no final
+     */
+    static function eloquentSql($d){
+        $query = str_replace(array('?'), array('\'%s\''), $d->toSql());
+        $query = vsprintf($query, $d->getBindings());
+        dump($query);
+        $result = $d->get();
+        if($result->count() > 0){
+            $result = $result->toArray();
+        }
+        return $result;
+    }
 }
