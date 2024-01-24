@@ -532,6 +532,20 @@ class Qlib
         }
         return $ret;
     }
+    static public function buscaValorDb0($tab,$campo_bus,$valor,$select,$compleSql=false,$debug=false)
+    {
+        $ret = false;
+        if($tab && $campo_bus && $valor && $select){
+            $sql = "SELECT $select FROM $tab WHERE $campo_bus='$valor' $compleSql";
+            if(isset($debug)&&$debug){
+                echo $sql;
+            }
+            $d = DB::select($sql);
+            if($d)
+                $ret = $d[0]->$select;
+        }
+        return $ret;
+    }
     static public function valorTabDb($tab = false,$campo_bus,$valor,$select,$compleSql=false)
     {
 

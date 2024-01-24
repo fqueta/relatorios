@@ -581,6 +581,13 @@ class PublicadoresController extends Controller
                 }
                 $s = Publicador::where('id',$d['id_publicador'])->update($df);
             }else{
+                if(isset($d['privilegio']) && $d['privilegio']=='p'){
+                    $privilegio = Qlib::buscaValorDb0('publicadores','id',$d['id_publicador'],'pioneiro');
+                    if($privilegio){
+                        $d['privilegio'] = $privilegio;
+                    }
+                }
+
                 $s = Relatorio::where('id_publicador','=',$d['id_publicador'])->where('mes','=',$d['mes'])->where('ano','=',$d['ano'])->update($d);
                 if(!$s){
                     $s = Relatorio::create($d);
