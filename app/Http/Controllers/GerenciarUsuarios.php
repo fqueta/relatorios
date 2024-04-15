@@ -384,20 +384,27 @@ class GerenciarUsuarios extends Controller
 
 
         $cartao['meses_relatados'] = $meses_relatados;
-        // if($cartao['meses_relatados']>0){
-        //   $mediasPublicacao = ($cartao['totais']['publicacao'] / $cartao['meses_relatados']) ;
-        //   $mediasvideos = ($cartao['totais']['videos'] / $cartao['meses_relatados']) ;
-        //   $mediasHoras = ($cartao['totais']['horas'] / $cartao['meses_relatados']) ;
-        //   $mediasRevisitas = ($cartao['totais']['revisitas'] / $cartao['meses_relatados']) ;
-        //   $mediasEstudos = ($cartao['totais']['estudos'] / $cartao['meses_relatados']) ;
-        // }else{
-        //   $mediasHoras = 0;
-        //   $mediasPublicacao = 0;
-        //   $mediasvideos = 0;
-        //   $mediasHoras = 0;
-        //   $mediasRevisitas = 0;
-        //   $mediasEstudos = 0;
-        // }
+        if($cartao['meses_relatados']>0){
+            // $mediasPublicacao = ($cartao['totais']['publicacao'] / $cartao['meses_relatados']) ;
+            $mediasPublicacao = 0 ;
+            // $mediasvideos = ($cartao['totais']['videos'] / $cartao['meses_relatados']) ;
+            $mediasvideos = 0 ;
+            $mediasHoras = ($cartao['totais']['horas'] / $cartao['meses_relatados']) ;
+            // $mediasRevisitas = ($cartao['totais']['revisitas'] / $cartao['meses_relatados']) ;
+            $mediasRevisitas = 0 ;
+            if(isset($cartao['totais']['estudos'])){
+                $mediasEstudos = ($cartao['totais']['estudos'] / $cartao['meses_relatados']) ;
+            }else{
+                $mediasEstudos = 0;
+            }
+        }else{
+                $mediasHoras = 0;
+                $mediasPublicacao = 0;
+                $mediasvideos = 0;
+                $mediasHoras = 0;
+                $mediasRevisitas = 0;
+                $mediasEstudos = 0;
+        }
         // $cartao['medias']['publicacao'] = round($mediasPublicacao) ;
         // $cartao['medias']['videos'] = round($mediasvideos) ;
         // $cartao['medias']['horas'] = round($mediasHoras) ;
@@ -466,7 +473,7 @@ class GerenciarUsuarios extends Controller
           }
           $title = '';
           $titulo = '';
-          //dd($cartao);
+        //   dd($cartao);
           return view('usuarios.cards',['cards'=>$cartao,'titulo'=>$title,'title'=>$titulo]);
         }
     }

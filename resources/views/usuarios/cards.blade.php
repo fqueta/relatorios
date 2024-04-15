@@ -65,7 +65,7 @@
             </tr>
             <tr>
               <td style="width:50%">
-                  <span class="label label-default">Data de nascimento:</span> <b class="d-flex"> {{ $cartao['dados']->data_nasci }}</b>
+                  <span class="label label-default">Data de nascimento:</span> <b> {{ $cartao['dados']->data_nasci }}</b>
               </td>
               <td style="width:50%" class="text-right">
                 <span class="label label-default">Sexo:</span> <b> {{ $cartao['dados']->sexo }}</b>
@@ -83,7 +83,27 @@
             <tr>
               <td colspan="2">
                   <div class="col-12 text-right">
-                    <b class="mr-3">{{ $cartao['dados']->fun }}</b> <b>{{ $cartao['dados']->pioneiro }}</b>
+                    <b class="mr-3">
+                        {{-- @if(isset($cartao['dados']->fun) && $cartao['dados']->fun=='anc')
+                            {{(Ancião)}}
+                        @endphp --}}
+                        {{-- {{ $cartao['dados']->fun }} --}}
+                        @php
+                            if($cartao['dados']->fun=='anc'){
+                                echo __('Ancião');
+                            }elseif ($cartao['dados']->fun=='sm') {
+                                echo __('Servo ministerial');
+                            }
+                        @endphp
+                    </b>
+                        <b>
+                        @php
+                            if($cartao['dados']->pioneiro=='pr'){
+                                echo __('Pioneiro Regular');
+                            }
+                        @endphp
+                        {{-- {{ $cartao['dados']->pioneiro }} --}}
+                    </b>
                   </div>
               </td>
             </tr>
@@ -91,7 +111,7 @@
         </table>
 
               <table class="table table-bordered table-striped table-hover">
-                <thead>
+                {{-- <thead>
                   <tr>
                     <th class="text-center">
                         Ano de serviço<br>{{ $cartao['ano_servico'] }}
@@ -115,28 +135,61 @@
                         Observações
                     </th>
                   </tr>
-                </thead>
+                </thead> --}}
+                <thead>
+                    <tr>
+                      <th class="text-center">
+                          Ano de serviço<br>{{ $cartao['ano_servico'] }}
+                      </th>
+                      <th class="text-center">
+                          Participou <br>no<br>ministério
+                      </th>
+                      <th class="text-center">
+                          Estudos<br>biblicos
+                      </th>
+                      <th class="text-center">
+                          Pioneiro<br>
+                          Auxiliar
+                      </th>
+                      <th class="text-center">
+                          Horas
+                      </th>
+                      <th class="text-center" style="width:30%">
+                          Observações
+                      </th>
+                    </tr>
+                  </thead>
+
                 <tbody>
                   @foreach($cartao['atividade'] As $key=>$relatorio)
                   <tr>
                     <td class="text-left">{{ $cartao['Schema'][$key]['mes'] }}</td>
-                    <td class="text-center">{{ $relatorio->publicacao }}</td>
-                    <td class="text-center">{{ $relatorio->video }}</td>
+                    <td class="text-center">
+                        <input type="checkbox" @if ($relatorio->participou=='s') checked @endif disabled id="participou-{{$cartao['dados']->id.'_'.$relatorio->mes}}" name="participou" />
+                    </td>
+                    <td class="text-center">
+                        {{ $relatorio->estudo }}
+                    </td>
+                    <td class="text-center">
+                        <input type="checkbox" @if (@$relatorio->privilegio=='pa') checked @endif disabled name="privilegio" id="privilegio-{{$cartao['dados']->id.'_'.$relatorio->mes}}"/>
+                    </td>
                     <td class="text-center">{{ $relatorio->hora }}</td>
-                    <td class="text-center">{{ $relatorio->revisita }}</td>
-                    <td class="text-center">{{ $relatorio->estudo }}</td>
                     <td class="text-center">{{ $relatorio->obs }}</td>
                   </tr>
                   @endforeach
                 </tbody>
                 <tfoot>
                   <tr>
+                    <th>&nbsp;</th>
+                    <th>&nbsp;</th>
+                    <th>&nbsp;</th>
                     <th>Total</th>
                     @foreach($cartao['totais'] As $k=>$total)
                       <th class="text-center">{{ $total }}</th>
                     @endforeach
                     <th>&nbsp;</th>
                   </tr>
+                  {{-- @isset($cartao['medias'])
                   <tr>
                     <th>Média</th>
                     @foreach($cartao['medias'] As $k=>$m)
@@ -144,6 +197,7 @@
                     @endforeach
                     <th>&nbsp;</th>
                   </tr>
+                  @endisset --}}
                 </tfoot>
               </table>
     </div>

@@ -116,10 +116,6 @@
                   <tr id="{{$cartao['dados']->id.'_'.$relatorio->mes}}" class="@if(isset($relatorio->class)){{$relatorio->class}}@endif" title="">
                     <td class="text-left">
                       <input type="hidden" name="var_cartao" value="{{base64_encode(json_encode($cartao))}}">
-                      {{-- <input type="hidden" name="ano" value="{{ $cartao['Schema'][$key]['ano_servico'] }}">
-                      <input type="hidden" name="mes" value="{{ $key }}">
-                      <input type="hidden" name="id_publicador" value="{{ $cartao['dados']->id }}">
-                      <input type="hidden" name="id_grupo" value="{{ $cartao['dados']->id_grupo }}"> --}}
                       <input type="hidden" name="ac" value="{{ $relatorio->ac }}">
                       <input type="hidden" name="id" value="{{ $relatorio->id }}">
                       <input type="hidden" name="privilegio" value="{{ @$relatorio->privilegio }}">
