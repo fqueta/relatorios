@@ -188,7 +188,7 @@
                          <a href="javascript:void(0);" onclick="lancarRelatorio(this);" data-pub="{{App\Qlib\Qlib::encode_array($arr_usuario)}}" title="Relatório mensal" class="btn btn-primary relatorios-create mr-1">
                            <i class="fa fa-list"></i> Relatório
                         </a>
-                         <a href="{{ route('usuarios.cartao',['id'=>$usuario->id]) }}" title="Cartão do publicador" class="btn btn-secondary mr-1 print-card">
+                        <a href="{{ route('usuarios.cartao',['id'=>$usuario->id]) }}" title="Cartão do publicador" class="btn btn-secondary mr-1 print-card">
                            <i class="fa fa-file-pdf"></i> Cartão
                         </a>
                         <a href="{{ route($routa.'.edit',['id'=>$usuario->id]) }}" title="Editar Cadastro" class="btn btn-light mr-1">
@@ -197,7 +197,6 @@
                             <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
                           </svg>
                         </a>
-
                         <form action="{{ route('publicadores-destroy',['id'=>$usuario->id]) }}" id="frm-{{$usuario->id}}" method="POST">
                           @csrf
                           @method('DELETE')

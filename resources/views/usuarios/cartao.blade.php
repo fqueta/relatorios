@@ -134,7 +134,7 @@
                         <input type="tel" id="hora-{{$cartao['dados']->id.'_'.$relatorio->mes}}" class="form-control text-center" name="hora" value="{{ $relatorio->hora }}" onchange="editCampoCartao(this);" {!!$data_mes_ano!!} />
                     </td>
                     <td class="text-center">
-                        <input type="tel" class="form-control" name="obs" value="{{ $relatorio->obs }}" onchange="editCampoCartao(this);" {!!$data_mes_ano!!} />
+                        <input type="text" class="form-control" name="obs" value="{{ $relatorio->obs }}" onchange="editCampoCartao(this);" {!!$data_mes_ano!!} />
                     </td>
 
                   </tr>

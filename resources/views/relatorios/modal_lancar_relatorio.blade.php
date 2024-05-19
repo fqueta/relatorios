@@ -56,7 +56,7 @@
                                         </tr>
                                         <tr>
                                             <td colspan="2">{{__('Observações')}}
-                                                <input class="form-control text-left" type="tel" name="obs" value="">
+                                                <input class="form-control text-left" type="text" name="obs" value="">
                                             </td>
                                         </tr>
                                     </tbody>
