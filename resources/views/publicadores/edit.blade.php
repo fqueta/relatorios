@@ -19,7 +19,7 @@
         <label for="obs">Observação</label><br>
         <textarea name="obs" class="form-control" rows="8" cols="80">{{$grupos->obs}}</textarea>
       </div>
-      <div class=form-group"">
+      <div class="form-group">
         <a href=" {{route('grupos-index')}} " class="btn btn-light"> Voltar</a>
         <button type="submit" class="btn btn-primary">Atualizar</button>
       </div>
