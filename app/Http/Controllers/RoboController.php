@@ -55,9 +55,9 @@ class RoboController extends Controller
                 $ret[$k]['somaHoras'] = $somaHoras;
                 $ret[$k]['somaRev'] = $somaRev;
                 $ret[$k]['id_publicador'] = $v['id'];
-                if(!$somaRev){
-                    $tags[] = 'sem_revisitas_6meses';
-                }
+                // if(!$somaRev){
+                //     $tags[] = 'sem_revisitas_6meses';
+                // }
                 $ret[$k]['tags'] = $tags;
                 $compleSalv = false;
                 $sqlSal = "UPDATE IGNORE publicadores SET updated_at = '".date('Y-m-d H:m:i')."'{compleSalv} WHERE id='".$v['id']."'";

@@ -356,7 +356,7 @@ class PublicadoresController extends Controller
         $controllerRelatorio = new GerenciarRelatorios($this->user);
         $id_grupo = isset($_GET['fil']['id_grupo'])?$_GET['fil']['id_grupo']:false;
         $estatisticas = $controllerRelatorio->estatisticas($mes,$ano,$id_grupo);
-
+// dump($queryPublicador);
         return view('publicadores.index',[
             'dados'=>$queryPublicador['publicador'],
             'title'=>$title,
